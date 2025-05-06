@@ -1,4 +1,4 @@
-require.config({
+equire.config({
     baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
     paths: {
         'DataGridView': 'DS/DataGridView/DataGridView',
@@ -11,6 +11,9 @@ require([
     'DataGridView',
     'WAFData'
 ], function (UWA, DataGridView, WAFData) {
+    // Make sure the widget is properly initialized or provided by the framework
+    var widget = widget || {}; // Fallback if 'widget' is not defined
+
     var myWidget = {
         onLoad: function() {
             console.log("Widget Loaded");
@@ -28,35 +31,21 @@ require([
                 return;
             }
 
-            // DataGridView setup
-           var gridView = new DataGridView({
-                columns: [
-                    {
-                        text: 'Name',
-                        dataIndex: 'name',
-                        sortable: true,
-                        width: '150px'
-                    },
-                    {
-                        text: 'Type',
-                        dataIndex: 'type',
-                        sortable: true,
-                        width: '120px'
-                    },
-                    {
-                        text: 'Revision',
-                        dataIndex: 'revision',
-                        sortable: true,
-                        width: '100px'
-                    }
-                ]
-            });
+            // Check if DataGridView is a valid constructor
+            if (typeof DataGridView === 'function') {
+                var gridView = new DataGridView({
+                    columns: [
+                        { text: 'Name', dataIndex: 'name', sortable: true, width: '150px' },
+                        { text: 'Type', dataIndex: 'type', sortable: true, width: '120px' },
+                        { text: 'Revision', dataIndex: 'revision', sortable: true, width: '100px' }
+                    ]
+                });
 
-            // Inject the grid into the container
-            gridView.inject(container.getDOM());
-
-            // Inject the grid into the container
-            gridView.inject(container);
+                // Inject the grid into the container
+                gridView.inject(container);
+            } else {
+                console.error('DataGridView is not a constructor');
+            }
 
             // Fetch documents using OOTB document service
             WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
@@ -66,11 +55,7 @@ require([
                     if (data && data.member) {
                         // Prepare rows from the document data
                         var rows = data.member.map(function (doc) {
-                            return {
-                                name: doc.name,
-                                type: doc.type,
-                                revision: doc.revision
-                            };
+                            return { name: doc.name, type: doc.type, revision: doc.revision };
                         });
 
                         // Add rows to the grid
@@ -86,5 +71,10 @@ require([
         }
     };
 
-    widget.addEvent('onLoad', myWidget.onLoad);
+    // Properly add the onLoad event
+    if (widget && widget.addEvent) {
+        widget.addEvent('onLoad', myWidget.onLoad);
+    } else {
+        console.error('Widget not initialized');
+    }
 });
