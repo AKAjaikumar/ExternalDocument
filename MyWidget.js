@@ -8,7 +8,7 @@ define('MyWidget', [
   var MyWidget = Abstract.extend({
     setup: function () {
       console.log('MyWidget loaded');
-      // Your logic here
+      
     }
   });
 
