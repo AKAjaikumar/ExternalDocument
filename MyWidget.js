@@ -8,7 +8,7 @@ define('MyWidget', [
   var MyWidget = Abstract.extend({
     setup: function () {
       console.log('MyWidget loaded');
-      
+      // You can place your DataGridView logic here
     }
   });
 
