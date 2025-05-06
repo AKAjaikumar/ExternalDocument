@@ -1,16 +1,9 @@
 {
-  "name": "DocumentsGridViewWidget",
-  "description": "Displays documents using DataGridView",
-  "category": "Custom",
-  "icon": "resources/icon.png",
-  "dependencies": ["WebappsUtils"],
-  "requirejs": {
-    "paths": {
-      "DS/DataGridView/DataGridView": "DS/DataGridView/DataGridView",
-      "DS/DataGridView/Columns/ColumnText": "DS/DataGridView/Columns/ColumnText",
-      "DS/DataGridView/DataGridModel": "DS/DataGridView/DataGridModel",
-      "DS/WAFData/WAFData": "DS/WAFData/WAFData"
-    }
-  },
-  "load": "MyWidget.js"
+  "name": "MyWidget",
+  "description": "External widget to display documents using DataGridView",
+  "version": "1.0",
+  "author": "MyWidget",
+  "module": "MyWidget",
+  "icon": "https://dslogo.png",
+  "isExternal": true
 }
