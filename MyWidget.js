@@ -1,4 +1,4 @@
-define([
+define('MyWidget', [
     'UWA/Core',
     'DS/DataGridView/DataGridView',
     'DS/WAFData/WAFData'
@@ -6,8 +6,6 @@ define([
     var myWidget = {
         onLoad: function () {
             console.log("Widget Loaded");
-
-            // Example usage of DataGridView (via promise)
             DataGridView().then(function (gridView) {
                 console.log("DataGridView ready");
             });
