@@ -1,19 +1,20 @@
 define('MyWidget', [
     'UWA/Core',
-    'DS/DataGridView/DataGridView',  // Make sure this exists!
-    'DS/WAFData/WAFData'             // Make sure this exists!
+    'DS/DataGridView/DataGridView',
+    'DS/WAFData/WAFData'
 ], function (UWA, DataGridView, WAFData) {
-     console.log("MyWidget module loaded"); 
     'use strict';
+
+    console.log("MyWidget module loaded");
 
     var myWidget = {
         onLoad: function () {
             console.log("Widget Loaded");
-            // Your DataGridView setup logic can go here
+
+            // Your DataGridView logic here (optional)
         }
     };
 
-    // Register widget events
     widget.addEvent('onLoad', myWidget.onLoad);
 
     return myWidget;
