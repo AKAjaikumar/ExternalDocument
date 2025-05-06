@@ -29,7 +29,7 @@ require([
             }
 
             // DataGridView setup
-            var gridView = new DataGridView({
+           var gridView = new DataGridView({
                 columns: [
                     {
                         text: 'Name',
@@ -51,6 +51,9 @@ require([
                     }
                 ]
             });
+
+            // Inject the grid into the container
+            gridView.inject(container.getDOM());
 
             // Inject the grid into the container
             gridView.inject(container);
