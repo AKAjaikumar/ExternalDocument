@@ -10,12 +10,20 @@ define('MyWidget', [
     var myWidget = {
         onLoad: function () {
             console.log("Widget Loaded");
+            console.log("onLoad function called");
 
-            // Your DataGridView logic here (optional)
+            // Add further log statements here to trace the flow
+            // Your DataGridView logic can go here
         }
     };
 
-    widget.addEvent('onLoad', myWidget.onLoad);
+    // Register widget events explicitly
+    if (widget) {
+        console.log('Widget object found, adding onLoad event');
+        widget.onLoad = myWidget.onLoad;
+    } else {
+        console.error('Widget object not found!');
+    }
 
     return myWidget;
 });
