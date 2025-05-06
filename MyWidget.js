@@ -1,6 +1,6 @@
 require([
     'UWA/Core',
-    'enovia/DataGridView/DataGridView',
+    'DS/DataGridView/DataGridView',
     'DS/TreeModel/TreeDocument',
     'DS/TreeModel/TreeNodeModel'
 ], function(UWA, DataGridView, TreeDocument, TreeNodeModel) {
