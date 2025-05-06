@@ -12,13 +12,15 @@ require([
     'WAFData'
 ], function (UWA, DataGridView, WAFData) {
     // Wait for the platform to load the widget
-    if (typeof widget !== 'undefined' && widget.addEvent) {
-        widget.addEvent('onLoad', function () {
+   var myWidget = {
+ 
+        onLoad: function() {
+ 
             console.log("Widget Loaded");
+		}
+	 };
+ 
 
-            
-        });
-    } else {
-        console.error('widget object is not available');
-    }
+ 
+    widget.addEvent('onLoad', myWidget.onLoad);
 });
