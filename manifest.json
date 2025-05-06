@@ -1,0 +1,17 @@
+{
+  "name": "DataGridViewDocumentWidget",
+  "description": "Shows cloud documents in a DataGridView",
+  "category": "Data",
+  "icon": "resources/icons/documents.png",
+  "require": {
+    "uwa": "^1.0.0"
+  },
+  "dependencies": [],
+  "extensions": ["DataGridView"],
+  "widget": {
+    "name": "DocumentsGridWidget",
+    "url": "MyWidget.html",
+    "width": 800,
+    "height": 500
+  }
+}
