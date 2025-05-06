@@ -1,26 +1,18 @@
-require.config({
-    baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
-    paths: {
-        'DataGridView': 'DS/DataGridView/DataGridView',
-        'WAFData': 'DS/WAFData/WAFData'
-    }
-});
-
-require([
+define('MyWidget', [
     'UWA/Core',
-    'DataGridView',
-    'WAFData'
+    'DS/DataGridView/DataGridView',
+    'DS/WAFData/WAFData'
 ], function (UWA, DataGridView, WAFData) {
-    // Wait for the platform to load the widget
-   var myWidget = {
- 
-        onLoad: function() {
- 
+    var myWidget = {
+        onLoad: function () {
             console.log("Widget Loaded");
-		}
-	 };
- 
 
- 
+            // Example usage of DataGridView (via promise)
+            DataGridView().then(function (gridView) {
+                console.log("DataGridView ready");
+            });
+        }
+    };
+
     widget.addEvent('onLoad', myWidget.onLoad);
 });
