@@ -1,6 +1,6 @@
 require([
     'UWA/Core',
-    'DS/DataGridView/DataGridView'
+    'ExternalDocument/DS/DataGridView/DataGridView'
 ], function(UWA, DataGridView) {
     var myWidget = {
         onLoad: function() {
