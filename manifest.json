@@ -1,19 +1,10 @@
 {
-  "name": "DataGridViewDocumentWidget",
-  "description": "Shows cloud documents in a DataGridView",
-  "category": "Data",
-  "icon": "resources/icons/documents.png",
-  "require": {
-    "uwa": "^1.0.0"
-  },
-  "dependencies": [],
-  "extensions": ["DataGridView"],
   "widget": {
-  "name": "MyWidget",
-  "require": {
-    "paths": {
-      "MyWidget": "https://akajaikumar.github.io/ExternalDocument/MyWidget"
+    "name": "MyWidget",
+    "require": {
+      "paths": {
+        "MyWidget": "https://akajaikumar.github.io/ExternalDocument/MyWidget"
+      }
     }
   }
-}
 }
