@@ -3,25 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <title>Documents DataGridView</title>
-  <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/MyWidget.js"></script>
-  <script type="text/javascript">
-    // Ensure the widget is loaded after the script is fully available
-    window.onload = function() {
-      // Locate the widget container
-      var container = document.getElementById('testGridView');
+  <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+  <script>
+    require.config({
+      paths: {
+        'MyWidget': 'https://akajaikumar.github.io/ExternalDocument/MyWidget'
+      }
+    });
 
+    require(['MyWidget'], function(MyWidget) {
+      console.log('Module loaded!');
+      var container = document.getElementById('testGridView');
       if (!container) {
         console.error("Grid container not found!");
         return;
       }
 
-      // Use 'require' to load and initialize MyWidget once the dependencies are available
-      require(['MyWidget'], function (MyWidget) {
-        // Create and set up the widget
-        var myWidgetInstance = new MyWidget();
-        myWidgetInstance.setup();
-      });
-    };
+      var myWidgetInstance = new MyWidget();
+      myWidgetInstance.setup();
+    });
   </script>
 </head>
 <body>
