@@ -1,4 +1,4 @@
-define('MyWidget', [
+define([
     'UWA/Core',
     'DS/DataGridView/DataGridView',
     'DS/WAFData/WAFData'
