@@ -4,6 +4,25 @@
   <meta charset="utf-8" />
   <title>Documents DataGridView</title>
   <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/MyWidget.js"></script>
+  <script type="text/javascript">
+    // Ensure the widget is loaded after the script is fully available
+    window.onload = function() {
+      // Locate the widget container
+      var container = document.getElementById('testGridView');
+
+      if (!container) {
+        console.error("Grid container not found!");
+        return;
+      }
+
+      // Use 'require' to load and initialize MyWidget once the dependencies are available
+      require(['MyWidget'], function (MyWidget) {
+        // Create and set up the widget
+        var myWidgetInstance = new MyWidget();
+        myWidgetInstance.setup();
+      });
+    };
+  </script>
 </head>
 <body>
   <div id="testGridView" style="position: absolute; top: 60px; left: 0px; bottom: 0px; width: 100%; height: 500px;"></div>
