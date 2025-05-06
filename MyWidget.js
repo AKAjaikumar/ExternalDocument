@@ -1,7 +1,14 @@
+require.config({
+    paths: {
+        'DataGridView': 'ExternalDocument/DS/DataGridView/DataGridView',
+        'WAFData': 'ExternalDocument/DS/WAFData/WAFData'
+    }
+});
+
 require([
     'UWA/Core',
-    'ExternalDocument/DS/DataGridView/DataGridView',
-    'ExternalDocument/DS/WAFData/WAFData'
+    'DataGridView',
+    'WAFData'
 ], function (UWA, DataGridView, WAFData) {
     var myWidget = {
         onLoad: function() {
