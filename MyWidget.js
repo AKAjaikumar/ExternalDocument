@@ -1,8 +1,7 @@
 require([
   'UWA/Core',
   'UWA/Controls/DataGridView',
-  'DS/i3DXCompassPlatformServices/i3DXCompassPlatformServices',
-  'DS/DataDragAndDrop/DataDragAndDrop'
+  'DS/i3DXCompassPlatformServices/i3DXCompassPlatformServices'
 ], function (UWA, DataGridView, i3DXCompassPlatformServices) {
 
   const container = document.getElementById('testGridView');
