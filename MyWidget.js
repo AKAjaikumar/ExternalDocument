@@ -10,6 +10,7 @@ define('MyWidget', [
 
   var MyWidget = Abstract.extend({
     setup: function () {
+		console.log("JS CALLED !");
       var container = widget.body;
       container.setStyle('padding', '10px');
       container.innerHTML = ''; // Clear any existing content
