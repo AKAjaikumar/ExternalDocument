@@ -1,81 +1,64 @@
 define('MyWidget', [
   'UWA/Core',
+  'UWA/Controls/Abstract',
   'DS/DataGridView/DataGridView',
-  'UWA/Controls/Abstract'
-], function (UWA, DataGridView, Abstract) {
+  'DS/DataGridView/Columns/ColumnText',
+  'DS/DataGridView/DataGridModel',
+  'DS/WAFData/WAFData'
+], function (UWA, Abstract, DataGridView, ColumnText, DataGridModel, WAFData) {
   'use strict';
 
   var myWidget = {
         onLoad: function() {
 
             var container = widget.body;
+			 container.setStyle('padding', '10px');
             container.innerHTML = '';
             if (!container) {
                 console.error("Container #testGridView not found!");
                 return;
             }
-            var wrapper = UWA.createElement('div', {
-                class: 'grid-wrapper',
-                styles: {
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%' // Full height of the widget
-                }
+           
+            
+     
+
+      // Set up model
+      var model = new DataGridModel();
+
+      // Set up DataGridView
+      var gridView = new DataGridView({
+        model: model,
+        columns: [
+          new ColumnText({ text: 'Name', dataIndex: 'name', sortable: true }),
+          new ColumnText({ text: 'Type', dataIndex: 'type', sortable: true }),
+          new ColumnText({ text: 'Revision', dataIndex: 'revision', sortable: true })
+        ]
+      });
+
+      gridView.inject(container);
+
+      // Call OOTB Document service
+      WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
+        method: 'GET',
+        type: 'json',
+        onComplete: function (data) {
+          if (data && data.member) {
+            var rows = data.member.map(function (doc) {
+              return {
+                name: doc.name,
+                type: doc.type,
+                revision: doc.revision
+              };
             });
-
-            var toolbar = UWA.createElement('div', {
-                class: 'toolbar',
-                styles: {
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    gap: '10px',
-                    padding: '8px',
-                    flex: 'none',
-                    minHeight: '40px',
-                    background: '#f8f8f8',
-                    borderBottom: '1px solid #ddd',
-                    position: 'relative', 
-                    zIndex: 10 
-                }
-            });
-
-            var addButton = UWA.createElement('button', {
-                text: 'Add EIN',
-                styles: {
-                    padding: '6px 12px',
-                    background: '#0073E6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                },
-                events: {
-                    click: function() {
-                        var selectedNodes = doc.getSelectedNodes();
-
-                        if (selectedNodes.length === 0) {
-                            alert("No rows selected!");
-                            return;
-                        }
-
-                        // Extract data from selected rows
-                        var selectedData = selectedNodes.map(function(node) {
-                            return {
-                                name: node.getLabel(),
-                                quantity: node.options.grid.quantity
-                            };
-                        });
-
-                        // Do something with the selectedData
-                        console.log("Selected EINs:", selectedData);
-
-
-                        alert("Selected:\n" + selectedData.map(d => `Name --- ${d.name}: Qty ---- ${d.quantity}`).join("\n"));
-                    }
-                }
-            });
-
-            addButton.inject(toolbar);
+            model.addRows(rows);
+          } else {
+            console.error('No documents returned');
+          }
+        },
+        onFailure: function (error) {
+          console.error('Failed to fetch documents:', error);
+        }
+      });
         }
   }
   return MyWidget;
