@@ -7,12 +7,12 @@
   "icon": "https://dslogo.png",
   "isExternal": true,
   "widget": {
-  "name": "ExternalDocument",
-  "require": "MyWidget"
-},
+    "name": "ExternalDocument",
+    "require": "MyWidget"
+  },
   "dependencies": {
-  "DS/DataGridView/DataGridView": {},
-     "DS/TreeModel/TreeDocument": {},
-     "DS/TreeModel/TreeNodeModel": {}
-}
+    "DS/DataGridView/DataGridView": {},
+    "DS/TreeModel/TreeDocument": {},
+    "DS/TreeModel/TreeNodeModel": {}
+  }
 }
