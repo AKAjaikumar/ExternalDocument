@@ -9,9 +9,10 @@
   "dependencies": [],
   "extensions": ["DataGridView"],
   "widget": {
-    "name": "DocumentsGridWidget",
-    "url": "MyWidget.html",
-    "width": 800,
-    "height": 500
+  "require": {
+    "paths": {
+      "MyWidget": "https://akajaikumar.github.io/ExternalDocument/MyWidget"
+    }
+  }
   }
 }
