@@ -1,29 +1,26 @@
-define('MyWidget', [
-    'UWA/Core',
-    'DS/DataGridView/DataGridView',
-    'DS/WAFData/WAFData'
-], function (UWA, DataGridView, WAFData) {
-    'use strict';
+try {
+    define('MyWidget', [
+        'UWA/Core',
+        'DS/DataGridView/DataGridView',
+        'DS/WAFData/WAFData'
+    ], function (UWA, DataGridView, WAFData) {
+        'use strict';
 
-    console.log("MyWidget module loaded");
+        var myWidget = {
+            onLoad: function () {
+                console.log("Widget Loaded - onLoad Event Triggered");
+            }
+        };
 
-    var myWidget = {
-        onLoad: function () {
-            console.log("Widget Loaded");
-            console.log("onLoad function called");
-
-            // Add further log statements here to trace the flow
-            // Your DataGridView logic can go here
+        if (widget) {
+            console.log("Widget object available.");
+            widget.addEvent('onLoad', myWidget.onLoad);
+        } else {
+            console.error("Widget object is missing!");
         }
-    };
 
-    // Register widget events explicitly
-    if (widget) {
-        console.log('Widget object found, adding onLoad event');
-        widget.onLoad = myWidget.onLoad;
-    } else {
-        console.error('Widget object not found!');
-    }
-
-    return myWidget;
-});
+        return myWidget;
+    });
+} catch (error) {
+    console.error("Error in widget initialization:", error);
+}
