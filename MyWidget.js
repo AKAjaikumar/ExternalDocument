@@ -3,22 +3,28 @@ define('MyWidget', [
     'DS/DataGridView/DataGridView',
     'DS/WAFData/WAFData'
 ], function (UWA, DataGridView, WAFData) {
-    'use strict';
-
     var myWidget = {
         onLoad: function () {
             console.log("Widget Loaded");
 
-            DataGridView().then(function (gridView) {
-                console.log("DataGridView ready");
-                // TODO: Add DataGridView usage logic here
-            }).catch(function (error) {
-                console.error("Failed to load DataGridView:", error);
+            // Basic DataGridView config
+            DataGridView().then(function (GridView) {
+                var gridView = new GridView({
+                    element: document.getElementById('testGridView'),
+                    data: [
+                        { name: 'Doc1', type: 'PDF' },
+                        { name: 'Doc2', type: 'Word' }
+                    ],
+                    columns: [
+                        { text: 'Name', dataIndex: 'name' },
+                        { text: 'Type', dataIndex: 'type' }
+                    ]
+                });
+                gridView.render();
+                console.log("DataGridView rendered");
             });
         }
     };
 
     widget.addEvent('onLoad', myWidget.onLoad);
-
-    return myWidget;
 });
