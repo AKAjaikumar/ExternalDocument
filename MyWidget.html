@@ -15,16 +15,17 @@
         return;
       }
 
-      // Inject widget into the container
+      // Use 'require' to load and initialize MyWidget once the dependencies are available
       require(['MyWidget'], function (MyWidget) {
-        var myWidget = new MyWidget();
-        myWidget.setup();
+        // Create and set up the widget
+        var myWidgetInstance = new MyWidget();
+        myWidgetInstance.setup();
       });
     };
   </script>
 </head>
 <body>
   <p>Widget loaded. Open browser console to verify.</p>
-  <div id="testGridView" style="position: absolute; top: 60px; left: 0px; bottom: 0px; width: 100%;"></div>
+  <div id="testGridView" style="position: absolute; top: 60px; left: 0px; bottom: 0px; width: 100%; height: 500px;"></div>
 </body>
 </html>
