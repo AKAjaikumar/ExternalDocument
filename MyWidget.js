@@ -1,4 +1,4 @@
-equire.config({
+require.config({
     baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
     paths: {
         'DataGridView': 'DS/DataGridView/DataGridView',
