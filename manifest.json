@@ -1,10 +1,16 @@
 {
-  "widget": {
-    "name": "MyWidget",
-    "require": {
-      "paths": {
-        "MyWidget": "https://akajaikumar.github.io/ExternalDocument/MyWidget"
-      }
+  "name": "DocumentsGridViewWidget",
+  "description": "Displays documents using DataGridView",
+  "category": "Custom",
+  "icon": "resources/icon.png",
+  "dependencies": ["WebappsUtils"],
+  "requirejs": {
+    "paths": {
+      "DS/DataGridView/DataGridView": "DS/DataGridView/DataGridView",
+      "DS/DataGridView/Columns/ColumnText": "DS/DataGridView/Columns/ColumnText",
+      "DS/DataGridView/DataGridModel": "DS/DataGridView/DataGridModel",
+      "DS/WAFData/WAFData": "DS/WAFData/WAFData"
     }
-  }
+  },
+  "load": "MyWidget.js"
 }
