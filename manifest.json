@@ -5,5 +5,8 @@
   "author": "MyWidget",
   "module": "MyWidget",
   "icon": "https://dslogo.png",
-  "isExternal": true
+  "isExternal": true,
+  "dependencies": {
+  "DS/DataGridView/DataGridView": {}
+}
 }
