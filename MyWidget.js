@@ -3,6 +3,7 @@ define('MyWidget', [
     'DS/DataGridView/DataGridView',  // Make sure this exists!
     'DS/WAFData/WAFData'             // Make sure this exists!
 ], function (UWA, DataGridView, WAFData) {
+     console.log("MyWidget module loaded"); 
     'use strict';
 
     var myWidget = {
