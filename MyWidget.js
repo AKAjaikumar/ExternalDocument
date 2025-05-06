@@ -1,6 +1,6 @@
 require([
     'UWA/Core',
-    'enovia/DataGridView/DataGridView'
+    'DS/DataGridView/DataGridView'
 ], function(UWA, DataGridView) {
     var myWidget = {
         onLoad: function() {
