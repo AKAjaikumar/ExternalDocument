@@ -11,42 +11,16 @@ require([
     'DataGridView',
     'WAFData'
 ], function (UWA, DataGridView, WAFData) {
-   return {
-        onLoad: function () {
-            console.log("onLoad triggered");
+    // Wait for the platform to load the widget
+   var myWidget = {
+ 
+        onLoad: function() {
+ 
+            console.log("Widget Loaded");
+		}
+	 };
+ 
 
-            // Create container
-            var container = document.createElement('div');
-            container.style.width = '100%';
-            container.style.height = '100%';
-            widget.body.appendChild(container);
-
-            // Create and render DataGridView
-            DataGridView().then(function (gridView) {
-                var config = new DataGridViewConfig({
-                    id: 'demo-grid',
-                    enableSorting: true
-                });
-
-                var layout = new DataGridViewLayoutEngine({
-                    columns: [
-                        { text: 'Name', dataIndex: 'name', width: 200 },
-                        { text: 'Type', dataIndex: 'type', width: 100 }
-                    ]
-                });
-
-                gridView.setConfig(config);
-                gridView.setLayoutEngine(layout);
-                gridView.setData([{
-                    name: 'Document A',
-                    type: 'doc'
-                }, {
-                    name: 'Document B',
-                    type: 'pdf'
-                }]);
-
-                gridView.inject(container);
-            });
-        }
-    };
+ 
+    widget.addEvent('onLoad', myWidget.onLoad);
 });
