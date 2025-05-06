@@ -15,7 +15,7 @@ require([
         onLoad: function() {
             console.log("Widget Loaded");
 
-            var container = widget.body;
+            var container = myWidget.body;  // Correct reference to `myWidget`
             container.setStyle('padding', '10px');
             container.innerHTML = ''; // Clear any existing content
 
