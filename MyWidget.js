@@ -15,11 +15,12 @@ require([
         onLoad: function() {
             console.log("Widget Loaded");
 
-             var container = document.createElement('div');  // Create the container element
+            var container = document.createElement('div');  // Create the container element
             myWidget.body = container;  // Assign it to the widget's body
             document.body.appendChild(container);  // Append to the DOM
 
-            container.setStyle('padding', '10px');
+            // Set styles using the standard DOM API
+            container.style.padding = '10px';
             container.innerHTML = ''; // Clear any existing content
 
             if (!container) {
