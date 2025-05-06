@@ -10,20 +10,16 @@ define('MyWidget', [
 
   var MyWidget = Abstract.extend({
     setup: function () {
-		console.log("JS CALLED !");
-      var container = widget.body;
-      container.setStyle('padding', '10px');
-      container.innerHTML = ''; // Clear any existing content
+      console.log("JS CALLED !");
 
+      var container = document.getElementById('testGridView');
       if (!container) {
         console.error("Container not found!");
         return;
       }
 
-      // Set up model
       var model = new DataGridModel();
 
-      // Set up DataGridView
       var gridView = new DataGridView({
         model: model,
         columns: [
@@ -33,10 +29,8 @@ define('MyWidget', [
         ]
       });
 
-      // Inject the grid into the container
       gridView.inject(container);
 
-      // Call OOTB Document service to get documents
       WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
         method: 'GET',
         type: 'json',
@@ -49,7 +43,7 @@ define('MyWidget', [
                 revision: doc.revision
               };
             });
-            model.addRows(rows); // Add rows to the model
+            model.addRows(rows);
           } else {
             console.error('No documents returned');
           }
