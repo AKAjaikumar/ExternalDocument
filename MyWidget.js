@@ -1,7 +1,10 @@
 require.config({
+    baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
     paths: {
-        'DataGridView': 'ExternalDocument/DS/DataGridView/DataGridView',
-        'WAFData': 'ExternalDocument/DS/WAFData/WAFData'
+        'DataGridView': 'DS/DataGridView/DataGridView',
+        'WAFData': 'DS/WAFData/WAFData',
+        'UWA': 'https://3dexperience.com/3DX/src/uwav2/require.js',
+        'widget': 'https://3dexperience.com/widget'
     }
 });
 
@@ -13,6 +16,7 @@ require([
     var myWidget = {
         onLoad: function() {
             console.log("Widget Loaded");
+
             var container = widget.body;
             container.setStyle('padding', '10px');
             container.innerHTML = ''; // Clear any existing content
@@ -22,7 +26,7 @@ require([
                 return;
             }
 
-            // DataGridView configuration
+            // DataGridView setup
             var gridView = new DataGridView({
                 columns: [
                     {
@@ -64,7 +68,7 @@ require([
                             };
                         });
 
-                        // Add rows to the grid (direct manipulation)
+                        // Add rows to the grid
                         gridView.addRows(rows);
                     } else {
                         console.error('No documents returned');
