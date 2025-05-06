@@ -1,59 +1,51 @@
-define('MyWidget', [
+require([
   'UWA/Core',
-  'UWA/Controls/Abstract',
-  'DS/DataGridView/DataGridView',
-  'DS/DataGridView/Columns/ColumnText',
-  'DS/DataGridView/DataGridModel',
-  'DS/WAFData/WAFData'
-], function (UWA, Abstract, DataGridView, ColumnText, DataGridModel, WAFData) {
-  'use strict';
+  'UWA/Controls/DataGridView',
+  'DS/i3DXCompassPlatformServices/i3DXCompassPlatformServices',
+  'DS/DataDragAndDrop/DataDragAndDrop'
+], function (UWA, DataGridView, i3DXCompassPlatformServices) {
 
-  var MyWidget = Abstract.extend({
-    setup: function () {
-      console.log("JS CALLED !");
+  const container = document.getElementById('testGridView');
 
-      var container = document.getElementById('testGridView');
-      if (!container) {
-        console.error("Container not found!");
-        return;
-      }
+  i3DXCompassPlatformServices.getPlatformTicket()
+    .then((ticketInfo) => {
+      const baseURL = ticketInfo.url;
+      const ticket = ticketInfo.ticket;
 
-      var model = new DataGridModel();
-
-      var gridView = new DataGridView({
-        model: model,
-        columns: [
-          new ColumnText({ text: 'Name', dataIndex: 'name', sortable: true }),
-          new ColumnText({ text: 'Type', dataIndex: 'type', sortable: true }),
-          new ColumnText({ text: 'Revision', dataIndex: 'revision', sortable: true })
-        ]
-      });
-
-      gridView.inject(container);
-
-      WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
+      fetch(baseURL + '/resources/v1/modeler/documents', {
         method: 'GET',
-        type: 'json',
-        onComplete: function (data) {
-          if (data && data.member) {
-            var rows = data.member.map(function (doc) {
-              return {
-                name: doc.name,
-                type: doc.type,
-                revision: doc.revision
-              };
-            });
-            model.addRows(rows);
-          } else {
-            console.error('No documents returned');
-          }
-        },
-        onFailure: function (error) {
-          console.error('Failed to fetch documents:', error);
+        headers: {
+          'Content-Type': 'application/json',
+          'SecurityContext': 'ctx::VPLMProjectLeader.Company Name.Default',
+          'Authorization': 'Bearer ' + ticket
         }
-      });
-    }
-  });
+      })
+      .then(response => response.json())
+      .then(data => {
+        const docs = data.member || [];
 
-  return MyWidget;
+        const rows = docs.map(doc => ({
+          id: doc.id,
+          name: doc.dataelements.title,
+          type: doc.type,
+          revision: doc.dataelements.revision,
+          policy: doc.dataelements.policy
+        }));
+
+        const grid = new DataGridView({
+          columns: [
+            { text: 'Name', dataIndex: 'name' },
+            { text: 'Type', dataIndex: 'type' },
+            { text: 'Revision', dataIndex: 'revision' },
+            { text: 'Policy', dataIndex: 'policy' }
+          ],
+          data: rows
+        });
+
+        grid.inject(container);
+      })
+      .catch(error => {
+        container.innerHTML = 'Error fetching documents: ' + error.message;
+      });
+    });
 });
