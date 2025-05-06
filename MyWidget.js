@@ -2,9 +2,7 @@ require.config({
     baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
     paths: {
         'DataGridView': 'DS/DataGridView/DataGridView',
-        'WAFData': 'DS/WAFData/WAFData',
-        'UWA': 'https://3dexperience.com/3DX/src/uwav2/require.js',
-        'widget': 'https://3dexperience.com/widget'
+        'WAFData': 'DS/WAFData/WAFData'
     }
 });
 
