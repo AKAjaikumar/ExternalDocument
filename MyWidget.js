@@ -8,19 +8,16 @@ define('MyWidget', [
 ], function (UWA, Abstract, DataGridView, ColumnText, DataGridModel, WAFData) {
   'use strict';
 
-  var myWidget = {
-        onLoad: function() {
+  var MyWidget = Abstract.extend({
+    setup: function () {
+      var container = widget.body;
+      container.setStyle('padding', '10px');
+      container.innerHTML = ''; // Clear any existing content
 
-            var container = widget.body;
-			 container.setStyle('padding', '10px');
-            container.innerHTML = '';
-            if (!container) {
-                console.error("Container #testGridView not found!");
-                return;
-            }
-           
-            
-     
+      if (!container) {
+        console.error("Container not found!");
+        return;
+      }
 
       // Set up model
       var model = new DataGridModel();
@@ -35,9 +32,10 @@ define('MyWidget', [
         ]
       });
 
+      // Inject the grid into the container
       gridView.inject(container);
 
-      // Call OOTB Document service
+      // Call OOTB Document service to get documents
       WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
         method: 'GET',
         type: 'json',
@@ -50,7 +48,7 @@ define('MyWidget', [
                 revision: doc.revision
               };
             });
-            model.addRows(rows);
+            model.addRows(rows); // Add rows to the model
           } else {
             console.error('No documents returned');
           }
@@ -59,7 +57,8 @@ define('MyWidget', [
           console.error('Failed to fetch documents:', error);
         }
       });
-        }
-  }
+    }
+  });
+
   return MyWidget;
 });
