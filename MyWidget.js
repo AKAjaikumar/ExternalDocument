@@ -1,26 +1,19 @@
-require.config({
-    baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
-    paths: {
-        'DataGridView': 'DS/DataGridView/DataGridView',
-        'WAFData': 'DS/WAFData/WAFData'
-    }
-});
-
-require([
+define('MyWidget', [
     'UWA/Core',
-    'DataGridView',
-    'WAFData'
+    'DS/DataGridView/DataGridView',  // Make sure this exists!
+    'DS/WAFData/WAFData'             // Make sure this exists!
 ], function (UWA, DataGridView, WAFData) {
-    // Wait for the platform to load the widget
-   var myWidget = {
- 
-        onLoad: function() {
- 
-            console.log("Widget Loaded");
-		}
-	 };
- 
+    'use strict';
 
- 
+    var myWidget = {
+        onLoad: function () {
+            console.log("Widget Loaded");
+            // Your DataGridView setup logic can go here
+        }
+    };
+
+    // Register widget events
     widget.addEvent('onLoad', myWidget.onLoad);
+
+    return myWidget;
 });
