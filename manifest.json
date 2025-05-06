@@ -1,14 +1,4 @@
-{
-  "name": "MyWidget",
-  "description": "External widget to display documents using DataGridView",
-  "version": "1.0",
-  "author": "MyWidget",
-  "module": "MyWidget",
-  "icon": "https://dslogo.png",
-  "isExternal": true,
-  "dependencies": {
-  "DS/DataGridView/DataGridView": {},
-     "DS/TreeModel/TreeDocument": {},
-     "DS/TreeModel/TreeNodeModel": {}
-}
+"widget": {
+  "name": "ExternalDocument",
+  "require": "MyWidget"
 }
