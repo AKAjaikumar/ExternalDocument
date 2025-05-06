@@ -14,5 +14,8 @@
     "DS/DataGridView/DataGridView": {},
     "DS/TreeModel/TreeDocument": {},
     "DS/TreeModel/TreeNodeModel": {}
+  },
+  "resources": {
+    "url": "https://akajaikumar.github.io/ExternalDocument/"
   }
 }
