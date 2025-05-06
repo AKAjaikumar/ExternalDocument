@@ -1,18 +1,24 @@
-define('testGridView', [
+require.config({
+    baseUrl: 'https://akajaikumar.github.io/ExternalDocument/',
+    paths: {
+        'DataGridView': 'DS/DataGridView/DataGridView',
+        'WAFData': 'DS/WAFData/WAFData'
+    }
+});
+
+require([
     'UWA/Core',
-    'DS/DataGridView/DataGridView',
-    'DS/WAFData/WAFData'
+    'DataGridView',
+    'WAFData'
 ], function (UWA, DataGridView, WAFData) {
-
-    'use strict';
-
-    var myWidget = {
-        onLoad: function () {
+    // Wait for the platform to load the widget
+    if (typeof widget !== 'undefined' && widget.addEvent) {
+        widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 
             
-        }
-    };
-
-    return myWidget;
+        });
+    } else {
+        console.error('widget object is not available');
+    }
 });
