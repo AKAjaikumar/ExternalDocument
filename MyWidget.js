@@ -41,7 +41,8 @@ require([
                         method: 'POST',
 						type: 'json',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							'SecurityContext': widget.getValue('ctx').securityContext
 						},
 						data: JSON.stringify({
 							select: ['name', 'type', 'revision'],
