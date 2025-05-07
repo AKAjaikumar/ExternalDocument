@@ -46,7 +46,7 @@ require([
                             // Step 2: Fetch Document Items using CSRF Token
                             const url = baseUrl + '/resources/v1/modeler/documents';
                             WAFData.authenticatedRequest(url, {
-                                method: 'POST',
+                                method: 'GET',
                                 type: 'json',
                                 headers: {
                                     'Content-Type': 'application/json',
