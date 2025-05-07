@@ -17,50 +17,49 @@ require([
 			var spaceURL = widget.getValue('x3dSpaceURL');
 			console.log("spaceURL:", spaceURL);
 			i3DXCompassServices.getServiceUrl({
-				serviceName: 'ENOVIA3DSpace',
-				onComplete: function (serviceArray) {
-					if (Array.isArray(serviceArray) && serviceArray.length > 0) {
-						// Pick the first ENOVIA3DSpace service
-						var enoviaBaseUrl = serviceArray[0].url;
+                serviceName: '3DSpace',
+                onComplete: function (URL3DSpace) {
+                    let baseUrl;
+                    if (typeof URL3DSpace === "string") {
+                        baseUrl = URL3DSpace;
+                    } else if (typeof URL3DSpace === "object" && URL3DSpace[0]) {
+                        baseUrl = URL3DSpace[0].url;
+                    }
 
-						console.log("Resolved 3DSpace URL:", enoviaBaseUrl);
+                    // Remove /3dspace if present
+                    if (baseUrl.endsWith('/3dspace')) {
+                        baseUrl = baseUrl.replace('/3dspace', '');
+                    }
 
-						const url = enoviaBaseUrl + '/resources/v1/modeler/documents';
+                    console.log("Resolved 3DSpace URL:", baseUrl);
 
-						WAFData.authenticatedRequest(url, {
-							method: 'POST',
-							type: 'json',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							data: JSON.stringify({
-								select: ['name', 'type', 'revision'],
-								top: 20
-							}),
-							onComplete: function (data) {
-								if (data && data.member) {
-									const rows = data.member.map(item => ({
-										name: item.name,
-										type: item.type,
-										revision: item.revision
-									}));
-									console.log('Document Items:', rows);
-								} else {
-									console.warn('No Document Items found');
-								}
-							},
-							onFailure: function (error) {
-								console.error('Failed to fetch Document Items:', error);
-							}
-						});
-					} else {
-						console.error('No 3DSpace services found.');
-					}
-				},
-				onFailure: function () {
-					console.error('Failed to get 3DSpace URL');
-				}
-			});
+                    // Call the documents API
+                    const url = baseUrl + '/resources/v1/modeler/documents';
+
+                    WAFData.authenticatedRequest(url, {
+                        method: 'GET',
+                        type: 'json',
+                        onComplete: function (data) {
+                            if (data && data.member) {
+                                const rows = data.member.map(item => ({
+                                    name: item.name,
+                                    type: item.type,
+                                    revision: item.revision
+                                }));
+                                console.log('Document Items:', rows);
+                            } else {
+                                console.warn('No Document Items found');
+                            }
+                        },
+                        onFailure: function (error) {
+                            console.error('Failed to fetch Document Items:', error);
+                        }
+                    });
+                },
+                onFailure: function () {
+                    console.error('Failed to get 3DSpace URL');
+                }
+            });
         });
     } else {
         console.error('Widget object is not available');
