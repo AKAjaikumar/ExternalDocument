@@ -14,6 +14,11 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
+			 var container1 = new UWA.Element('div', {
+                styles: {
+                    padding: '15px'
+                }
+            }).inject(widget.body);
 
             // Create button inside widget.body
             var button = new UWA.Element('button', {
@@ -143,6 +148,7 @@ require([
             });
             // Inject the button into the widget container
             button.inject(container);
+			button1.inject(container1);
         });
     } else {
         console.error('Widget object is not available');
