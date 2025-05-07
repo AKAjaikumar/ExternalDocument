@@ -33,6 +33,7 @@ require([
                         baseUrl = baseUrl.replace('/3dspace', '');
                     }
                     // Step 1: Get CSRF token
+					console.log("CSRF Token URL:", baseUrl + '/resources/modeler/pno/csrf');
                     WAFData.authenticatedRequest(
                         baseUrl + '/resources/modeler/pno/csrf', {
                         method: 'GET',
