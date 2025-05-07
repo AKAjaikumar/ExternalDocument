@@ -35,7 +35,7 @@ require([
                     // Step 1: Get CSRF token
 					console.log("CSRF Token URL:", baseUrl + '/resources/v1/application/CSRF');
                     WAFData.authenticatedRequest(
-                        baseUrl + '/resources/modeler/pno/csrf', {
+                        baseUrl + '/resources/v1/application/CSRF', {
                         method: 'GET',
                         type: 'json',
                         onComplete: function (csrfData) {
