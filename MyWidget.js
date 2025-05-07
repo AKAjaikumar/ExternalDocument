@@ -85,11 +85,62 @@ require([
                             onFailure: function () {
                                 console.error("Failed to get 3DSpace URL");
                             }
+							
                         });
                     }
                 }
             });
+			var button1 = new UWA.Element('button', {
+                text: 'GET Attachment',
+                styles: {
+                    padding: '10px 15px',
+                    background: '#0078d4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                },
+                events: {
+                    click: function () {
+                        const platformId = widget.getValue("x3dPlatformId");
 
+                        i3DXCompassServices.getServiceUrl({
+                            platformId: platformId,
+                            serviceName: '3DSpace',
+                            onComplete: function (URL3DSpace) {
+                                let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+                                if (baseUrl.endsWith('/3dspace')) {
+                                    baseUrl = baseUrl.replace('/3dspace', '');
+                                }
+
+                                const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+                                WAFData.authenticatedRequest(baseUrl + '/resources/v1/modeler/documents/resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId', {
+								method: 'GET',
+								type: 'json',
+								onComplete: function (data) {
+									if (data && data.member && data.member.length > 0) {
+										data.member.forEach(file => {
+											console.log('Attachment:', file.fileName, 'Size:', file.size);
+											alert("File Name!" +file.fileName);
+										});
+									} else {
+										console.warn('No attachments found');
+									}
+								},
+								onFailure: function (error) {
+									console.error('Failed to fetch attachments:', error);
+								}
+							});
+                            },
+                            onFailure: function () {
+                                console.error("Failed to get 3DSpace URL");
+                            }
+							
+                        });
+                    }
+                }
+            });
             // Inject the button into the widget container
             button.inject(container);
         });
