@@ -1,7 +1,6 @@
 require([
-    'UWA/Core',
-    'DS/DataGridView/DataGridView'
-], function(UWA, DataGridView) {
+    'UWA/Core'
+], function(UWA) {
     var myWidget = {
         onLoad: function() {
 			console.log("Widget loaded from JS !");
