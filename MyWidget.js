@@ -17,14 +17,14 @@ require([
 			var spaceURL = widget.getValue('x3dSpaceURL');
 			console.log("spaceURL:", spaceURL);
 			i3DXCompassServices.getServiceUrl({
-    serviceName: 'ENOVIA3DSpace',
-    onComplete: function (enoviaBaseUrl) {
-        const url = enoviaBaseUrl + '/resources/v1/modeler/documents';
+                serviceName: 'ENOVIA3DSpace',
+                onComplete: function (enoviaBaseUrl) {
+                   
 
                     console.log("Resolved 3DSpace URL:", enoviaBaseUrl);
 
                     // Call the documents API
-                   // const url = baseUrl + '/resources/v1/modeler/documents';
+                    const url = enoviaBaseUrl + '/resources/v1/modeler/documents';
 
                     WAFData.authenticatedRequest(url, {
                         method: 'GET',
