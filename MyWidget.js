@@ -16,7 +16,7 @@ require([
 			var spaceURL = widget.getValue('x3dSpaceURL');
 			console.log("spaceURL:", spaceURL);
 			//var url = '/api/' + platformId + '/enovia/resources/v1/modeler/documents';
-            var url = '/enovia/resources/v1/modeler/documents';
+            var url = 'https://r1132100433648-ap2-space.3dexperience.3ds.com/enovia/resources/v1/modeler/documents';
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
