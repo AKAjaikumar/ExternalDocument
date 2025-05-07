@@ -1,26 +1,17 @@
-define('MyWidget', [
-    'UWA/Core'
-], function (UWA) {
-    'use strict';
+window.onload = function() {
+    console.log("Widget loaded from JS!");
 
-    var myWidget = {
-        onLoad: function () {
-            console.log("Widget loaded from JS!");
-            var container = widget.body;
-            container.innerHTML = '';
-
-            if (!container) {
-                console.error("Container not found!");
-                return;
-            }
-
-            container.innerHTML = '<div style="padding:10px;">Hello from 3DEXPERIENCE widget!</div>';
-        }
-    };
-
+    // Ensure widget object is available (which should be injected by 3DEXPERIENCE)
     if (typeof widget !== 'undefined') {
-        widget.addEvent('onLoad', myWidget.onLoad);
-    }
+        var container = widget.body;
+        if (!container) {
+            console.error("Container not found!");
+            return;
+        }
 
-    return myWidget;
-});
+        container.innerHTML = '';
+        container.innerHTML = '<div style="padding:10px;">Hello from 3DEXPERIENCE widget!</div>';
+    } else {
+        console.error("Widget object is not available.");
+    }
+};
