@@ -16,7 +16,7 @@ require([
 			var platformId = widget.getValue("x3dPlatformId"); 
 			var spaceURL = widget.getValue('x3dSpaceURL');
 			console.log("spaceURL:", spaceURL);
-			i3DXCompassServices.getServiceUrl({i3DXCompassServices.getServiceUrl({
+			i3DXCompassServices.getServiceUrl({
 				serviceName: 'ENOVIA3DSpace',
 				onComplete: function (serviceArray) {
 					if (Array.isArray(serviceArray) && serviceArray.length > 0) {
