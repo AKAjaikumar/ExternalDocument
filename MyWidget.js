@@ -1,30 +1,18 @@
-define('MyWidget', [
+require([
     'UWA/Core',
-    'DS/DataGridView/DataGridView',
-    'DS/WAFData/WAFData'
-], function (UWA, DataGridView, WAFData) {
+    'DS/DataGridView/DataGridView'
+], function(UWA, DataGridView) {
     var myWidget = {
-        onLoad: function () {
-            console.log("Widget Loaded");
-
-            // Basic DataGridView config
-            DataGridView().then(function (GridView) {
-                var gridView = new GridView({
-                    element: document.getElementById('testGridView'),
-                    data: [
-                        { name: 'Doc1', type: 'PDF' },
-                        { name: 'Doc2', type: 'Word' }
-                    ],
-                    columns: [
-                        { text: 'Name', dataIndex: 'name' },
-                        { text: 'Type', dataIndex: 'type' }
-                    ]
-                });
-                gridView.render();
-                console.log("DataGridView rendered");
-            });
-        }
-    };
-
-    widget.addEvent('onLoad', myWidget.onLoad);
+        onLoad: function() {
+			console.log("Widget loaded from JS !");
+            var container = widget.body;
+            container.innerHTML = '';
+            if (!container) {
+                console.error("Container #testGridView not found!");
+                return;
+            }
+			
+		}
+	};
+	widget.addEvent('onLoad', myWidget.onLoad);
 });
