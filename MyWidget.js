@@ -1,8 +1,9 @@
 require([
     'UWA/Core',
-    'DS/WAFData/WAFData'
-], function (UWA, WAFData) {
-
+    'DS/WAFData/WAFData',
+	'DS/i3DXCompassServices/i3DXCompassServices'
+], function (UWA, WAFData, i3DXCompassServices) {
+	var URL;
     if (typeof widget !== 'undefined') {
 
         widget.addEvent('onLoad', function () {
@@ -14,6 +15,26 @@ require([
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
 			var platformId = widget.getValue("x3dPlatformId"); 
 			var spaceURL = widget.getValue('x3dSpaceURL');
+			initializePreferences : function () {
+                i3DXCompassServices.getServiceUrl( { 
+                    serviceName: '3DCompass',
+                    onComplete : exports.onServiceURLComplete,
+                    onFailure  : function () {
+                        widget.body.innerHTML="URLIssue: Please check with your administrator";
+                    } });
+            },
+            onServiceURLComplete : function(URL3DSpace) {
+                if ( typeof URL3DSpace  === "string" ) {
+                    URL=URL3DSpace;
+                }else if ( typeof URL3DSpace  === "object" ) {
+                    URL=URL3DSpace[0].url;
+                }
+                //remove ../3dspace from url
+                URL = URL.substring(0, URL.length-8);
+				exports.getWareHouseFilter();
+                exports.getDataTable();
+				
+            }
 			console.log("spaceURL:", spaceURL);
 			//var url = '/api/' + platformId + '/enovia/resources/v1/modeler/documents';
             var url = 'https://r1132100433648-ap2-space.3dexperience.3ds.com/enovia/resources/v1/modeler/documents';
