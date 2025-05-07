@@ -42,8 +42,7 @@ require([
 						type: 'json',
 						headers: {
 							'Content-Type': 'application/json',
-							'Accept': 'application/json',
-							'SecurityContext': 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
+							'Accept': 'application/json'
 						},
 						data: JSON.stringify({
 							select: ['name', 'type', 'revision'],
