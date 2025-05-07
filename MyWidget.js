@@ -52,10 +52,6 @@ require([
                                     'Content-Type': 'application/json',
                                     [csrfHeaderName]: csrfToken // Include CSRF token in header
                                 },
-                                data: JSON.stringify({
-                                    select: ['name', 'type', 'revision'],
-                                    top: 20
-                                }),
                                 onComplete: function (data) {
                                     if (data && data.member) {
                                         const rows = data.member.map(item => ({
