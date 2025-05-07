@@ -34,7 +34,7 @@ require([
                     console.log("Resolved 3DSpace URL:", baseUrl);
 
                     // Call the documents API
-                    const url = baseUrl + '/enovia/resources/v1/modeler/documents';
+                    const url = baseUrl + '/resources/v1/modeler/documents';
 
                     WAFData.authenticatedRequest(url, {
                         method: 'GET',
