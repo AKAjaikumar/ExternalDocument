@@ -13,8 +13,10 @@ require([
 			console.log("Context:", widget.getValue("ctx"));
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
 			var platformId = widget.getValue("x3dPlatformId"); 
+			var spaceURL = widget.getValue('x3dSpaceURL');
+			console.log("spaceURL:", spaceURL);
 			//var url = '/api/' + platformId + '/enovia/resources/v1/modeler/documents';
-            var url = '/enovia/resources/v1/modeler/documents';
+            var url = spaceURL + '/enovia/resources/v1/modeler/documents';
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
