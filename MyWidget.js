@@ -1,8 +1,7 @@
 require([
     'UWA/Core',
-    'DS/DataGrid/DataGrid',
     'DS/WAFData/WAFData'
-], function (UWA, DataGrid, WAFData) {
+], function (UWA, WAFData) {
     // Wait for 3DEXPERIENCE platform to fully load the widget
     if (typeof widget !== 'undefined') {
         // Check if widget is loaded and call onLoad event handler
@@ -15,16 +14,6 @@ require([
             container.style.padding = '10px';
 
             
-            var gridView = new DataGrid({
-                columns: [
-                    { text: 'Name', dataIndex: 'name', sortable: true, width: '150px' },
-                    { text: 'Type', dataIndex: 'type', sortable: true, width: '120px' },
-                    { text: 'Revision', dataIndex: 'revision', sortable: true, width: '100px' }
-                ]
-            });
-
-            // Inject the gridView into the container
-            gridView.inject(container);
 
             // Make authenticated request to fetch documents from the 3DEXPERIENCE services
             WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
@@ -40,7 +29,7 @@ require([
                             };
                         });
                         // Add rows to the DataGridView
-                        gridView.addRows(rows);
+                        console.log("rows",rows);
                     } else {
                         console.error('No documents returned');
                     }
