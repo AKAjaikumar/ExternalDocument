@@ -12,7 +12,7 @@ require([
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
-            WAFData.authenticatedRequest('/resources/v1/modeler/dseng/dseng:EngItem', {
+            WAFData.authenticatedRequest('/enovia/resources/v1/modeler/documents', {
 				method: 'GET',
 				type: 'json',
 				onComplete: function (data) {
@@ -22,13 +22,13 @@ require([
 							type: item.type,
 							revision: item.revision
 						}));
-						console.log('Engineering Items:', rows);
+						console.log('Document Items:', rows);
 					} else {
-						console.warn('No Engineering Items found');
+						console.warn('No Document Items found');
 					}
 				},
 				onFailure: function (error) {
-					console.error('Failed to fetch Engineering Items:', error);
+					console.error('Failed to fetch Document Items:', error);
 				}
 			});
         });
