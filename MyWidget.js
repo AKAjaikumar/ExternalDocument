@@ -8,11 +8,6 @@ require([
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 
-            widget.setValue('ctx', {
-                securityContext: 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
-            });
-
-            // Clear existing content and add a container
             widget.body.empty();
             var container = new UWA.Element('div', {
                 styles: {
