@@ -43,7 +43,7 @@ require([
 						headers: {
 							'Content-Type': 'application/json',
 							'Accept': 'application/json',
-							'SecurityContext': 'ctx::VPLMProjectLeader.Company Collaborative Space.APTIV INDIA'
+							'SecurityContext': 'ctx::VPLMProjectLeader.APTIV INDIA Collaborative Space'
 						},
 						data: JSON.stringify({
 							select: ['name', 'type', 'revision'],
