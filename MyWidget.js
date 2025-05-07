@@ -18,7 +18,7 @@ require([
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
-			var testUrl = `'/api/' + platformId + '/resources/v1/contexts';  
+			var testUrl = '/api/' + platformId + '/resources/v1/contexts';  
 			WAFData.authenticatedRequest(testUrl, {
 				method: 'GET',
 				type: 'json',
