@@ -14,7 +14,7 @@ require([
             container.style.padding = '10px';
 
 
-            WAFData.authenticatedRequest('/resources/v1/modeler/dseng/dseng:EngItem', {
+            WAFData.authenticatedRequest('/enovia/resources/v1/modeler/dseng/dseng:EngItem', {
 				method: 'GET',
 				type: 'json',
 				onComplete: function (data) {
