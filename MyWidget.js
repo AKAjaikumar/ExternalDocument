@@ -1,21 +1,21 @@
 require([
     'UWA/Core',
-    'DS/DataGridView/DataGridView',
+    'DS/DataGrid/DataGrid',
     'DS/WAFData/WAFData'
-], function (UWA, DataGridView, WAFData) {
+], function (UWA, DataGrid, WAFData) {
     // Wait for 3DEXPERIENCE platform to fully load the widget
     if (typeof widget !== 'undefined') {
         // Check if widget is loaded and call onLoad event handler
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 
-            // Create a container for the DataGridView
+            // Create a container for the DataGrid
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
 
             
-            var gridView = new DataGridView({
+            var gridView = new DataGrid({
                 columns: [
                     { text: 'Name', dataIndex: 'name', sortable: true, width: '150px' },
                     { text: 'Type', dataIndex: 'type', sortable: true, width: '120px' },
