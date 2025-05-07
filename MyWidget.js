@@ -16,7 +16,7 @@ require([
             
 
             // Make authenticated request to fetch documents from the 3DEXPERIENCE services
-            WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
+            WAFData.authenticatedRequest('3dspace/resources/v1/modeler/documents', {
                 method: 'GET',
                 type: 'json',
                 onComplete: function (data) {
