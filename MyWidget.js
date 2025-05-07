@@ -18,10 +18,12 @@ require([
 			console.log("spaceURL:", spaceURL);
 			i3DXCompassServices.getServiceUrl({
                 serviceName: 'ENOVIA3DSpace',
-                onComplete: function (enoviaBaseUrl) {
-                   
+                onComplete: function (serviceArray) {
+                   if (Array.isArray(serviceArray) && serviceArray.length > 0) {
+						// Pick the first ENOVIA3DSpace service
+						var enoviaBaseUrl = serviceArray[0].url;
 
-                    console.log("Resolved 3DSpace URL:", enoviaBaseUrl);
+						console.log("Resolved 3DSpace URL:", enoviaBaseUrl);
 
                     // Call the documents API
                     const url = enoviaBaseUrl + '/resources/v1/modeler/documents';
@@ -49,6 +51,7 @@ require([
                 onFailure: function () {
                     console.error('Failed to get 3DSpace URL');
                 }
+				}
             });
         });
     } else {
