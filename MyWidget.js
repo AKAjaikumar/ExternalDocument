@@ -11,15 +11,18 @@ require([
     'DataGridView',
     'WAFData'
 ], function (UWA, DataGridView, WAFData) {
-    // Wait for the platform to load the widget
-    if (typeof widget !== 'undefined' && widget.addEvent) {
+    // Wait for 3DEXPERIENCE platform to fully load the widget
+    if (typeof widget !== 'undefined') {
+        // Check if widget is loaded and call onLoad event handler
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 
+            // Create a container for the DataGridView
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
 
+            // Initialize DataGridView with columns
             var gridView = new DataGridView({
                 columns: [
                     { text: 'Name', dataIndex: 'name', sortable: true, width: '150px' },
@@ -28,8 +31,10 @@ require([
                 ]
             });
 
+            // Inject the gridView into the container
             gridView.inject(container);
 
+            // Make authenticated request to fetch documents from the 3DEXPERIENCE services
             WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
                 method: 'GET',
                 type: 'json',
@@ -42,6 +47,7 @@ require([
                                 revision: doc.revision
                             };
                         });
+                        // Add rows to the DataGridView
                         gridView.addRows(rows);
                     } else {
                         console.error('No documents returned');
@@ -53,6 +59,6 @@ require([
             });
         });
     } else {
-        console.error('widget object is not available');
+        console.error('Widget object is not available');
     }
 });
