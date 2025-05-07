@@ -120,23 +120,36 @@ require([
 
                                 const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
-                                WAFData.authenticatedRequest(baseUrl + '/resources/v1/modeler/documents/resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId', {
-								method: 'GET',
-								type: 'json',
-								onComplete: function (data) {
-									if (data && data.member && data.member.length > 0) {
-										data.member.forEach(file => {
-											console.log('Attachment:', file.fileName, 'Size:', file.size);
-											alert("File Name!" +file.fileName);
-										});
-									} else {
-										console.warn('No attachments found');
-									}
-								},
-								onFailure: function (error) {
-									console.error('Failed to fetch attachments:', error);
-								}
-							});
+                                WAFData.authenticatedRequest(csrfURL, {
+                                    method: 'GET',
+                                    type: 'json',
+                                    onComplete: function (csrfData) {
+                                        const csrfToken = csrfData.csrf.value;
+                                        const csrfHeaderName = csrfData.csrf.name;
+
+                                        const createDocURL = baseUrl + '/resources/v1/modeler/documents/resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId';
+                                       
+                                        WAFData.authenticatedRequest(createDocURL, {
+                                            method: 'GET',
+                                            type: 'json',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                [csrfHeaderName]: csrfToken
+                                            },
+                                            data: JSON.stringify(payload),
+                                             if (data && data.member && data.member.length > 0) {
+												data.member.forEach(file => {
+													console.log('Attachment:', file.fileName, 'Size:', file.size);
+												});
+											} else {
+												console.warn('No attachments found');
+											}
+                                        });
+                                    },
+                                    onFailure: function (err) {
+                                        console.error("Failed to fetch CSRF token:", err);
+                                    }
+                                });
                             },
                             onFailure: function () {
                                 console.error("Failed to get 3DSpace URL");
