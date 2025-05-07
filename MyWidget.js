@@ -42,7 +42,8 @@ require([
 						type: 'json',
 						headers: {
 							'Content-Type': 'application/json',
-							'SecurityContext': widget.getValue('ctx').securityContext
+							'Accept': 'application/json',
+							'SecurityContext': 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
 						},
 						data: JSON.stringify({
 							select: ['name', 'type', 'revision'],
