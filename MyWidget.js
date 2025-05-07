@@ -13,7 +13,6 @@ require([
             document.body.appendChild(container);
             container.style.padding = '10px';
 
-            initializePreference : function
 
             WAFData.authenticatedRequest('/resources/v1/modeler/dseng/dseng:EngItem', {
 				method: 'GET',
