@@ -1,9 +1,9 @@
 require([
-    'UWA/Core',
-    'UWA/Drivers/Alone',
-    'DS/WAFData/WAFData',
-    'DS/i3DXCompassServices/i3DXCompassServices'
-], function (UWA, Alone, WAFData, i3DXCompassServices) {
+        'UWA/Core',
+        'UWA/Drivers/Alone',
+        'DS/WAFData/WAFData',
+        'DS/i3DXCompassServices/i3DXCompassServices'
+    ], function (UWA, Alone, WAFData, i3DXCompassServices) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
@@ -14,7 +14,7 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
-			 var container1 = new UWA.Element('div', {
+            var container1 = new UWA.Element('div', {
                 styles: {
                     padding: '15px'
                 }
@@ -56,12 +56,13 @@ require([
                                         const createDocURL = baseUrl + '/resources/v1/modeler/documents';
                                         const payload = {
                                             data: [{
-                                                attributes: {
-                                                    name: "Test_Document_" + Date.now(),
-                                                    type: "Document",
-                                                    policy: "Document Release"
+                                                    attributes: {
+                                                        name: "Test_Document_" + Date.now(),
+                                                        type: "Document",
+                                                        policy: "Document Release"
+                                                    }
                                                 }
-                                            }]
+                                            ]
                                         };
 
                                         WAFData.authenticatedRequest(createDocURL, {
@@ -90,12 +91,12 @@ require([
                             onFailure: function () {
                                 console.error("Failed to get 3DSpace URL");
                             }
-							
+
                         });
                     }
                 }
             });
-			var button1 = new UWA.Element('button', {
+            var button1 = new UWA.Element('button', {
                 text: 'GET Attachment',
                 styles: {
                     padding: '10px 15px',
@@ -128,7 +129,7 @@ require([
                                         const csrfHeaderName = csrfData.csrf.name;
 
                                         const createDocURL = baseUrl + '/resources/v1/modeler/documents/resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId';
-                                       
+
                                         WAFData.authenticatedRequest(createDocURL, {
                                             method: 'GET',
                                             type: 'json',
@@ -136,13 +137,20 @@ require([
                                                 'Content-Type': 'application/json',
                                                 [csrfHeaderName]: csrfToken
                                             },
-                                            data: JSON.stringify(payload),
-                                             if (data && data.member && data.member.length > 0) {
-												data.member.forEach(file => {
-													console.log('Attachment:', file.fileName, 'Size:', file.size);
-												});
-											} else {
-												console.warn('No attachments found');
+                                            onComplete: function (data) {
+												if (data && data.member && data.member.length > 0) {
+													data.member.forEach(file => {
+														console.log('Attachment:', file.fileName, 'Size:', file.size);
+														alert(`File: ${file.fileName}, Size: ${file.size}`);
+													});
+												} else {
+													console.warn('No attachments found');
+													alert('No attachments found');
+												}
+											},
+											onFailure: function (err) {
+												console.error("Failed to get attachments:", err);
+												alert("Failed to get attachments.");
 											}
                                         });
                                     },
@@ -154,14 +162,14 @@ require([
                             onFailure: function () {
                                 console.error("Failed to get 3DSpace URL");
                             }
-							
+
                         });
                     }
                 }
             });
             // Inject the button into the widget container
             button.inject(container);
-			button1.inject(container1);
+            button1.inject(container1);
         });
     } else {
         console.error('Widget object is not available');
