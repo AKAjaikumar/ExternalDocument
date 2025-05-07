@@ -7,6 +7,9 @@ require([
         // Check if widget is loaded and call onLoad event handler
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
+		widget.setValue('ctx', {
+  securityContext: 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
+});
 			console.log("Context:", widget.getValue("ctx"));
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
             // Create a container for the DataGrid
