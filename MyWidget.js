@@ -18,7 +18,17 @@ require([
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
-
+			var testUrl = `'/api/' + platformId + '/resources/v1/contexts';  
+			WAFData.authenticatedRequest(testUrl, {
+				method: 'GET',
+				type: 'json',
+				onComplete: function (data) {
+					console.log('Context or API Test Success:', data);
+				},
+				onFailure: function (error) {
+					console.error('API Test Failure:', error);
+				}
+			});
             WAFData.authenticatedRequest(url, {
 				method: 'GET',
 				type: 'json',
