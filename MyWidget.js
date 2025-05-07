@@ -1,83 +1,99 @@
 require([
-        'UWA/Core',
-        'DS/WAFData/WAFData',
-        'DS/i3DXCompassServices/i3DXCompassServices'
-    ], function (UWA, WAFData, i3DXCompassServices) {
+    'UWA/Core',
+    'UWA/Drivers/Alone',
+    'DS/WAFData/WAFData',
+    'DS/i3DXCompassServices/i3DXCompassServices'
+], function (UWA, Alone, WAFData, i3DXCompassServices) {
     if (typeof widget !== 'undefined') {
-
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
+
+            // Set default context
             widget.setValue('ctx', {
                 securityContext: 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
             });
-            console.log("Context:", widget.getValue("ctx"));
-            console.log("Platform ID:", widget.getValue("x3dPlatformId"));
-            var platformId = widget.getValue("x3dPlatformId");
-            var spaceURL = widget.getValue('x3dSpaceURL');
-            console.log("spaceURL:", spaceURL);
 
-            i3DXCompassServices.getServiceUrl({
-                platformId: platformId,
-                serviceName: '3DSpace',
-                onComplete: function (URL3DSpace) {
-
-                    let baseUrl;
-                    if (typeof URL3DSpace === "string") {
-                        baseUrl = URL3DSpace;
-                    } else if (typeof URL3DSpace === "object" && URL3DSpace[0]) {
-                        baseUrl = URL3DSpace[0].url;
-                    }
-
-                    // Remove /3dspace if present
-                    if (baseUrl.endsWith('/3dspace')) {
-                        baseUrl = baseUrl.replace('/3dspace', '');
-                    }
-                    // Step 1: Get CSRF token
-					console.log("CSRF Token URL:", baseUrl + '/resources/v1/application/CSRF');
-                    WAFData.authenticatedRequest(
-                        baseUrl + '/resources/v1/application/CSRF', {
-                        method: 'GET',
-                        type: 'json',
-                        onComplete: function (csrfData) {
-                            const csrfToken = csrfData.csrf.value;
-                            const csrfHeaderName = csrfData.csrf.name;
-                            console.log("CSRF Token:", csrfToken);
-
-                            // Step 2: Fetch Document Items using CSRF Token
-                            const url = baseUrl + '/resources/v1/modeler/documents';
-                            WAFData.authenticatedRequest(url, {
-                                method: 'POST',
-                                type: 'json',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    [csrfHeaderName]: csrfToken // Include CSRF token in header
-                                },
-                                onComplete: function (data) {
-                                    if (data && data.member) {
-                                        const rows = data.member.map(item => ({
-                                                    name: item.name,
-                                                    type: item.type,
-                                                    revision: item.revision
-                                                }));
-                                        console.log('Document Items:', rows);
-                                    } else {
-                                        console.warn('No Document Items found');
-                                    }
-                                },
-                                onFailure: function (error) {
-                                    console.error('Failed to fetch Document Items:', error);
-                                }
-                            });
-                        },
-                        onFailure: function (error) {
-                            console.error('Failed to fetch CSRF token:', error);
-                        }
-                    });
+            // Create and insert button
+            const button = UWA.createElement('button', {
+                text: 'Create Document',
+                styles: {
+                    padding: '10px',
+                    background: '#0078d4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    margin: '10px'
                 },
-                onFailure: function () {
-                    console.error('Failed to get 3DSpace URL');
+                events: {
+                    click: function () {
+                        const platformId = widget.getValue("x3dPlatformId");
+
+                        i3DXCompassServices.getServiceUrl({
+                            platformId: platformId,
+                            serviceName: '3DSpace',
+                            onComplete: function (URL3DSpace) {
+                                let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+                                if (baseUrl.endsWith('/3dspace')) {
+                                    baseUrl = baseUrl.replace('/3dspace', '');
+                                }
+
+                                // Get CSRF token
+                                const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+                                console.log("Getting CSRF from:", csrfURL);
+
+                                WAFData.authenticatedRequest(csrfURL, {
+                                    method: 'GET',
+                                    type: 'json',
+                                    onComplete: function (csrfData) {
+                                        const csrfToken = csrfData.csrf.value;
+                                        const csrfHeaderName = csrfData.csrf.name;
+                                        console.log("CSRF Token:", csrfToken);
+
+                                        // Create document
+                                        const createDocURL = baseUrl + '/resources/v1/modeler/documents';
+                                        const payload = {
+                                            data: [{
+                                                attributes: {
+                                                    name: "Test_Document_" + Date.now(),
+                                                    type: "Document",
+                                                    policy: "Document Release"
+                                                }
+                                            }]
+                                        };
+
+                                        WAFData.authenticatedRequest(createDocURL, {
+                                            method: 'POST',
+                                            type: 'json',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                [csrfHeaderName]: csrfToken
+                                            },
+                                            data: JSON.stringify(payload),
+                                            onComplete: function (response) {
+                                                console.log("Document Created:", response);
+                                                alert("Document created successfully!");
+                                            },
+                                            onFailure: function (err) {
+                                                console.error("Failed to create document:", err);
+                                                alert("Failed to create document.");
+                                            }
+                                        });
+                                    },
+                                    onFailure: function (err) {
+                                        console.error("Failed to fetch CSRF token:", err);
+                                    }
+                                });
+                            },
+                            onFailure: function () {
+                                console.error("Failed to get 3DSpace URL");
+                            }
+                        });
+                    }
                 }
             });
+
+            document.body.appendChild(button);
         });
     } else {
         console.error('Widget object is not available');
