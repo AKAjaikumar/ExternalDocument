@@ -23,16 +23,16 @@ require([
             container.style.padding = '10px';
 
             
-            /*var gridView = new DataGridView({
+            var gridView = new DataGridView({
                 columns: [
                     { text: 'Name', dataIndex: 'name', sortable: true, width: '150px' },
                     { text: 'Type', dataIndex: 'type', sortable: true, width: '120px' },
                     { text: 'Revision', dataIndex: 'revision', sortable: true, width: '100px' }
                 ]
-            });*/
+            });
 
             // Inject the gridView into the container
-          
+            gridView.inject(container);
 
             // Make authenticated request to fetch documents from the 3DEXPERIENCE services
             WAFData.authenticatedRequest('/resources/v1/modeler/documents', {
@@ -47,9 +47,8 @@ require([
                                 revision: doc.revision
                             };
                         });
-						console.log('rows',rows);
                         // Add rows to the DataGridView
-                        //gridView.addRows(rows);
+                        gridView.addRows(rows);
                     } else {
                         console.error('No documents returned');
                     }
