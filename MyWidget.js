@@ -37,23 +37,30 @@ require([
                     const url = baseUrl + '/resources/v1/modeler/documents';
 
                     WAFData.authenticatedRequest(url, {
-                        method: 'GET',
-                        type: 'json',
-                        onComplete: function (data) {
-                            if (data && data.member) {
-                                const rows = data.member.map(item => ({
-                                    name: item.name,
-                                    type: item.type,
-                                    revision: item.revision
-                                }));
-                                console.log('Document Items:', rows);
-                            } else {
-                                console.warn('No Document Items found');
-                            }
-                        },
-                        onFailure: function (error) {
-                            console.error('Failed to fetch Document Items:', error);
-                        }
+                        method: 'POST',
+						type: 'json',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						data: JSON.stringify({
+							select: ['name', 'type', 'revision'],
+							top: 20
+						}),
+						onComplete: function (data) {
+							if (data && data.member) {
+								const rows = data.member.map(item => ({
+									name: item.name,
+									type: item.type,
+									revision: item.revision
+								}));
+								console.log('Document Items:', rows);
+							} else {
+								console.warn('No Document Items found');
+							}
+						},
+						onFailure: function (error) {
+							console.error('Failed to fetch Document Items:', error);
+						}
                     });
                 },
                 onFailure: function () {
