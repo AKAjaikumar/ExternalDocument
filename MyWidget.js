@@ -128,7 +128,7 @@ require([
                                         const csrfToken = csrfData.csrf.value;
                                         const csrfHeaderName = csrfData.csrf.name;
 
-                                        const createDocURL = baseUrl + '/resources/v1/modeler/documents/resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId';
+                                        const createDocURL = baseUrl + 'resources/v1/modeler/documents/parentId/4111F597B51B1000681B4FB50001A9A0?parentRelName=Reference Document&parentDirection=from&$fields=indexedImage,indexedTypeicon,isDocumentType,organizationTitle,isLatestRevision,!parentId';
 
                                         WAFData.authenticatedRequest(createDocURL, {
                                             method: 'GET',
