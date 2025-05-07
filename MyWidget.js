@@ -137,16 +137,22 @@ require([
                                                 'Content-Type': 'application/json',
                                                 [csrfHeaderName]: csrfToken
                                             },
-                                            onComplete: function (data) {
-												if (data && data.member && data.member.length > 0) {
-													data.member.forEach(file => {
-														console.log('Attachment:', file.fileName, 'Size:', file.size);
-														alert(`File: ${file.fileName}, Size: ${file.size}`);
-													});
-												} else {
-													console.warn('No attachments found');
-													alert('No attachments found');
-												}
+                                            onComplete: function (response) {
+												 if (response && response.data && response.data.length > 0) {
+                                                    const doc = response.data[0];
+
+                                                    const docName = doc.dataelements?.name || 'N/A';
+                                                    const fileObj = doc.relateddata?.files?.[0];
+                                                    const fileName = fileObj?.dataelements?.title || 'No file';
+
+                                                    console.log("Document Name:", docName);
+                                                    console.log("File Name:", fileName);
+
+                                                    alert(`Document Name: ${docName}\nFile Name: ${fileName}`);
+                                                } else {
+                                                    console.warn('No document found');
+                                                    alert("No document data found.");
+                                                }
 											},
 											onFailure: function (err) {
 												console.error("Failed to get attachments:", err);
