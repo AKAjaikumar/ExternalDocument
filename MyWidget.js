@@ -8,22 +8,28 @@ require([
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 
-            // Set default context
             widget.setValue('ctx', {
                 securityContext: 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
             });
 
-            // Create and insert button
-            const button = UWA.createElement('button', {
+            // Clear existing content and add a container
+            widget.body.empty();
+            var container = new UWA.Element('div', {
+                styles: {
+                    padding: '15px'
+                }
+            }).inject(widget.body);
+
+            // Create button inside widget.body
+            var button = new UWA.Element('button', {
                 text: 'Create Document',
                 styles: {
-                    padding: '10px',
+                    padding: '10px 15px',
                     background: '#0078d4',
                     color: '#fff',
                     border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    margin: '10px'
+                    borderRadius: '5px',
+                    cursor: 'pointer'
                 },
                 events: {
                     click: function () {
@@ -38,9 +44,7 @@ require([
                                     baseUrl = baseUrl.replace('/3dspace', '');
                                 }
 
-                                // Get CSRF token
                                 const csrfURL = baseUrl + '/resources/v1/application/CSRF';
-                                console.log("Getting CSRF from:", csrfURL);
 
                                 WAFData.authenticatedRequest(csrfURL, {
                                     method: 'GET',
@@ -48,9 +52,7 @@ require([
                                     onComplete: function (csrfData) {
                                         const csrfToken = csrfData.csrf.value;
                                         const csrfHeaderName = csrfData.csrf.name;
-                                        console.log("CSRF Token:", csrfToken);
 
-                                        // Create document
                                         const createDocURL = baseUrl + '/resources/v1/modeler/documents';
                                         const payload = {
                                             data: [{
@@ -93,7 +95,8 @@ require([
                 }
             });
 
-            document.body.appendChild(button);
+            // Inject the button into the widget container
+            button.inject(container);
         });
     } else {
         console.error('Widget object is not available');
