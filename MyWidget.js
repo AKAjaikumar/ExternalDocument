@@ -12,11 +12,13 @@ require([
 });
 			console.log("Context:", widget.getValue("ctx"));
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
+			var platformId = widget.getValue("x3platformId");
             // Create a container for the DataGrid
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
-            WAFData.authenticatedRequest('/enovia/resources/v1/modeler/documents', {
+			var url = '/api/${platformId}/enovia/resources/v1/modeler/documents';
+            WAFData.authenticatedRequest(url, {
 				method: 'GET',
 				type: 'json',
 				onComplete: function (data) {
