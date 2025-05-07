@@ -17,6 +17,7 @@ require([
 			var spaceURL = widget.getValue('x3dSpaceURL');
 			console.log("spaceURL:", spaceURL);
 			i3DXCompassServices.getServiceUrl({
+				platformId: platformId,
                 serviceName: '3DSpace',
                 onComplete: function (URL3DSpace) {
                     let baseUrl;
