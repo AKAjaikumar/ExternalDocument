@@ -9,7 +9,7 @@ require([
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 		widget.setValue('ctx', {
-  securityContext: 'ctx::VPLMProjectLeader.Company Collaborative Space.Role'
+  securityContext: 'ctx::VPLMProjectLeader.Company Name.APTIV INDIA'
 });
 			console.log("Context:", widget.getValue("ctx"));
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
@@ -43,7 +43,7 @@ require([
 						headers: {
 							'Content-Type': 'application/json',
 							'Accept': 'application/json',
-							'SecurityContext': 'ctx::VPLMProjectLeader.APTIV INDIA Collaborative Space'
+							'SecurityContext': 'ctx::VPLMProjectLeader.Company Name.APTIV INDIA'
 						},
 						data: JSON.stringify({
 							select: ['name', 'type', 'revision'],
