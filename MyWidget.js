@@ -2,9 +2,9 @@ require([
     'UWA/Core',
     'DS/WAFData/WAFData'
 ], function (UWA, WAFData) {
-    // Wait for 3DEXPERIENCE platform to fully load the widget
+
     if (typeof widget !== 'undefined') {
-        // Check if widget is loaded and call onLoad event handler
+
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 		widget.setValue('ctx', {
@@ -13,22 +13,11 @@ require([
 			console.log("Context:", widget.getValue("ctx"));
 			console.log("Platform ID:", widget.getValue("x3dPlatformId"));
 			var platformId = widget.getValue("x3dPlatformId"); 
-			var url = '/api/' + platformId + '/enovia/resources/v1/modeler/documents';
-            // Create a container for the DataGrid
+			//var url = '/api/' + platformId + '/enovia/resources/v1/modeler/documents';
+            var url = '/enovia/resources/v1/modeler/documents';
             var container = document.createElement('div');
             document.body.appendChild(container);
             container.style.padding = '10px';
-			var testUrl = '/api/' + platformId + '/resources/v1/contexts';  
-			WAFData.authenticatedRequest(testUrl, {
-				method: 'GET',
-				type: 'json',
-				onComplete: function (data) {
-					console.log('Context or API Test Success:', data);
-				},
-				onFailure: function (error) {
-					console.error('API Test Failure:', error);
-				}
-			});
             WAFData.authenticatedRequest(url, {
 				method: 'GET',
 				type: 'json',
