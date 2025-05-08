@@ -24,7 +24,7 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
-
+			const platformId = widget.getValue("x3dPlatformId");
             // Create button inside widget.body
             var button = new UWA.Element('button', {
                 text: 'Create Document',
@@ -38,8 +38,7 @@ require([
                 },
                 events: {
                     click: function () {
-                        const platformId = widget.getValue("x3dPlatformId");
-
+                       
                         i3DXCompassServices.getServiceUrl({
                             platformId: platformId,
                             serviceName: '3DSpace',
@@ -113,8 +112,7 @@ require([
                 },
                 events: {
                     click: function () {
-                        const platformId = widget.getValue("x3dPlatformId");
-
+                    
                         i3DXCompassServices.getServiceUrl({
                             platformId: platformId,
                             serviceName: '3DSpace',
@@ -196,7 +194,6 @@ require([
 				events: {
 					click: function () {
                         
-
                         i3DXCompassServices.getServiceUrl({
                             platformId: platformId,
                             serviceName: '3DSpace',
