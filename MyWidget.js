@@ -414,14 +414,17 @@ require([
 
 						try {
 							var droppedObjects = JSON.parse(data); // Expecting array of dragged objects
+							if (!Array.isArray(droppedObjects)) {
+								droppedObjects = [droppedObjects]; // Wrap in array if single object
+							}
+
 							console.log("Dropped Objects:", droppedObjects);
 
 							var summaryHtml = droppedObjects.map(obj =>
 								`<div><b>Name:</b> ${obj.name} <b>ID:</b> ${obj.id}</div>`
 							).join('');
-							dropZone.setHTML('<strong>Dropped:</strong><br>' + summaryHtml);
 
-							// You can store them for later use or connect them here
+							dropZone.setHTML('<strong>Dropped:</strong><br>' + summaryHtml);
 						} catch (err) {
 							console.error("Failed to parse dropped data:", err);
 							alert("Invalid dropped object format.");
