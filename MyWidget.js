@@ -412,14 +412,23 @@ require([
 							return;
 						}
 
+						console.log("Raw drop data:", data);
+
 						try {
-							var droppedObjects = JSON.parse(data); // Expecting array of dragged objects
+							var droppedObjects = JSON.parse(data);
+							console.log("Parsed dropped objects:", droppedObjects);
+
 							if (!Array.isArray(droppedObjects)) {
-								droppedObjects = [droppedObjects]; // Wrap single object
+								droppedObjects = [droppedObjects];
 							}
 
-							console.log("Dropped Objects:", droppedObjects);
-							console.log("First dropped object structure:", droppedObjects[0]);
+							// Log first object structure
+							if (droppedObjects.length > 0) {
+								console.log("First object keys:", Object.keys(droppedObjects[0]));
+								console.log("First object:", droppedObjects[0]);
+							} else {
+								console.warn("Dropped array is empty.");
+							}
 
 							var summaryHtml = droppedObjects.map(obj =>
 								`<div>
