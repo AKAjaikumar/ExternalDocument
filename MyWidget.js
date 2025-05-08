@@ -143,16 +143,15 @@ require([
 													let allFileIds = [];
 
 													documentList.forEach(doc => {
-														const files = doc.relateddata?.files || [];
-														console.log("Files for doc:", doc.dataelements?.name, files);
-														files.forEach(file => {
-															allFileIds.push({
-																id: file.id,
-																docName: doc.dataelements?.name || 'N/A',
-																title: file.dataelements?.title || ''
-															});
+														const docId = doc.id || 'N/A';
+														const docName = doc.dataelements?.name || 'N/A';
+
+														docIdNameList.push({
+															id: docId,
+															name: docName
 														});
-													});	
+													});
+
 													alert(`Document List: ${JSON.stringify(allFileIds, null, 2)}`);
 												} else {
 													console.warn('No document found');
