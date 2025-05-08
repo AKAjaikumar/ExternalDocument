@@ -19,6 +19,11 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
+			var container2 = new UWA.Element('div', {
+                styles: {
+                    padding: '15px'
+                }
+            }).inject(widget.body);
 
             // Create button inside widget.body
             var button = new UWA.Element('button', {
