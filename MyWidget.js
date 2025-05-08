@@ -184,12 +184,11 @@ require([
 				text: 'Promote Attached Document',
 				styles: {
 					padding: '10px 15px',
-					background: '#28a745',
-					color: '#fff',
-					border: 'none',
-					borderRadius: '5px',
-					marginLeft: '10px',
-					cursor: 'pointer'
+                    background: '#0078d4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
 				},
 				events: {
 					click: function () {
