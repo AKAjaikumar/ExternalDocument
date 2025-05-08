@@ -146,7 +146,7 @@ require([
 														const docId = doc.id || 'N/A';
 														const docName = doc.dataelements?.name || 'N/A';
 
-														docIdNameList.push({
+														allFileIds.push({
 															id: docId,
 															name: docName
 														});
