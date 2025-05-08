@@ -224,18 +224,17 @@ require([
                                             onComplete: function (response) {
 												 if (response && response.data && response.data.length > 0) {
 													const documentList = response.data || [];
-													let allFileIds = [];
+													
 
-													documentList.forEach(doc => {
+													const allFileIds = documentList.map(doc => ({
 														id: doc.id,
 														name: doc.dataelements?.name || 'N/A',
 														type: doc.type || 'Document'
-														
-													});
+													}));
 													console.log("Fetched Documents:", documentList);
 													alert("Documents:\n" + JSON.stringify(documentList, null, 2));
 													const promotePayload = {
-														data: documentList.map(doc => ({
+														data: allFileIds.map(doc => ({
 															id: doc.id,
 															type: doc.type
 														}))
