@@ -246,7 +246,8 @@ require([
 														data: JSON.stringify(promotePayload),
 														headers: {
 															'Content-Type': 'application/json',
-															'ENO_CSRF_TOKEN': csrfToken
+															'ENO_CSRF_TOKEN': csrfToken,
+															'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA'
 														},
 														onComplete: function (promotionResponse) {
 															console.log("Promotion successful:", promotionResponse);
