@@ -236,7 +236,8 @@ require([
 													const promotePayload = {
 														data: allFileIds.map(doc => ({
 															id: doc.id,
-															type: doc.type
+															type: doc.type,
+															transition: "Set to Frozen"
 														}))
 													};
 													const promoteUrl = baseUrl + '/resources/lifecycle/maturity/promote';
