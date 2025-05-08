@@ -147,7 +147,7 @@ require([
 														files.forEach(file => {
 															allFileIds.push({
 																id: file.id,
-																docName = doc.dataelements?.name || 'N/A';
+																docName = doc.dataelements?.name || 'N/A',
 																title: file.dataelements?.title || ''
 															});
 														});
