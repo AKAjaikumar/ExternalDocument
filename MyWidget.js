@@ -415,32 +415,26 @@ require([
 						console.log("Raw drop data:", data);
 
 						try {
-							var droppedObjects = JSON.parse(data);
-							console.log("Parsed dropped objects:", droppedObjects);
+							var droppedPayload = JSON.parse(data);
 
+							// Check if we got a proper 3DXContent structure
+							var droppedObjects = droppedPayload?.data?.items || [];
 							if (!Array.isArray(droppedObjects)) {
 								droppedObjects = [droppedObjects];
 							}
 
-							// Log first object structure
-							if (droppedObjects.length > 0) {
-								console.log("First object keys:", Object.keys(droppedObjects[0]));
-								console.log("First object:", droppedObjects[0]);
-							} else {
-								console.warn("Dropped array is empty.");
-							}
+							console.log("Dropped Items:", droppedObjects);
 
 							var summaryHtml = droppedObjects.map(obj =>
 								`<div>
-									<b>Name:</b> ${obj.displayName || obj.objectName || obj.name || 'N/A'}<br>
-									<b>ID:</b> ${obj.physicalId || obj.objectId || obj.id || 'N/A'}<br>
-									<b>Type:</b> ${obj.type || 'N/A'}<br>
-									<b>Collab Space:</b> ${obj.collabspace || 'N/A'}
+									<b>Name:</b> ${obj.displayName || 'N/A'}<br>
+									<b>ID:</b> ${obj.objectId || 'N/A'}<br>
+									<b>Type:</b> ${obj.objectType || obj.displayType || 'N/A'}<br>
+									<b>Collab Space:</b> ${obj.contextId || 'N/A'}
 								</div><br>`
 							).join('');
 
 							dropZone.setHTML('<strong>Dropped:</strong><br>' + summaryHtml);
-
 						} catch (err) {
 							console.error("Failed to parse dropped data:", err);
 							alert("Invalid dropped object format.");
