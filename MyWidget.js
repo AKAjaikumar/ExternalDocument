@@ -228,13 +228,13 @@ require([
 													documentList.forEach(doc => {
 														const files = doc.relateddata?.files || [];
 														files.forEach(file => {
-														allFileIds.push({
-															id: file.id,
-															docName = doc.dataelements?.name || 'N/A';
-															title: file.dataelements?.title || ''
+															allFileIds.push({
+																id: file.id,
+																docName = doc.dataelements?.name || 'N/A';
+																title: file.dataelements?.title || ''
+															});
 														});
-													}
-
+													}	
                                                     alert(`Document List: ${allFileIds}`);
                                                 } else {
                                                     console.warn('No document found');
