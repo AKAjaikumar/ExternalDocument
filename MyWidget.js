@@ -227,24 +227,36 @@ require([
 													let allFileIds = [];
 
 													documentList.forEach(doc => {
-														const docId = doc.id || 'N/A';
-														const promoteUrl = baseUrl + '/resources/v1/modeler/documents/parentId/'+docId+'/promote';
-														 WAFData.authenticatedRequest(promoteUrl, {
-															method: 'POST',
-															type: 'json',
-															headers: {
-																'Content-Type': 'application/json',
-																[csrfHeaderName]: csrfToken
-															},
-															onComplete: function (response) {
-																console.log('Promote Success:', response);
-																alert("Document promoted to next state.");
-															},
-															onFailure: function (err) {
-																console.error("Promote failed:", err);
-																alert("Failed to promote document.");
-															}
-														});
+														id: doc.id,
+														name: doc.dataelements?.name || 'N/A',
+														type: doc.type || 'Document'
+														
+													});
+													console.log("Fetched Documents:", documentList);
+													alert("Documents:\n" + JSON.stringify(documentList, null, 2));
+													const promotePayload = {
+														data: documentList.map(doc => ({
+															id: doc.id,
+															type: doc.type
+														}))
+													};
+													const promoteUrl = baseUrl + '/resources/lifecycle/maturity/promote';
+													 WAFData.authenticatedRequest(promoteUrl, {
+														method: 'POST',
+														type: 'json',
+														data: JSON.stringify(promotePayload),
+														headers: {
+															'Content-Type': 'application/json',
+															'ENO_CSRF_TOKEN': csrfToken
+														},
+														onComplete: function (promotionResponse) {
+															console.log("Promotion successful:", promotionResponse);
+															alert("Promotion completed successfully.");
+														},
+														onFailure: function (err) {
+															console.error("Promotion failed:", err);
+															alert("Promotion failed. Check console.");
+														}
 													});
                                                     
                                                 } else {
