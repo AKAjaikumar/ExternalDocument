@@ -24,6 +24,11 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
+			var container3 = new UWA.Element('div', {
+                styles: {
+                    padding: '15px'
+                }
+            }).inject(widget.body);
 			const platformId = widget.getValue("x3dPlatformId");
             // Create button inside widget.body
             var button = new UWA.Element('button', {
@@ -283,6 +288,91 @@ require([
                     }
 				}
 			}).inject(container2);
+			var connectBtn = new UWA.Element('button', {
+				text: 'Connect Attached Document',
+				styles: {
+					padding: '10px 15px',
+                    background: '#0078d4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+				},
+				events: {
+					click: function () {
+                        
+                        i3DXCompassServices.getServiceUrl({
+                            platformId: platformId,
+                            serviceName: '3DSpace',
+                            onComplete: function (URL3DSpace) {
+                                let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+                                if (baseUrl.endsWith('/3dspace')) {
+                                    baseUrl = baseUrl.replace('/3dspace', '');
+                                }
+
+                                const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+                                WAFData.authenticatedRequest(csrfURL, {
+                                    method: 'GET',
+                                    type: 'json',
+                                    onComplete: function (csrfData) {
+                                        const csrfToken = csrfData.csrf.value;
+                                        const csrfHeaderName = csrfData.csrf.name;
+
+                                        const addAttachedDocURL = baseUrl + '/resources/v1/modeler/documents/?disableOwnershipInheritance=1&parentRelName=Reference Document&parentDirection=from';
+
+										const payload = {
+											csrf: {
+												name: csrfHeaderName,
+												value: csrfToken
+											},
+											data: [
+												{
+													id: '070DD5F7A8D022006809BB4D0002BE12', // The Document ID to connect
+													relateddata: {
+														parents: [
+															{
+																id: '4111F597B51B1000681B4FB50001A9A0', // The target parent object ID
+																updateAction: 'CONNECT'
+															}
+														]
+													},
+													updateAction: 'NONE'
+												}
+											]
+										};
+
+											WAFData.authenticatedRequest(addAttachedDocURL, {
+												method: 'POST',
+												type: 'json',
+												headers: {
+													'Content-Type': 'application/json',
+													[csrfHeaderName]: csrfToken,
+													'Accept': 'application/json'
+												},
+												data: JSON.stringify(payload),
+												onComplete: function (res) {
+													console.log('Connected Reference Document:', res);
+													alert('Document successfully connected as Reference Document!');
+												},
+												onFailure: function (err) {
+													console.error("Failed to connect document:", err);
+													alert('Failed to connect reference document.');
+												}
+											});
+									},
+									onFailure: function (err) {
+										console.error("Failed to fetch CSRF token:", err);
+									}
+								});
+							},
+							onFailure: function () {
+								console.error("Failed to get 3DSpace URL");
+							}
+						});
+					}
+				}
+			}).inject(container3);
             // Inject the button into the widget container
             button.inject(container);
             button1.inject(container1);
