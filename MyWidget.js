@@ -139,7 +139,7 @@ require([
                                             },
                                             onComplete: function (response) {
 												 if (response && response.data && response.data.length > 0) {
-                                                    const documentList = responseData.data || [];
+													const documentList = response.data || [];
 													let allFileIds = [];
 
 													documentList.forEach(doc => {
@@ -147,16 +147,16 @@ require([
 														files.forEach(file => {
 															allFileIds.push({
 																id: file.id,
-																docName = doc.dataelements?.name || 'N/A',
+																docName: doc.dataelements?.name || 'N/A',
 																title: file.dataelements?.title || ''
 															});
 														});
 													});	
-                                                    alert(`Document List: ${allFileIds}`);
-                                                } else {
-                                                    console.warn('No document found');
-                                                    alert("No document data found.");
-                                                }
+													alert(`Document List: ${JSON.stringify(allFileIds, null, 2)}`);
+												} else {
+													console.warn('No document found');
+													alert("No document data found.");
+												}
 											},
 											onFailure: function (err) {
 												console.error("Failed to get attachments:", err);
