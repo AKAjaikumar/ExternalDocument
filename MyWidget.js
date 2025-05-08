@@ -417,7 +417,6 @@ require([
 						try {
 							var droppedPayload = JSON.parse(data);
 
-							// Check if we got a proper 3DXContent structure
 							var droppedObjects = droppedPayload?.data?.items || [];
 							if (!Array.isArray(droppedObjects)) {
 								droppedObjects = [droppedObjects];
@@ -429,8 +428,6 @@ require([
 								`<div>
 									<b>Name:</b> ${obj.displayName || 'N/A'}<br>
 									<b>ID:</b> ${obj.objectId || 'N/A'}<br>
-									<b>Type:</b> ${obj.objectType || obj.displayType || 'N/A'}<br>
-									<b>Collab Space:</b> ${obj.contextId || 'N/A'}
 								</div><br>`
 							).join('');
 
