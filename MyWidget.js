@@ -29,6 +29,17 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
+			var container4 = new UWA.Element('div', {
+                styles: {
+                    display: 'flex',
+					flexDirection: 'column',
+					padding: '10px',
+					gap: '8px',
+					border: '1px solid #ccc',
+					width: '200px',
+					marginBottom: '20px'
+                }
+            }).inject(widget.body);
 			const platformId = widget.getValue("x3dPlatformId");
             // Create button inside widget.body
             var button = new UWA.Element('button', {
@@ -373,6 +384,51 @@ require([
 					}
 				}
 			}).inject(container3);
+			var dropZone = new UWA.Element('div', {
+				html: '<strong>Drop Objects Here</strong>',
+				styles: {
+					border: '2px dashed #0078d4',
+					padding: '30px',
+					textAlign: 'center',
+					marginTop: '20px',
+					background: '#f3f3f3',
+					color: '#333'
+				},
+				events: {
+					dragover: function (event) {
+						event.preventDefault(); // Allow drop
+						dropZone.setStyle('background', '#e0f0ff');
+					},
+					dragleave: function () {
+						dropZone.setStyle('background', '#f3f3f3');
+					},
+					drop: function (event) {
+						event.preventDefault();
+						dropZone.setStyle('background', '#f3f3f3');
+
+						var data = event.dataTransfer.getData('text');
+						if (!data) {
+							alert("No data dropped.");
+							return;
+						}
+
+						try {
+							var droppedObjects = JSON.parse(data); // Expecting array of dragged objects
+							console.log("Dropped Objects:", droppedObjects);
+
+							var summaryHtml = droppedObjects.map(obj =>
+								`<div><b>Name:</b> ${obj.name} <b>ID:</b> ${obj.id}</div>`
+							).join('');
+							dropZone.setHTML('<strong>Dropped:</strong><br>' + summaryHtml);
+
+							// You can store them for later use or connect them here
+						} catch (err) {
+							console.error("Failed to parse dropped data:", err);
+							alert("Invalid dropped object format.");
+						}
+					}
+				}
+			}).inject(container4);
             // Inject the button into the widget container
             button.inject(container);
             button1.inject(container1);
