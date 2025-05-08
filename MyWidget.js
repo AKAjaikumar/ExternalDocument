@@ -226,39 +226,10 @@ require([
 													const documentList = response.data || [];
 													
 
-													const allFileIds = documentList.map(doc => ({
-														id: doc.id,
-														name: doc.dataelements?.name || 'N/A',
-														type: doc.type || 'Document'
-													}));
-													console.log("Fetched Documents:", documentList);
-													alert("Documents:\n" + JSON.stringify(documentList, null, 2));
-													const promotePayload = {
-														data: allFileIds.map(doc => ({
-															id: doc.id,
-															type: doc.type,
-															transition: "Set to Frozen"
-														}))
-													};
-													const promoteUrl = baseUrl + '/resources/lifecycle/maturity/promote';
-													 WAFData.authenticatedRequest(promoteUrl, {
-														method: 'POST',
-														type: 'json',
-														data: JSON.stringify(promotePayload),
-														headers: {
-															'Content-Type': 'application/json',
-															'ENO_CSRF_TOKEN': csrfToken,
-															'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA'
-														},
-														onComplete: function (promotionResponse) {
-															console.log("Promotion successful:", promotionResponse);
-															alert("Promotion completed successfully.");
-														},
-														onFailure: function (err) {
-															console.error("Promotion failed:", err);
-															alert("Promotion failed. Check console.");
-														}
+													documentList.forEach(doc => {
+														promoteWithAvailableTransition(doc, csrfToken, csrfHeaderName, baseUrl);
 													});
+													
                                                     
                                                 } else {
                                                     console.warn('No document found');
@@ -284,6 +255,58 @@ require([
                     }
 				}
 			}).inject(container2);
+			const promoteWithAvailableTransition = function (doc, csrfToken, csrfHeaderName, baseUrl) {
+			const transitionURL = `${baseUrl}/resources/lifecycle/maturity/transitions?objectId=${doc.id}&type=${doc.type}`;
+
+			WAFData.authenticatedRequest(transitionURL, {
+				method: 'GET',
+				type: 'json',
+				headers: {
+					'Content-Type': 'application/json',
+					[csrfHeaderName]: csrfToken
+				},
+				onComplete: function (transitionResp) {
+					const transitions = transitionResp.data || [];
+
+					if (transitions.length === 0) {
+						console.warn(`No transitions available for document: ${doc.id}`);
+						return;
+					}
+
+					// Pick the first available transition (or customize the priority if needed)
+					const transitionToUse = transitions[0].name;
+
+					const promoteUrl = `${baseUrl}/resources/lifecycle/maturity/promote`;
+					const promotePayload = {
+						data: [{
+							id: doc.id,
+							type: doc.type,
+							transition: transitionToUse
+						}]
+					};
+
+					WAFData.authenticatedRequest(promoteUrl, {
+						method: 'POST',
+						type: 'json',
+						data: JSON.stringify(promotePayload),
+						headers: {
+							'Content-Type': 'application/json',
+							[csrfHeaderName]: csrfToken
+						},
+						onComplete: function (promotionResponse) {
+							console.log(`Promotion successful for ${doc.id} using '${transitionToUse}'`, promotionResponse);
+							alert(`Promoted ${doc.id} using '${transitionToUse}'`);
+						},
+						onFailure: function (err) {
+							console.error(`Promotion failed for ${doc.id}`, err);
+						}
+					});
+				},
+				onFailure: function (err) {
+					console.error(`Failed to get transitions for ${doc.id}`, err);
+				}
+			});
+			};
             // Inject the button into the widget container
             button.inject(container);
             button1.inject(container1);
