@@ -419,97 +419,65 @@ require([
 							var droppedObjects = droppedPayload?.data?.items || [];
 							if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
 
-							droppedObjects.forEach(async (obj) => {
-								const objectId = obj.objectId;
-								const objectType = obj.objectType;
-								const displayName = obj.displayName;
-
-							  
-								const response = await fetch(`/3dspace/resources/v1/modeler/documents/${objectId}`, {
-									method: 'GET',
-									headers: {
-										'Accept': 'application/json',
-										'Content-Type': 'application/json',
-										'SecurityContext': obj.contextId // Important for cloud
+							
+							const objectId = obj.objectId;
+							const objectType = obj.objectType;
+							const displayName = obj.displayName;
+							i3DXCompassServices.getServiceUrl({
+								platformId: platformId,
+								serviceName: '3DSpace',
+								onComplete: function (URL3DSpace) {
+									let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+									if (baseUrl.endsWith('/3dspace')) {
+										baseUrl = baseUrl.replace('/3dspace', '');
 									}
-								});
 
-								const fullData = await response.json();
-								const info = fullData.data[0];
+									const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
-								const props = {
-									Name: info.dataelements.title,
-									ID: info.id,
-									Type: info.type,
-									Revision: info.dataelements.revision,
-									Policy: info.policy,
-									CollabSpace: info.collabspace
-								};
+									WAFData.authenticatedRequest(csrfURL, {
+										method: 'GET',
+										type: 'json',
+										onComplete: function (csrfData) {
+											const csrfToken = csrfData.csrf.value;
+											const csrfHeaderName = csrfData.csrf.name;
 
-								
-								const { jsPDF } = window.jspdf;
-								const doc = new jsPDF();
-								doc.text("Document Properties", 10, 10);
+											droppedObjects.forEach((obj) => {
+												const objectId = obj.objectId;
 
-								let y = 20;
-								for (const key in props) {
-									doc.text(`${key}: ${props[key] || 'N/A'}`, 10, y);
-									y += 10;
+												const getDocURL = baseUrl + '/resources/v1/modeler/documents/' + objectId;
+
+												WAFData.authenticatedRequest(getDocURL, {
+													method: 'GET',
+													type: 'json',
+													headers: {
+														'Content-Type': 'application/json',
+														[csrfHeaderName]: csrfToken,
+														'Accept': 'application/json'
+													},
+													onComplete: function (docRes) {
+														console.log("Dropped Document Info:", docRes);
+														alert(`Dropped Document: ${JSON.stringify(docRes.data[0].dataelements.name || 'Unnamed')}`);
+														// You can now: convert it to PDF, or attach it, or promote, etc.
+													},
+													onFailure: function (err) {
+														console.error("Failed to get dropped doc:", err);
+														alert("Failed to retrieve dropped document info.");
+													}
+												});
+											});
+										},
+										onFailure: function (err) {
+											console.error("Failed to fetch CSRF token:", err);
+										}
+									});
+								},
+								onFailure: function () {
+									console.error("Failed to get 3DSpace URL");
 								}
-
-								const pdfBlob = doc.output("blob");
-
-								
-								const createResp = await fetch('/3dspace/resources/v1/modeler/documents', {
-									method: 'POST',
-									headers: {
-										'Accept': 'application/json',
-										'Content-Type': 'application/json',
-										'SecurityContext': obj.contextId
-									},
-									body: JSON.stringify({
-										data: [{
-											type: "Document",
-											attributes: {
-												title: "Generated PDF - " + props.Name,
-												policy: "Document",
-												description: "Auto-created from drop",
-											}
-										}]
-									})
-								});
-
-								const createData = await createResp.json();
-								const newDocId = createData.data[0].id;
-
-								
-								const uploadUrlResp = await fetch(`/3dspace/resources/v1/modeler/documents/${newDocId}/files/Checkin`, {
-									method: 'POST',
-									headers: {
-										'Accept': 'application/json',
-										'Content-Type': 'application/json',
-										'SecurityContext': obj.contextId
-									},
-									body: JSON.stringify({
-										data: [{
-											fileName: `Properties-${props.Name}.pdf`,
-											fileSize: pdfBlob.size,
-											title: "Properties PDF",
-											version: "1.0"
-										}]
-									})
-								});
-
-								const uploadUrlData = await uploadUrlResp.json();
-								const uploadURL = uploadUrlData.data[0].uploadURL;
-
-								await fetch(uploadURL, {
-									method: 'PUT',
-									body: pdfBlob
-								});
-
-								alert(`New document created: ${props.Name}`);
 							});
+							  
+								
+							
 
 						} catch (err) {
 							console.error("Failed to parse dropped data or process file:", err);
