@@ -419,30 +419,27 @@ require([
 							var droppedObjects = droppedPayload?.data?.items || [];
 							if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
 
-							
-							const objectId = obj.objectId;
-							const objectType = obj.objectType;
-							const displayName = obj.displayName;
-							i3DXCompassServices.getServiceUrl({
-								platformId: platformId,
-								serviceName: '3DSpace',
-								onComplete: function (URL3DSpace) {
-									let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
-									if (baseUrl.endsWith('/3dspace')) {
-										baseUrl = baseUrl.replace('/3dspace', '');
-									}
+							droppedObjects.forEach((obj) => {
+								const objectId = obj.objectId;
+								const displayName = obj.displayName;
 
-									const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+								i3DXCompassServices.getServiceUrl({
+									platformId: platformId,
+									serviceName: '3DSpace',
+									onComplete: function (URL3DSpace) {
+										let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+										if (baseUrl.endsWith('/3dspace')) {
+											baseUrl = baseUrl.replace('/3dspace', '');
+										}
 
-									WAFData.authenticatedRequest(csrfURL, {
-										method: 'GET',
-										type: 'json',
-										onComplete: function (csrfData) {
-											const csrfToken = csrfData.csrf.value;
-											const csrfHeaderName = csrfData.csrf.name;
+										const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
-											droppedObjects.forEach((obj) => {
-												const objectId = obj.objectId;
+										WAFData.authenticatedRequest(csrfURL, {
+											method: 'GET',
+											type: 'json',
+											onComplete: function (csrfData) {
+												const csrfToken = csrfData.csrf.value;
+												const csrfHeaderName = csrfData.csrf.name;
 
 												const getDocURL = baseUrl + '/resources/v1/modeler/documents/' + objectId;
 
@@ -454,34 +451,30 @@ require([
 														[csrfHeaderName]: csrfToken,
 														'Accept': 'application/json'
 													},
-													onComplete: function (docRes) {
-														console.log("Dropped Document Info:", docRes);
-														alert(`Dropped Document: ${JSON.stringify(docRes.data[0].dataelements.name || 'Unnamed')}`);
-														// You can now: convert it to PDF, or attach it, or promote, etc.
+													onComplete: function (docData) {
+														console.log(`Document ${displayName} Info:`, docData);
+														alert("Document info loaded: " + displayName);
 													},
 													onFailure: function (err) {
-														console.error("Failed to get dropped doc:", err);
-														alert("Failed to retrieve dropped document info.");
+														console.error("Failed to load document details:", err);
+														alert("Failed to load document details.");
 													}
 												});
-											});
-										},
-										onFailure: function (err) {
-											console.error("Failed to fetch CSRF token:", err);
-										}
-									});
-								},
-								onFailure: function () {
-									console.error("Failed to get 3DSpace URL");
-								}
+											},
+											onFailure: function (err) {
+												console.error("Failed to fetch CSRF token:", err);
+											}
+										});
+									},
+									onFailure: function () {
+										console.error("Failed to get 3DSpace URL");
+									}
+								});
 							});
-							  
-								
-							
 
 						} catch (err) {
 							console.error("Failed to parse dropped data or process file:", err);
-							alert("Error during document processing.");
+							alert("Error: Failed to process dropped data.");
 						}
 					}
 				}
