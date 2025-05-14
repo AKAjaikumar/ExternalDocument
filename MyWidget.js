@@ -567,7 +567,6 @@ require([
 			  try {
 				await loadJsPDFWithAutoTable();
 
-				const { jsPDF } = window.jspdf;
 				const doc = new jsPDF();
 
 				doc.autoTable({
