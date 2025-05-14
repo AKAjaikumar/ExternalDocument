@@ -529,7 +529,7 @@ require([
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min.js';
+						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
 
 						script.onload = () => {
 							if (window.jspdf && window.jspdf.jsPDF) {
