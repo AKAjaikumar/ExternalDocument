@@ -529,7 +529,7 @@ require([
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js';
+						script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.legacy.min.js';
 
 						script.onload = () => {
 							if (typeof window.jsPDF !== 'undefined') {
@@ -552,7 +552,7 @@ require([
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
+						script.src = 'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js';
 						script.onload = () => {
 							console.log('AutoTable plugin loaded.');
 							resolve();
