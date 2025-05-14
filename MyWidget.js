@@ -526,6 +526,9 @@ require([
 			async function loadJsPDFWithAutoTable() {
 				// Check if jsPDF is already loaded
 				if (typeof window.jspdf === 'undefined') {
+					console.log('Loading jsPDF...');
+
+					// Load jsPDF from CDN (latest UMD version)
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -533,29 +536,34 @@ require([
 							if (typeof window.jspdf === 'undefined') {
 								reject(new Error('jsPDF not loaded from latest version.'));
 							} else {
-								console.log('jsPDF loaded from latest version');
+								console.log('jsPDF loaded successfully.');
 								resolve();
 							}
 						};
-						script.onerror = reject;
+						script.onerror = (err) => {
+							reject(new Error('Failed to load jsPDF: ' + err));
+						};
 						document.head.appendChild(script);
 					});
 				}
 
-				// Check if AutoTable is available
-				if (!window.jspdf) {
-					throw new Error('jsPDF is not loaded');
+				// Check if AutoTable plugin is available
+				if (typeof window.jspdf === 'undefined') {
+					throw new Error('jsPDF is not loaded.');
 				}
 
 				if (!window.jspdf.autoTable) {
+					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
 						script.onload = () => {
-							console.log('AutoTable plugin loaded.');
+							console.log('AutoTable plugin loaded successfully.');
 							resolve();
 						};
-						script.onerror = reject;
+						script.onerror = (err) => {
+							reject(new Error('Failed to load AutoTable plugin: ' + err));
+						};
 						document.head.appendChild(script);
 					});
 				}
