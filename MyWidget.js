@@ -487,11 +487,12 @@ require([
 											[csrfHeaderName]: csrfToken
 										},
 										onComplete: function (docData) {
-												if (docData.data && docData.data.length > 0) {
-													resolve(docData.data[0]);  // Return first document object
-												} else {
-													reject("No document data returned");
-												}
+										console.log("Fetched docData for ID", docId, docData);
+											if (docData.data && docData.data.length > 0) {
+												resolve(docData.data[0]);  // Return first document object
+											} else {
+												reject("No document data returned");
+											}
 										},
 										onFailure: function (err) {
 											reject(err);
