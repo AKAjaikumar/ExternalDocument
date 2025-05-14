@@ -385,7 +385,7 @@ require([
 				}
 			}).inject(container3);
 			var dropZone = new UWA.Element('div', {
-				html: '<strong>Drop Objects Here</strong>',
+				html: '<strong>Drop Documents Here</strong>',
 				styles: {
 					border: '2px dashed #0078d4',
 					padding: '30px',
@@ -419,58 +419,35 @@ require([
 							var droppedObjects = droppedPayload?.data?.items || [];
 							if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
 
-							droppedObjects.forEach((obj) => {
-								const objectId = obj.objectId;
-								const displayName = obj.displayName;
+							if (droppedObjects.length === 2) {
+								// Fetch the document data for both dropped objects
+								Promise.all(droppedObjects.map(function (obj) {
+									return fetchDocumentData(obj.objectId);
+								})).then(function (docs) {
+									// docs contains both documents' data
+									const doc1 = docs[0];
+									const doc2 = docs[1];
 
-								i3DXCompassServices.getServiceUrl({
-									platformId: platformId,
-									serviceName: '3DSpace',
-									onComplete: function (URL3DSpace) {
-										let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
-										if (baseUrl.endsWith('/3dspace')) {
-											baseUrl = baseUrl.replace('/3dspace', '');
-										}
+									// Merge the document data into a table format
+									const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
 
-										const csrfURL = baseUrl + '/resources/v1/application/CSRF';
-
-										WAFData.authenticatedRequest(csrfURL, {
-											method: 'GET',
-											type: 'json',
-											onComplete: function (csrfData) {
-												const csrfToken = csrfData.csrf.value;
-												const csrfHeaderName = csrfData.csrf.name;
-
-												const getDocURL = baseUrl + '/resources/v1/modeler/documents/' + objectId;
-
-												WAFData.authenticatedRequest(getDocURL, {
-													method: 'GET',
-													type: 'json',
-													headers: {
-														'Content-Type': 'application/json',
-														[csrfHeaderName]: csrfToken,
-														'Accept': 'application/json'
-													},
-													onComplete: function (docData) {
-														console.log(`Document ${displayName} Info:`, docData);
-														alert("Document info loaded: " + displayName);
-													},
-													onFailure: function (err) {
-														console.error("Failed to load document details:", err);
-														alert("Failed to load document details.");
-													}
-												});
-											},
-											onFailure: function (err) {
-												console.error("Failed to fetch CSRF token:", err);
-											}
+									// Generate PDF from the merged content
+									generatePDF(mergedContent).then(function (pdfData) {
+										// Create a new document and upload the merged PDF
+										createDocumentWithPDF(pdfData).then(function (response) {
+											alert("Document created and checked in successfully!");
+										}).catch(function (err) {
+											console.error("Failed to create or check in the document:", err);
 										});
-									},
-									onFailure: function () {
-										console.error("Failed to get 3DSpace URL");
-									}
+									}).catch(function (err) {
+										console.error("Failed to generate PDF:", err);
+									});
+								}).catch(function (err) {
+									console.error("Failed to fetch document data:", err);
 								});
-							});
+							} else {
+								alert("Please drop exactly two documents.");
+							}
 
 						} catch (err) {
 							console.error("Failed to parse dropped data or process file:", err);
@@ -479,6 +456,173 @@ require([
 					}
 				}
 			}).inject(container4);
+
+
+			function fetchDocumentData(docId) {
+				return new Promise(function (resolve, reject) {
+					i3DXCompassServices.getServiceUrl({
+						platformId: platformId,
+						serviceName: '3DSpace',
+						onComplete: function (URL3DSpace) {
+							let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+							if (baseUrl.endsWith('/3dspace')) {
+								baseUrl = baseUrl.replace('/3dspace', '');
+							}
+
+							const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+							WAFData.authenticatedRequest(csrfURL, {
+								method: 'GET',
+								type: 'json',
+								onComplete: function (csrfData) {
+									const csrfToken = csrfData.csrf.value;
+									const csrfHeaderName = csrfData.csrf.name;
+
+									const docURL = baseUrl + '/resources/v1/modeler/documents/' + docId;
+									WAFData.authenticatedRequest(docURL, {
+										method: 'GET',
+										type: 'json',
+										headers: {
+											'Content-Type': 'application/json',
+											[csrfHeaderName]: csrfToken
+										},
+										onComplete: function (docData) {
+											resolve(docData);  // Return the document data
+										},
+										onFailure: function (err) {
+											reject(err);
+										}
+									});
+								},
+								onFailure: function (err) {
+									reject(err);
+								}
+							});
+						},
+						onFailure: function () {
+							reject("Failed to get 3DSpace URL");
+						}
+					});
+				});
+			}
+
+
+			function mergeDocumentsIntoTable(doc1, doc2) {
+				const content = [];
+				content.push(['Document Name', 'Document ID', 'Type']); // Header
+				content.push([doc1.dataelements.name, doc1.id, doc1.type]);
+				content.push([doc2.dataelements.name, doc2.id, doc2.type]);
+				return content;
+			}
+
+
+			function generatePDF(content) {
+				return new Promise(function (resolve, reject) {
+					// Use a library like jsPDF or similar to create a PDF from the content
+					const jsPDF = window.jsPDF;  // Assuming jsPDF is available
+					const doc = new jsPDF();
+
+					doc.autoTable({
+						head: content.slice(0, 1),
+						body: content.slice(1),
+					});
+
+					const pdfData = doc.output('blob');  // Get PDF as Blob
+					resolve(pdfData);
+				});
+			}
+
+
+			function createDocumentWithPDF(pdfData) {
+				return new Promise(function (resolve, reject) {
+					i3DXCompassServices.getServiceUrl({
+						platformId: platformId,
+						serviceName: '3DSpace',
+						onComplete: function (URL3DSpace) {
+							let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+							if (baseUrl.endsWith('/3dspace')) {
+								baseUrl = baseUrl.replace('/3dspace', '');
+							}
+
+							const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+							WAFData.authenticatedRequest(csrfURL, {
+								method: 'GET',
+								type: 'json',
+								onComplete: function (csrfData) {
+									const csrfToken = csrfData.csrf.value;
+									const csrfHeaderName = csrfData.csrf.name;
+
+									const createDocURL = baseUrl + '/resources/v1/modeler/documents';
+									const payload = {
+										data: [{
+											attributes: {
+												name: "Merged_Document_" + Date.now(),
+												type: "Document",
+												policy: "Document Release"
+											}
+										}]
+									};
+
+									WAFData.authenticatedRequest(createDocURL, {
+										method: 'POST',
+										type: 'json',
+										headers: {
+											'Content-Type': 'application/json',
+											[csrfHeaderName]: csrfToken
+										},
+										data: JSON.stringify(payload),
+										onComplete: function (response) {
+											const docId = response.data[0].id;
+
+											// Assuming an API endpoint to upload a PDF file to the newly created document
+											const uploadUrl = baseUrl + `/resources/v1/modeler/documents/${docId}/attachments`;
+											const formData = new FormData();
+											formData.append('file', pdfData);
+
+											WAFData.authenticatedRequest(uploadUrl, {
+												method: 'POST',
+												headers: {
+													[csrfHeaderName]: csrfToken
+												},
+												data: formData,
+												onComplete: function () {
+													// Check in the document if needed
+													const checkInUrl = baseUrl + `/resources/v1/modeler/documents/${docId}/checkin`;
+													WAFData.authenticatedRequest(checkInUrl, {
+														method: 'POST',
+														headers: {
+															[csrfHeaderName]: csrfToken
+														},
+														onComplete: function () {
+															resolve(response);
+														},
+														onFailure: function (err) {
+															reject("Failed to check in the document: " + err);
+														}
+													});
+												},
+												onFailure: function (err) {
+													reject("Failed to upload PDF: " + err);
+												}
+											});
+										},
+										onFailure: function (err) {
+											reject("Failed to create document: " + err);
+										}
+									});
+								},
+								onFailure: function (err) {
+									reject("Failed to fetch CSRF token: " + err);
+								}
+							});
+						},
+						onFailure: function () {
+							reject("Failed to get 3DSpace URL");
+						}
+					});
+				});
+			}
             // Inject the button into the widget container
             button.inject(container);
             button1.inject(container1);
