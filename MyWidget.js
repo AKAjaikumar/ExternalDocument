@@ -524,10 +524,10 @@ require([
 
 
 			async function ensureJsPDFLoaded() {
-			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
+			  if (typeof window.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+				  script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.min.js';
 				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
@@ -535,7 +535,7 @@ require([
 			  }
 
 			  // Load AutoTable plugin
-			  if (!window.jspdf.jsPDF.API.autoTable) {
+			  if (!window.jsPDF.API.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
 				  script.src = 'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js';
