@@ -539,7 +539,13 @@ require([
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
 				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
-				  script.onload = resolve;
+				  script.onload = () => {
+						// Explicitly attach AutoTable to jsPDF instance if not available
+						if (typeof window.jspdf !== 'undefined' && window.jspdf) {
+						  window.jspdf.jsPDF.API.autoTable = window.jspdf.API.autoTable;
+						}
+						resolve();
+					  };
 				  script.onerror = (e) => reject(new Error('Failed to load AutoTable plugin: ' + e.message));
 				  document.head.appendChild(script);
 				});
