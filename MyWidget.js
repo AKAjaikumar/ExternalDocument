@@ -527,10 +527,10 @@ require([
 			  if (typeof window.jsPDF === 'undefined') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js';
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
 				  script.onload = () => {
 					if (typeof window.jsPDF === 'undefined') {
-					  reject(new Error('jsPDF not loaded from legacy build'));
+					  reject(new Error('jsPDF not loaded from classic build'));
 					} else {
 					  console.log('jsPDF loaded from legacy build');
 					  resolve();
@@ -544,7 +544,7 @@ require([
 			  if (!window.jsPDF.prototype.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
 				  script.onload = () => {
 					console.log('AutoTable loaded.');
 					resolve();
