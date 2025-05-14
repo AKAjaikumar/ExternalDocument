@@ -536,7 +536,7 @@ require([
 						// On script load
 						script.onload = () => {
 							console.log('jsPDF loaded:', window.jspdf); // Log the loaded jsPDF object
-							if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+							if (typeof window.jspdf === 'undefined') {
 								reject(new Error('jsPDF not loaded from latest version.'));
 							} else {
 								console.log('jsPDF loaded successfully.');
@@ -553,11 +553,12 @@ require([
 					});
 				}
 
-				// Check if AutoTable plugin is available
-				if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+				// Ensure jsPDF is loaded and available
+				if (typeof window.jspdf === 'undefined') {
 					throw new Error('jsPDF is not loaded.');
 				}
 
+				// Ensure AutoTable plugin is available
 				if (!window.jspdf.autoTable) {
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
@@ -580,7 +581,7 @@ require([
 					// Load jsPDF and AutoTable before using them
 					await loadJsPDFWithAutoTable();
 
-					// Ensure that jsPDF is available and load it
+					// Access the jsPDF constructor from window.jspdf
 					const { jsPDF } = window.jspdf;
 
 					// Create a new jsPDF instance
