@@ -524,29 +524,30 @@ require([
 
 
 			async function ensureJsPDFLoaded() {
-			  if (!window.jspdf || !window.jspdf.jsPDF) {
-				await new Promise((resolve, reject) => {
-				  const script = document.createElement('script');
-				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-				  script.onload = resolve;
-				  script.onerror = reject;
-				  document.head.appendChild(script);
-				});
-			  }
+				  if (!window.jspdf || !window.jspdf.jsPDF) {
+					await new Promise((resolve, reject) => {
+					  const script = document.createElement('script');
+					  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+					  script.onload = resolve;
+					  script.onerror = reject;
+					  document.head.appendChild(script);
+					});
+				  }
 
-			  if (!window.jspdf || !window.jspdf.jsPDF) {
-				throw new Error('jsPDF not properly loaded.');
-			  }
+				  if (!window.jspdf || !window.jspdf.jsPDF) {
+					throw new Error('jsPDF not properly loaded.');
+				  }
 
-			  if (!window.jspdf.jsPDF.API.autoTable) {
-				await new Promise((resolve, reject) => {
-				  const script = document.createElement('script');
-				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js';
-				  script.onload = resolve;
-				  script.onerror = reject;
-				  document.head.appendChild(script);
-				});
-			  }
+				  if (!window.jspdf.jsPDF.API.autoTable) {
+					await new Promise((resolve, reject) => {
+					  const script = document.createElement('script');
+					  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js';
+					  script.onload = resolve;
+					  script.onerror = reject;
+					  document.head.appendChild(script);
+					});
+				  }
+		  }
 			async function generatePDF(content) {
 				try {
 					console.log(content);
