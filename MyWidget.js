@@ -523,24 +523,52 @@ require([
 			}
 
 
-			function generatePDF(content) {
-				return new Promise((resolve, reject) => {
-					try {
-						const { jsPDF } = window.jspdf; // Correct way for UMD
+			async function loadJsPDFWithAutoTable() {
+				if (!window.jspdf) {
+					// Load jsPDF
+					await new Promise((resolve, reject) => {
+						const script = document.createElement('script');
+						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+						script.onload = resolve;
+						script.onerror = reject;
+						document.head.appendChild(script);
+					});
+				}
 
-						const doc = new jsPDF();
-						doc.autoTable({
-							head: content.slice(0, 1),
-							body: content.slice(1),
-						});
+				if (!window.jspdf || !window.jspdf.jsPDF) {
+					throw new Error('jsPDF not loaded correctly');
+				}
 
-						const pdfData = doc.output('blob');
-						resolve(pdfData);
-					} catch (err) {
-						console.error('Failed to generate PDF:', err);
-						reject(err);
-					}
-				});
+				// Load AutoTable plugin
+				if (!window.jspdf.jsPDF.prototype.autoTable) {
+					await new Promise((resolve, reject) => {
+						const script = document.createElement('script');
+						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
+						script.onload = resolve;
+						script.onerror = reject;
+						document.head.appendChild(script);
+					});
+				}
+			}
+
+			async function generatePDF(content) {
+				try {
+					await loadJsPDFWithAutoTable();
+
+					const { jsPDF } = window.jspdf;
+					const doc = new jsPDF();
+
+					doc.autoTable({
+						head: content.slice(0, 1),
+						body: content.slice(1),
+					});
+
+					const pdfBlob = doc.output('blob');
+					return pdfBlob;
+				} catch (err) {
+					console.error('Failed to generate PDF:', err);
+					throw err;
+				}
 			}
 
 
