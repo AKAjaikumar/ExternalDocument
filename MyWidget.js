@@ -513,22 +513,13 @@ require([
 
 
 			function mergeDocumentsIntoTable(doc1, doc2) {
-				const content = [];
-				content.push(['Document Name', 'Document ID', 'Type']); // Header
+				const headers = ["Name", "Policy", "State"];
+				const rows = [
+					[doc1.dataelements.name, doc1.dataelements.policy, doc1.dataelements.state],
+					[doc2.dataelements.name, doc2.dataelements.policy, doc2.dataelements.state]
+				];
 
-				content.push([
-					doc1.attributes.name || "N/A",
-					doc1.id,
-					doc1.type
-				]);
-
-				content.push([
-					doc2.attributes.name || "N/A",
-					doc2.id,
-					doc2.type
-				]);
-
-				return content;
+				return { headers, rows };
 			}
 
 
