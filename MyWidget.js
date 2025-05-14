@@ -527,34 +527,34 @@ require([
 				// Check if jsPDF is already loaded
 				if (typeof window.jspdf === 'undefined') {
 					console.log('Loading jsPDF...');
-					
+
 					// Load jsPDF from CDN (latest UMD version)
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-						
+
 						// On script load
 						script.onload = () => {
 							console.log('jsPDF loaded:', window.jspdf); // Log the loaded jsPDF object
-							if (typeof window.jspdf === 'undefined') {
+							if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
 								reject(new Error('jsPDF not loaded from latest version.'));
 							} else {
 								console.log('jsPDF loaded successfully.');
 								resolve();
 							}
 						};
-						
+
 						// On error
 						script.onerror = (err) => {
 							reject(new Error('Failed to load jsPDF: ' + err));
 						};
-						
+
 						document.head.appendChild(script);
 					});
 				}
 
 				// Check if AutoTable plugin is available
-				if (typeof window.jspdf === 'undefined') {
+				if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
 					throw new Error('jsPDF is not loaded.');
 				}
 
