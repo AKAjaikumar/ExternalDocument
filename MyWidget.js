@@ -532,10 +532,10 @@ require([
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-
+						console.log('Window object:', window);
 						// On script load
 						script.onload = () => {
-							console.log('jsPDF loaded:', window.jspdf); // Log the loaded jsPDF object
+							console.log('window.jspdf:', window.jspdf); // Log the loaded jsPDF object
 							if (typeof window.jspdf === 'undefined') {
 								reject(new Error('jsPDF not loaded from latest version.'));
 							} else {
