@@ -524,84 +524,73 @@ require([
 
 
 			async function loadJsPDFWithAutoTable() {
-				if (typeof window.jsPDF === 'undefined') {
-					console.log('Loading jsPDF (legacy)...');
+				if (typeof window.jspdf === 'undefined') {
+					console.log('Loading jsPDF (UMD)...');
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
-
 						script.onload = () => {
 							if (window.jspdf && window.jspdf.jsPDF) {
 								console.log('window.jspdf loaded.');
-							  window.jsPDF = window.jspdf.jsPDF;
-							  resolve();
+								resolve();
 							} else {
-							  reject(new Error('jsPDF not found in UMD.'));
+								reject(new Error('jsPDF not found in UMD.'));
 							}
-						  };
-						  script.onerror = (err) => reject(new Error('Failed to load jsPDF: ' + err));
-						  document.head.appendChild(script);
-
-
+						};
+						script.onerror = (err) => reject(new Error('Failed to load jsPDF: ' + err));
+						document.head.appendChild(script);
 					});
 				}
-				if (typeof window.jsPDF === 'undefined') {
+
+				if (!window.jspdf || !window.jspdf.jsPDF) {
 					throw new Error('jsPDF not loaded properly.');
 				}
-				if (!window.jsPDF.autoTable) {
+
+				if (!window.jspdf.jsPDF.API.autoTable) {
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
 						script.onload = () => {
 							console.log('AutoTable plugin loaded.');
-							resolve();
+							if (typeof window.jspdf.jsPDF.API.autoTable !== 'function') {
+								reject(new Error('AutoTable is not attached to jsPDF.'));
+							} else {
+								resolve();
+							}
 						};
-						script.onerror = (err) => {
-							reject(new Error('Failed to load AutoTable plugin: ' + err));
-						};
+						script.onerror = (err) => reject(new Error('Failed to load AutoTable plugin: ' + err));
 						document.head.appendChild(script);
 					});
 				}
 			}
-
 			async function generatePDF(content) {
 				try {
 					console.log(content);
 
-					// Check if content has 'headers' and 'rows'
 					if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
 						throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
 					}
 
-					// Combine headers and rows into the format expected by jsPDF autoTable
-					const tableData = [
-						content.headers,  // The first row will be the table header
-						...content.rows   // The rest will be the table rows
-					];
+					await loadJsPDFWithAutoTable();
 
-					await loadJsPDFWithAutoTable();  // Ensure jsPDF and AutoTable are loaded
+					// Create jsPDF instance using correct UMD reference
+					const doc = new window.jspdf.jsPDF();
 
-					const doc = new window.jsPDF();  // Create jsPDF instance
-
-					// Debugging line to check if autoTable is available
 					console.log('AutoTable method available:', typeof doc.autoTable);
 
-					 if (doc.autoTable) {
-						console.log('AutoTable method available.');
+					if (typeof doc.autoTable === 'function') {
 						doc.autoTable({
-							head: tableData.slice(0, 1),  // First element is the table header
-							body: tableData.slice(1),     // Remaining elements are table rows
+							head: [content.headers],
+							body: content.rows
 						});
 
-						// Return the generated PDF as a blob
 						return doc.output('blob');
 					} else {
 						throw new Error('AutoTable is not available on jsPDF.');
 					}
-					// Return the generated PDF as a blob
-					return doc.output('blob');
+
 				} catch (err) {
 					console.error('Failed to generate PDF:', err);
 					throw err;
