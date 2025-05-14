@@ -531,13 +531,15 @@ require([
 				  script.onload = () => {
 					try {
 					  // jsPDF UMD exports to window.jspdf under jspdf.jsPDF
-					  const global = window.jspdf || window.jspdf;
-					  if (!global || !global.jsPDF) {
-						// Try attaching it manually
-						const exports = window.jspdf?.jsPDF || window.jspdf?.jsPDF;
-						if (exports) {
-						  window.jspdf = { jsPDF: exports };
-						}
+					  if (window.jspdf && typeof window.jspdf.jsPDF === 'function') {
+						console.log('jsPDF loaded via UMD.');
+					  } else if (window.jspdf?.jsPDF) {
+						window.jspdf = { jsPDF: window.jspdf.jsPDF };
+					  } else if (window.jspdf?.default?.jsPDF) {
+						// Some UMDs expose under default
+						window.jspdf = { jsPDF: window.jspdf.default.jsPDF };
+					  } else {
+						console.warn('jsPDF UMD structure not found.');
 					  }
 					} catch (e) {
 					  console.error('Error attaching jsPDF manually:', e);
@@ -549,10 +551,11 @@ require([
 				});
 			  }
 
-			  if (!window.jspdf || !window.jspdf.jsPDF) {
+			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
 				throw new Error('jsPDF not properly loaded.');
 			  }
 
+			  // Load AutoTable plugin
 			  if (!window.jspdf.jsPDF.API.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
