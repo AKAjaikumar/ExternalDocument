@@ -524,78 +524,57 @@ require([
 
 
 			async function ensureJsPDFLoaded() {
-			  if (!window.jspdf || !window.jspdf.jsPDF) {
+			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
+				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 				  script.onload = () => {
-					try {
-					  // jsPDF UMD exports to window.jspdf under jspdf.jsPDF
-					  if (window.jspdf && typeof window.jspdf.jsPDF === 'function') {
-						console.log('jsPDF loaded via UMD.');
-					  } else if (window.jspdf?.jsPDF) {
-						window.jspdf = { jsPDF: window.jspdf.jsPDF };
-					  } else if (window.jspdf?.default?.jsPDF) {
-						// Some UMDs expose under default
-						window.jspdf = { jsPDF: window.jspdf.default.jsPDF };
-					  } else {
-						console.warn('jsPDF UMD structure not found.');
-					  }
-					} catch (e) {
-					  console.error('Error attaching jsPDF manually:', e);
+					// UMD exposes everything to globalThis.jspdf
+					if (globalThis.jspdf && typeof globalThis.jspdf.jsPDF === 'function') {
+					  window.jspdf = globalThis.jspdf;
+					  resolve();
+					} else {
+					  reject(new Error('jsPDF not properly exported to window.jspdf'));
 					}
-					resolve();
 				  };
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
 				});
 			  }
 
-			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
-				throw new Error('jsPDF not properly loaded.');
-			  }
-
-			  // Load AutoTable plugin
+			  // Load AutoTable if missing
 			  if (!window.jspdf.jsPDF.API.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
+				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js';
 				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load AutoTable plugin: ' + e.message));
 				  document.head.appendChild(script);
 				});
 			  }
 			}
+
 			async function generatePDF(content) {
-				try {
-					console.log(content);
-
-					if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
-						throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
-					}
-
-					await ensureJsPDFLoaded();
-
-					// Create jsPDF instance using correct UMD reference
-					const doc = new window.jspdf.jsPDF();
-
-					console.log('AutoTable method available:', typeof doc.autoTable);
-
-					if (typeof doc.autoTable === 'function') {
-						doc.autoTable({
-							head: [content.headers],
-							body: content.rows
-						});
-
-						return doc.output('blob');
-					} else {
-						throw new Error('AutoTable is not available on jsPDF.');
-					}
-
-				} catch (err) {
-					console.error('Failed to generate PDF:', err);
-					throw err;
+			  try {
+				if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
+				  throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
 				}
+
+				await ensureJsPDFLoaded();
+
+				const { jsPDF } = window.jspdf;
+				const doc = new jsPDF();
+
+				doc.autoTable({
+				  head: [content.headers],
+				  body: content.rows
+				});
+
+				return doc.output('blob');
+			  } catch (err) {
+				console.error('Failed to generate PDF:', err);
+				throw err;
+			  }
 			}
 
 
