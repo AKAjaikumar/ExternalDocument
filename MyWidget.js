@@ -525,21 +525,18 @@ require([
 
 			async function loadJsPDFWithAutoTable() {
 				if (typeof window.jsPDF === 'undefined') {
-					console.log('Loading jsPDF...');
+					console.log('Loading jsPDF (legacy)...');
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js';
 
 						script.onload = () => {
-							// For UMD: jsPDF is available under window.jspdfjs.jspdf
-							if (window.jspdfjs && window.jspdfjs.jspdf && window.jspdfjs.jspdf.jsPDF) {
-								window.jsPDF = window.jspdfjs.jspdf.jsPDF; // Assign to global for easier access
+							if (typeof window.jsPDF !== 'undefined') {
 								console.log('jsPDF loaded successfully.');
 								resolve();
 							} else {
-								console.error('UMD jsPDF not properly exposed.', window.jspdfjs);
-								reject(new Error('jsPDF not loaded from UMD version.'));
+								reject(new Error('jsPDF not properly loaded.'));
 							}
 						};
 
@@ -551,7 +548,6 @@ require([
 					});
 				}
 
-				// Check AutoTable
 				if (!window.jsPDF.API.autoTable) {
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
