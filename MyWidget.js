@@ -2,8 +2,9 @@ require([
         'UWA/Core',
         'UWA/Drivers/Alone',
         'DS/WAFData/WAFData',
-        'DS/i3DXCompassServices/i3DXCompassServices'
-    ], function (UWA, Alone, WAFData, i3DXCompassServices) {
+        'DS/i3DXCompassServices/i3DXCompassServices',
+		'DS/jsPDF/jsPDF'
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,jsPDF) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
@@ -527,8 +528,9 @@ require([
 				return new Promise(function (resolve, reject) {
 					// Use a library like jsPDF or similar to create a PDF from the content
 					const jsPDF = window.jsPDF;  // Assuming jsPDF is available
-					const doc = new jsPDF();
-
+					console.log("jsPDF:", jsPDF);
+					const PDFConstructor = jsPDF.default || jsPDF;
+					const doc = new PDFConstructor();
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
