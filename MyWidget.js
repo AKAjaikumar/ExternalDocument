@@ -534,6 +534,7 @@ require([
 				  `;
 				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
+				  console.log('script:', script);
 				  document.body.appendChild(script);
 				});
 			  }
@@ -549,6 +550,7 @@ require([
 				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
 				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load AutoTable plugin: ' + e.message));
+				  console.log('script:', script);
 				  document.head.appendChild(script);
 				});
 			  }
@@ -562,10 +564,10 @@ require([
 					}
 
 					await ensureJsPDFLoaded();
-
+					
 					// Create jsPDF instance using correct UMD reference
 					const doc = new window.jspdf.jsPDF();
-
+					console.log('doc:', doc);
 					console.log('AutoTable method available:', typeof doc.autoTable);
 
 					if (typeof doc.autoTable === 'function') {
@@ -573,7 +575,7 @@ require([
 							head: [content.headers],
 							body: content.rows
 						});
-
+						
 						return doc.output('blob');
 					} else {
 						throw new Error('AutoTable is not available on jsPDF.');
