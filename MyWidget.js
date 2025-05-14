@@ -588,12 +588,18 @@ require([
 					// Debugging line to check if autoTable is available
 					console.log('AutoTable method available:', typeof doc.autoTable);
 
-					// Use AutoTable with doc
-					doc.autoTable({
-						head: tableData.slice(0, 1),  // First element is the table header
-						body: tableData.slice(1),     // Remaining elements are table rows
-					});
+					 if (doc.autoTable) {
+						console.log('AutoTable method available.');
+						doc.autoTable({
+							head: tableData.slice(0, 1),  // First element is the table header
+							body: tableData.slice(1),     // Remaining elements are table rows
+						});
 
+						// Return the generated PDF as a blob
+						return doc.output('blob');
+					} else {
+						throw new Error('AutoTable is not available on jsPDF.');
+					}
 					// Return the generated PDF as a blob
 					return doc.output('blob');
 				} catch (err) {
