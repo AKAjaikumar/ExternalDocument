@@ -568,15 +568,23 @@ require([
 
 			async function generatePDF(content) {
 				try {
-					await loadJsPDFWithAutoTable();
+					console.log(content);
+					// Ensure content is an array of arrays for AutoTable
+					if (!Array.isArray(content) || !Array.isArray(content[0])) {
+						throw new Error('Invalid content format. Expected an array of arrays.');
+					}
 
-					const doc = new window.jsPDF();
+					await loadJsPDFWithAutoTable(); // Ensure jsPDF and AutoTable are loaded
 
+					const doc = new window.jsPDF(); // Create jsPDF instance
+
+					// Use AutoTable with doc
 					doc.autoTable({
-						head: content.slice(0, 1),
-						body: content.slice(1),
+						head: content.slice(0, 1),  // First element is the table header
+						body: content.slice(1),     // Remaining elements are table rows
 					});
 
+					// Return the generated PDF as a blob
 					return doc.output('blob');
 				} catch (err) {
 					console.error('Failed to generate PDF:', err);
