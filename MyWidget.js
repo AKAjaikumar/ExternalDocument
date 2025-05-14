@@ -524,46 +524,54 @@ require([
 
 
 			async function loadJsPDFWithAutoTable() {
-				// Load jsPDF if not already loaded
-				if (typeof window.jsPDF === 'undefined') {
-					await new Promise((resolve, reject) => {
-						const script = document.createElement('script');
-						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
-						script.onload = resolve;
-						script.onerror = reject;
-						document.head.appendChild(script);
-					});
-				}
+			  // Load jsPDF if not already loaded
+			  if (typeof window.jsPDF === 'undefined') {
+				await new Promise((resolve, reject) => {
+				  const script = document.createElement('script');
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
+				  script.onload = () => {
+					if (typeof window.jsPDF === 'undefined') {
+					  console.error('jsPDF not found after loading script.');
+					  reject(new Error('jsPDF not found.'));
+					} else {
+					  resolve();
+					}
+				  };
+				  script.onerror = reject;
+				  document.head.appendChild(script);
+				});
+			  }
 
-				// Load AutoTable plugin if not already loaded
-				if (!window.jsPDF?.prototype?.autoTable) {
-					await new Promise((resolve, reject) => {
-						const script = document.createElement('script');
-						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
-						script.onload = resolve;
-						script.onerror = reject;
-						document.head.appendChild(script);
-					});
-				}
+			  // Ensure AutoTable is loaded
+			  if (typeof window.jsPDF?.prototype?.autoTable === 'undefined') {
+				await new Promise((resolve, reject) => {
+				  const script = document.createElement('script');
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
+				  script.onload = resolve;
+				  script.onerror = reject;
+				  document.head.appendChild(script);
+				});
+			  }
 			}
 
 			async function generatePDF(content) {
-				try {
-					await loadJsPDFWithAutoTable();
+			  try {
+				await loadJsPDFWithAutoTable();
 
-					const doc = new jsPDF();
+				// Now jsPDF should be available
+				const doc = new jsPDF();
 
-					doc.autoTable({
-						head: content.slice(0, 1),
-						body: content.slice(1),
-					});
+				doc.autoTable({
+				  head: content.slice(0, 1),
+				  body: content.slice(1),
+				});
 
-					const pdfBlob = doc.output('blob');
-					return pdfBlob;
-				} catch (err) {
-					console.error('Failed to generate PDF:', err);
-					throw err;
-				}
+				const pdfBlob = doc.output('blob');
+				return pdfBlob;
+			  } catch (err) {
+				console.error('Failed to generate PDF:', err);
+				throw err;
+			  }
 			}
 
 
