@@ -569,19 +569,26 @@ require([
 			async function generatePDF(content) {
 				try {
 					console.log(content);
-					// Ensure content is an array of arrays for AutoTable
-					if (!Array.isArray(content) || !Array.isArray(content[0])) {
-						throw new Error('Invalid content format. Expected an array of arrays.');
+
+					// Check if content has 'headers' and 'rows'
+					if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
+						throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
 					}
 
-					await loadJsPDFWithAutoTable(); // Ensure jsPDF and AutoTable are loaded
+					// Combine headers and rows into the format expected by jsPDF autoTable
+					const tableData = [
+						content.headers,  // The first row will be the table header
+						...content.rows   // The rest will be the table rows
+					];
 
-					const doc = new window.jsPDF(); // Create jsPDF instance
+					await loadJsPDFWithAutoTable();  // Ensure jsPDF and AutoTable are loaded
+
+					const doc = new window.jsPDF();  // Create jsPDF instance
 
 					// Use AutoTable with doc
 					doc.autoTable({
-						head: content.slice(0, 1),  // First element is the table header
-						body: content.slice(1),     // Remaining elements are table rows
+						head: tableData.slice(0, 1),  // First element is the table header
+						body: tableData.slice(1),     // Remaining elements are table rows
 					});
 
 					// Return the generated PDF as a blob
