@@ -523,9 +523,11 @@ require([
 			}
 
 
-			function generatePDF(content) {
-				return new Promise(function (resolve, reject) {
-					const { jsPDF } = window.jspdf;
+			async function generatePDF(content) {
+				try {
+					const module = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+					const { jsPDF } = module;
+
 					const doc = new jsPDF();
 					doc.autoTable({
 						head: content.slice(0, 1),
@@ -533,8 +535,11 @@ require([
 					});
 
 					const pdfData = doc.output('blob');  // Get PDF as Blob
-					resolve(pdfData);
-				});
+					return pdfData;
+				} catch (err) {
+					console.error('Failed to generate PDF:', err);
+					throw err;
+				}
 			}
 
 
