@@ -585,6 +585,9 @@ require([
 
 					const doc = new window.jsPDF();  // Create jsPDF instance
 
+					// Debugging line to check if autoTable is available
+					console.log('AutoTable method available:', typeof doc.autoTable);
+
 					// Use AutoTable with doc
 					doc.autoTable({
 						head: tableData.slice(0, 1),  // First element is the table header
