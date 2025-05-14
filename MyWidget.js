@@ -555,7 +555,9 @@ require([
 				await ensureJsPDFLoaded();
 
 				const doc = new window.jsPDF();
-
+				 if (typeof doc.autoTable !== 'function') {
+				  throw new Error("AutoTable plugin is not available.");
+				}
 				doc.autoTable({
 				  head: [content.headers],
 				  body: content.rows
