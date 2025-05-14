@@ -524,24 +524,27 @@ require([
 
 
 			async function loadJsPDFWithAutoTable() {
-				return new Promise((resolve, reject) => {
-					const jsPDFScript = document.createElement('script');
-					jsPDFScript.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
-					jsPDFScript.onload = () => {
-						// Assign to window.jspdf if not already set
-						if (!window.jspdf && window.jsPDF) {
-							window.jspdf = { jsPDF: window.jsPDF };
-						}
+				// Load jsPDF if not already loaded
+				if (typeof window.jsPDF === 'undefined') {
+					await new Promise((resolve, reject) => {
+						const script = document.createElement('script');
+						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
+						script.onload = resolve;
+						script.onerror = reject;
+						document.head.appendChild(script);
+					});
+				}
 
-						const autoTableScript = document.createElement('script');
-						autoTableScript.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
-						autoTableScript.onload = resolve;
-						autoTableScript.onerror = reject;
-						document.head.appendChild(autoTableScript);
-					};
-					jsPDFScript.onerror = reject;
-					document.head.appendChild(jsPDFScript);
-				});
+				// Load AutoTable plugin if not already loaded
+				if (!window.jsPDF?.prototype?.autoTable) {
+					await new Promise((resolve, reject) => {
+						const script = document.createElement('script');
+						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
+						script.onload = resolve;
+						script.onerror = reject;
+						document.head.appendChild(script);
+					});
+				}
 			}
 
 			async function generatePDF(content) {
