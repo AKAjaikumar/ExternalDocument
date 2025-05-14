@@ -524,27 +524,25 @@ require([
 
 
 			async function loadJsPDFWithAutoTable() {
-				// Check if jsPDF is already loaded
-				if (typeof window.jspdf === 'undefined') {
+				if (typeof window.jsPDF === 'undefined') {
 					console.log('Loading jsPDF...');
 
-					// Load jsPDF from CDN (latest UMD version)
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-						console.log('Window object:', window);
-						// On script load
+
 						script.onload = () => {
-							console.log('window.jspdf:', window.jspdf); // Log the loaded jsPDF object
-							if (typeof window.jspdf === 'undefined') {
-								reject(new Error('jsPDF not loaded from latest version.'));
-							} else {
+							// For UMD: jsPDF is available under window.jspdfjs.jspdf
+							if (window.jspdfjs && window.jspdfjs.jspdf && window.jspdfjs.jspdf.jsPDF) {
+								window.jsPDF = window.jspdfjs.jspdf.jsPDF; // Assign to global for easier access
 								console.log('jsPDF loaded successfully.');
 								resolve();
+							} else {
+								console.error('UMD jsPDF not properly exposed.', window.jspdfjs);
+								reject(new Error('jsPDF not loaded from UMD version.'));
 							}
 						};
 
-						// On error
 						script.onerror = (err) => {
 							reject(new Error('Failed to load jsPDF: ' + err));
 						};
@@ -553,19 +551,14 @@ require([
 					});
 				}
 
-				// Ensure jsPDF is loaded and available
-				if (typeof window.jspdf === 'undefined') {
-					throw new Error('jsPDF is not loaded.');
-				}
-
-				// Ensure AutoTable plugin is available
-				if (!window.jspdf.autoTable) {
+				// Check AutoTable
+				if (!window.jsPDF.API.autoTable) {
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
 						script.onload = () => {
-							console.log('AutoTable plugin loaded successfully.');
+							console.log('AutoTable plugin loaded.');
 							resolve();
 						};
 						script.onerror = (err) => {
@@ -578,24 +571,16 @@ require([
 
 			async function generatePDF(content) {
 				try {
-					// Load jsPDF and AutoTable before using them
 					await loadJsPDFWithAutoTable();
 
-					// Access the jsPDF constructor from window.jspdf
-					const { jsPDF } = window.jspdf;
+					const doc = new window.jsPDF();
 
-					// Create a new jsPDF instance
-					const doc = new jsPDF();
-
-					// Use the autoTable function to add tables to the PDF
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
 					});
 
-					// Output PDF as a blob
-					const pdfBlob = doc.output('blob');
-					return pdfBlob;
+					return doc.output('blob');
 				} catch (err) {
 					console.error('Failed to generate PDF:', err);
 					throw err;
