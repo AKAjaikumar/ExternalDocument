@@ -559,7 +559,7 @@ require([
 				try {
 					console.log(content);
 
-					iconst { jsPDF } = window.jspdf;
+					const { jsPDF } = window.jspdf;
 					console.log("jsPDF loaded:", jsPDF);
 
 					const doc = new jsPDF();
