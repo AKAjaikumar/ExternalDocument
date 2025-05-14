@@ -529,21 +529,22 @@ require([
 				  const script = document.createElement('script');
 				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 				  script.onload = () => {
-					// 🔽 Manually attach exports from UMD
-					if (window.jspdf === undefined && window.jspdf === undefined) {
-					  window.jspdf = window.jspdf || window.jspdf || window.jspdf = window.jspdf || window.jspdf;
-					}
-					if (!window.jspdf && typeof window.jspdf === 'undefined') {
-					  try {
-						const exported = window.jspdf || window.jspdf || window.jspdf;
-						window.jspdf = exported;
-					  } catch (e) {
-						console.error('Failed to attach jsPDF manually.', e);
+					try {
+					  // jsPDF UMD exports to window.jspdf under jspdf.jsPDF
+					  const global = window.jspdf || window.jspdf;
+					  if (!global || !global.jsPDF) {
+						// Try attaching it manually
+						const exports = window.jspdf?.jsPDF || window.jspdf?.jsPDF;
+						if (exports) {
+						  window.jspdf = { jsPDF: exports };
+						}
 					  }
+					} catch (e) {
+					  console.error('Error attaching jsPDF manually:', e);
 					}
 					resolve();
 				  };
-				  script.onerror = reject;
+				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
 				});
 			  }
@@ -557,7 +558,7 @@ require([
 				  const script = document.createElement('script');
 				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js';
 				  script.onload = resolve;
-				  script.onerror = reject;
+				  script.onerror = (e) => reject(new Error('Failed to load AutoTable plugin: ' + e.message));
 				  document.head.appendChild(script);
 				});
 			  }
