@@ -528,12 +528,13 @@ require([
 			  if (typeof window.jsPDF === 'undefined') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
+				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js';
 				  script.onload = () => {
 					if (typeof window.jsPDF === 'undefined') {
 					  console.error('jsPDF not found after loading script.');
 					  reject(new Error('jsPDF not found.'));
 					} else {
+					  console.log('jsPDF loaded.');
 					  resolve();
 					}
 				  };
@@ -546,8 +547,11 @@ require([
 			  if (typeof window.jsPDF?.prototype?.autoTable === 'undefined') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
-				  script.onload = resolve;
+				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
+				  script.onload = () => {
+					console.log('AutoTable loaded.');
+					resolve();
+				  };
 				  script.onerror = reject;
 				  document.head.appendChild(script);
 				});
@@ -558,7 +562,6 @@ require([
 			  try {
 				await loadJsPDFWithAutoTable();
 
-				// Now jsPDF should be available
 				const doc = new jsPDF();
 
 				doc.autoTable({
