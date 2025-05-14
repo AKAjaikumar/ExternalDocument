@@ -524,17 +524,23 @@ require([
 
 
 			async function ensureJsPDFLoaded() {
+			  // Load jsPDF UMD
 			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
+				  script.type = 'text/javascript';
 				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 				  script.onload = () => {
-					// UMD exposes everything to globalThis.jspdf
-					if (globalThis.jspdf && typeof globalThis.jspdf.jsPDF === 'function') {
-					  window.jspdf = globalThis.jspdf;
-					  resolve();
-					} else {
-					  reject(new Error('jsPDF not properly exported to window.jspdf'));
+					try {
+					  // The UMD bundle attaches to window.jspdf as default
+					  if (window.jspdf?.default?.jsPDF) {
+						window.jspdf = { jsPDF: window.jspdf.default.jsPDF };
+						resolve();
+					  } else {
+						reject(new Error('jsPDF not properly exported via UMD.'));
+					  }
+					} catch (err) {
+					  reject(err);
 					}
 				  };
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
@@ -542,7 +548,7 @@ require([
 				});
 			  }
 
-			  // Load AutoTable if missing
+			  // Load AutoTable
 			  if (!window.jspdf.jsPDF.API.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
