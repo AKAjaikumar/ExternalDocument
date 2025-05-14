@@ -566,10 +566,10 @@ require([
 					// Load jsPDF and AutoTable before using them
 					await loadJsPDFWithAutoTable();
 
-					// Use jsPDF and AutoTable to generate PDF
+					// Using jsPDF with ES Module pattern for v2.x
 					const { jsPDF } = window.jspdf;
-					const doc = new jsPDF();
 
+					const doc = new jsPDF();
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
