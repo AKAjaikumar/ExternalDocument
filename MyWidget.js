@@ -554,8 +554,7 @@ require([
 
 				await ensureJsPDFLoaded();
 
-				const { jsPDF } = window.jspdf;
-				const doc = new jsPDF();
+				const doc = new window.jsPDF();
 
 				doc.autoTable({
 				  head: [content.headers],
