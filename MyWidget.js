@@ -525,10 +525,12 @@ require([
 
 			async function generatePDF(content) {
 				try {
-					const module = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-					const { default: jsPDFModule } = module;
-					const doc = new jsPDFModule.jsPDF();
+					const jsPDFModule = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+					await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
 
+					const jsPDF = jsPDFModule.default.jsPDF;
+
+					const doc = new jsPDF();
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
