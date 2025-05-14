@@ -526,15 +526,15 @@ require([
 			async function generatePDF(content) {
 				try {
 					const module = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-					const { jsPDF } = module;
+					const { default: jsPDFModule } = module;
+					const doc = new jsPDFModule.jsPDF();
 
-					const doc = new jsPDF();
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
 					});
 
-					const pdfData = doc.output('blob');  // Get PDF as Blob
+					const pdfData = doc.output('blob');
 					return pdfData;
 				} catch (err) {
 					console.error('Failed to generate PDF:', err);
