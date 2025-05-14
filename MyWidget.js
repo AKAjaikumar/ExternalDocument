@@ -527,27 +527,14 @@ require([
 			  if (!window.jspdf || !window.jspdf.jsPDF) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
-				  script.onload = () => {
-					try {
-					  // jsPDF UMD exports to window.jspdf under jspdf.jsPDF
-					  if (window.jspdf && typeof window.jspdf.jsPDF === 'function') {
-						console.log('jsPDF loaded via UMD.');
-					  } else if (window.jspdf?.jsPDF) {
-						window.jspdf = { jsPDF: window.jspdf.jsPDF };
-					  } else if (window.jspdf?.default?.jsPDF) {
-						// Some UMDs expose under default
-						window.jspdf = { jsPDF: window.jspdf.default.jsPDF };
-					  } else {
-						console.warn('jsPDF UMD structure not found.');
-					  }
-					} catch (e) {
-					  console.error('Error attaching jsPDF manually:', e);
-					}
-					resolve();
-				  };
+				  script.type = 'module'; // IMPORTANT
+				  script.textContent = `
+					import * as jspdf from 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
+					window.jspdf = { jsPDF: jspdf.jsPDF };
+				  `;
+				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
-				  document.head.appendChild(script);
+				  document.body.appendChild(script);
 				});
 			  }
 
