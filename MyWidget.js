@@ -546,8 +546,10 @@ require([
 
 					});
 				}
-
-				if (!window.jsPDF.API.autoTable) {
+				if (typeof window.jsPDF === 'undefined') {
+					throw new Error('jsPDF not loaded properly.');
+				}
+				if (!window.jsPDF.autoTable) {
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
