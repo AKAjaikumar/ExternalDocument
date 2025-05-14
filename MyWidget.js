@@ -523,25 +523,24 @@ require([
 			}
 
 
-			async function generatePDF(content) {
-				try {
-					const jsPDFModule = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-					await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
+			function generatePDF(content) {
+				return new Promise((resolve, reject) => {
+					try {
+						const { jsPDF } = window.jspdf; // Correct way for UMD
 
-					const jsPDF = jsPDFModule.default.jsPDF;
+						const doc = new jsPDF();
+						doc.autoTable({
+							head: content.slice(0, 1),
+							body: content.slice(1),
+						});
 
-					const doc = new jsPDF();
-					doc.autoTable({
-						head: content.slice(0, 1),
-						body: content.slice(1),
-					});
-
-					const pdfData = doc.output('blob');
-					return pdfData;
-				} catch (err) {
-					console.error('Failed to generate PDF:', err);
-					throw err;
-				}
+						const pdfData = doc.output('blob');
+						resolve(pdfData);
+					} catch (err) {
+						console.error('Failed to generate PDF:', err);
+						reject(err);
+					}
+				});
 			}
 
 
