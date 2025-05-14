@@ -529,22 +529,20 @@ require([
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.legacy.min.js';
+						script.src = 'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js';
 
 						script.onload = () => {
-							if (typeof window.jsPDF !== 'undefined') {
-								console.log('jsPDF loaded successfully.');
-								resolve();
+							if (window.jspdf && window.jspdf.jsPDF) {
+							  window.jsPDF = window.jspdf.jsPDF;
+							  resolve();
 							} else {
-								reject(new Error('jsPDF not properly loaded.'));
+							  reject(new Error('jsPDF not found in UMD.'));
 							}
-						};
+						  };
+						  script.onerror = (err) => reject(new Error('Failed to load jsPDF: ' + err));
+						  document.head.appendChild(script);
 
-						script.onerror = (err) => {
-							reject(new Error('Failed to load jsPDF: ' + err));
-						};
 
-						document.head.appendChild(script);
 					});
 				}
 
