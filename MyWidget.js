@@ -524,19 +524,19 @@ require([
 
 
 			async function loadJsPDFWithAutoTable() {
-				// Load classic jsPDF (which attaches to window.jsPDF directly)
-				if (!window.jsPDF) {
+				// Load jsPDF if not already loaded
+				if (typeof window.jsPDF === 'undefined') {
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js';
+						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js';
 						script.onload = resolve;
 						script.onerror = reject;
 						document.head.appendChild(script);
 					});
 				}
 
-				// Load AutoTable plugin
-				if (!window.jsPDF.prototype.autoTable) {
+				// Load AutoTable plugin if not already loaded
+				if (!window.jsPDF?.prototype?.autoTable) {
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
@@ -551,7 +551,7 @@ require([
 				try {
 					await loadJsPDFWithAutoTable();
 
-					const doc = new window.jsPDF();
+					const doc = new jsPDF();
 
 					doc.autoTable({
 						head: content.slice(0, 1),
