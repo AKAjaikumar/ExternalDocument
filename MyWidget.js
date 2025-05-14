@@ -487,7 +487,11 @@ require([
 											[csrfHeaderName]: csrfToken
 										},
 										onComplete: function (docData) {
-											resolve(docData);  // Return the document data
+												if (docData.data && docData.data.length > 0) {
+													resolve(docData.data[0]);  // Return first document object
+												} else {
+													reject("No document data returned");
+												}
 										},
 										onFailure: function (err) {
 											reject(err);
@@ -510,8 +514,19 @@ require([
 			function mergeDocumentsIntoTable(doc1, doc2) {
 				const content = [];
 				content.push(['Document Name', 'Document ID', 'Type']); // Header
-				content.push([doc1.dataelements.name, doc1.id, doc1.type]);
-				content.push([doc2.dataelements.name, doc2.id, doc2.type]);
+
+				content.push([
+					doc1.attributes.name || "N/A",
+					doc1.id,
+					doc1.type
+				]);
+
+				content.push([
+					doc2.attributes.name || "N/A",
+					doc2.id,
+					doc2.type
+				]);
+
 				return content;
 			}
 
