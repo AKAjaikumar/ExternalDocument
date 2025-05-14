@@ -535,7 +535,7 @@ require([
 			  }
 
 			  // Load AutoTable plugin
-			  if (!window.jsPDF.API.autoTable) {
+			  if (typeof window.jspdf === 'undefined' || !window.jspdf.API || !window.jspdf.API.autoTable) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
 				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
