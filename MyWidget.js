@@ -559,27 +559,17 @@ require([
 				try {
 					console.log(content);
 
-					if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
-						throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
-					}
+					iconst { jsPDF } = window.jspdf;
+					console.log("jsPDF loaded:", jsPDF);
 
-					await ensureJsPDFLoaded();
-					
-					// Create jsPDF instance using correct UMD reference
-					const doc = new window.jspdf.jsPDF();
-					console.log('doc:', doc);
-					console.log('AutoTable method available:', typeof doc.autoTable);
+					const doc = new jsPDF();
+					console.log("autoTable plugin:", doc.autoTable); // should NOT be undefined
 
-					if (typeof doc.autoTable === 'function') {
-						doc.autoTable({
-							head: [content.headers],
-							body: content.rows
-						});
-						
-						return doc.output('blob');
-					} else {
-						throw new Error('AutoTable is not available on jsPDF.');
-					}
+					doc.autoTable({
+						head: [['Column 1', 'Column 2']],
+						body: [['Value 1', 'Value 2']],
+					});
+					doc.save("demo.pdf");
 
 				} catch (err) {
 					console.error('Failed to generate PDF:', err);
