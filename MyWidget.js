@@ -533,6 +533,7 @@ require([
 
 						script.onload = () => {
 							if (window.jspdf && window.jspdf.jsPDF) {
+								console.log('window.jspdf loaded.');
 							  window.jsPDF = window.jspdf.jsPDF;
 							  resolve();
 							} else {
