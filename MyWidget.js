@@ -525,12 +525,12 @@ require([
 
 			async function loadJsPDFWithAutoTable() {
 				// Check if jsPDF is already loaded
-				if (typeof window.jsPDF === 'undefined') {
+				if (typeof window.jspdf === 'undefined') {
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
 						script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 						script.onload = () => {
-							if (typeof window.jsPDF === 'undefined') {
+							if (typeof window.jspdf === 'undefined') {
 								reject(new Error('jsPDF not loaded from latest version.'));
 							} else {
 								console.log('jsPDF loaded from latest version');
@@ -566,15 +566,19 @@ require([
 					// Load jsPDF and AutoTable before using them
 					await loadJsPDFWithAutoTable();
 
-					// Using jsPDF with ES Module pattern for v2.x
+					// Ensure that jsPDF is available and load it
 					const { jsPDF } = window.jspdf;
 
+					// Create a new jsPDF instance
 					const doc = new jsPDF();
+
+					// Use the autoTable function to add tables to the PDF
 					doc.autoTable({
 						head: content.slice(0, 1),
 						body: content.slice(1),
 					});
 
+					// Output PDF as a blob
 					const pdfBlob = doc.output('blob');
 					return pdfBlob;
 				} catch (err) {
