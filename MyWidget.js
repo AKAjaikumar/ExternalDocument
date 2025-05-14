@@ -527,7 +527,7 @@ require([
 			  if (typeof window.jsPDF === 'undefined') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js';
+				  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js';
 				  script.onload = () => {
 					if (typeof window.jsPDF === 'undefined') {
 					  reject(new Error('jsPDF not loaded from legacy build'));
