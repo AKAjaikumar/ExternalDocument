@@ -529,7 +529,7 @@ require([
 
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js';
+						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min.js';
 
 						script.onload = () => {
 							if (window.jspdf && window.jspdf.jsPDF) {
@@ -550,7 +550,7 @@ require([
 					console.log('Loading AutoTable plugin...');
 					await new Promise((resolve, reject) => {
 						const script = document.createElement('script');
-						script.src = 'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js';
+						script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
 						script.onload = () => {
 							console.log('AutoTable plugin loaded.');
 							resolve();
