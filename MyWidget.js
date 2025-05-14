@@ -527,7 +527,7 @@ require([
 			  if (!window.jspdf || !window.jspdf.jsPDF) {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min.js';
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jsPDF.umd.min.js';
 				  script.onload = () => {
 					try {
 					  // jsPDF UMD exports to window.jspdf under jspdf.jsPDF
