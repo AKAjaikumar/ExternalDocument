@@ -528,14 +528,20 @@ require([
 			  if (typeof window.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js'; // IIFE
-				  script.onload = resolve;
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js'; // IIFE version
+				  script.onload = () => {
+					// Ensure window.jspdf is defined for AutoTable plugin compatibility
+					if (typeof window.jspdf === 'undefined') {
+					  window.jspdf = { jsPDF: window.jsPDF };
+					}
+					resolve();
+				  };
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
 				});
 			  }
 
-			  // Load AutoTable plugin (depends on jsPDF being loaded already)
+			  // Load AutoTable plugin
 			  if (typeof window.jsPDF === 'function' && typeof window.jsPDF.API.autoTable !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
