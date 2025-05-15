@@ -23,7 +23,7 @@ require([
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
-
+			
             widget.body.empty();
             var container = new UWA.Element('div', {
                 styles: {
@@ -539,25 +539,28 @@ require([
 			}
 
 
-			function ensureJsPDFLoaded() {
-			  return window.jsPDFReady || Promise.reject("jsPDF not loaded");
-			}
+			async function generatePDF(content) {
+			  try {
+				if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
+				  throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
+				}
 
-			function generatePDF(documentData) {
-			  ensureJsPDFLoaded().then(() => {
-				const doc = new window.jsPDF(); // Now globally accessible
-				doc.text("Document Properties", 10, 10);
+				await ensureJsPDFLoaded();
 
-				// Assume autoTable is already loaded
-				window.jspdf.plugin.autotable(doc, {
-				  head: [['Name', 'Type']],
-				  body: documentData.map(doc => [doc.name, doc.type])
+				const doc = new jspdf("p", "mm", "a4");
+				 if (typeof doc.autoTable !== 'function') {
+				  throw new Error("AutoTable plugin is not available.");
+				}
+				doc.autoTable({
+				  head: [content.headers],
+				  body: content.rows
 				});
 
-				doc.save("document.pdf");
-			  }).catch((err) => {
-				console.error("Failed to generate PDF:", err);
-			  });
+				return doc.output('blob');
+			  } catch (err) {
+				console.error('Failed to generate PDF:', err);
+				throw err;
+			  }
 			}
 
 
