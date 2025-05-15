@@ -504,14 +504,15 @@ require([
 
 						const navURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
 						const payload = {
-						  objects: [
-							{ id: bookmarkId }
-						  ]
+						  ids: [bookmarkId],
+						  label: `ENOFOL4_${widgetId}`, // create a dynamic label using your widgetId
+						  responseMode: "objectsByPatterns",
+						  widgetId: widgetId // generate a UID or static string is okay for test
 						};
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
 						  type: 'json',
-						  data: JSON.stringify(payload),
+						    data: JSON.stringify(payload),
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
