@@ -14,8 +14,10 @@ require([
         'UWA/Core',
         'UWA/Drivers/Alone',
         'DS/WAFData/WAFData',
-        'DS/i3DXCompassServices/i3DXCompassServices'
-    ], function (UWA, Alone, WAFData, i3DXCompassServices) {
+        'DS/i3DXCompassServices/i3DXCompassServices',
+		'PDFJsDependency',
+		'AUTOTABLE',
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,PDFJsDependency,AUTOTABLE) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
