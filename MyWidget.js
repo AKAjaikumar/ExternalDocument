@@ -638,8 +638,9 @@ require([
 													console.log("FCS Upload URL:", fcsUrl);
 													console.log("PDF Blob size:", pdfBlob.size);
 													const formData = new FormData();
+													formData.append(paramName, ticket);
 													formData.append('file_0', pdfBlob, "Merged_Document.pdf");
-													formData.append("__fcs__jobTicket", ticket);
+													
 													
 
 													const xhr = new XMLHttpRequest();
