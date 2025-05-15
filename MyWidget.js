@@ -476,7 +476,7 @@ require([
 				}
 			}).inject(container4);
 
-			function fetchBookmarksForFolder(docId) {
+			function fetchBookmarksForDocument(docId) {
 			  return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
 						platformId: platformId,
