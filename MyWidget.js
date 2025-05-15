@@ -636,11 +636,11 @@ require([
 													console.log("Using ticket param:", paramName);
 													console.log("Ticket:", ticket);
 													console.log("FCS Upload URL:", fcsUrl);
-
+													console.log("PDF Blob size:", pdfBlob.size);
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, "Merged_Document.pdf");
 													formData.append("__fcs__jobTicket", ticket);
-													formData.append("file_0_filename", "Merged_Document.pdf");
+													
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
