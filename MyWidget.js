@@ -651,8 +651,8 @@ require([
 														if (xhr.status === 200) {
 															// 5. Call Checkin
 															console.log("Raw FCS responseText:", xhr.responseText);
-															const match = xhr.responseText.match(/^receipt=(.+)$/m);
-															const receipt = match ? match[1] : null;
+															
+															const receipt = xhr.responseText;
 
 															if (!receipt) {
 																reject("FCS upload succeeded but no valid receipt was returned.");
