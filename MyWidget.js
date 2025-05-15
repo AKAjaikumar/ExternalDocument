@@ -450,8 +450,8 @@ require([
 								  console.log("bookmark2:", bookmark2);
 
 								  const [ctrlCopy1, ctrlCopy2] = await Promise.all([
-									getParentRelatedCtrlCopy(bookmark1.id),
-									getParentRelatedCtrlCopy(bookmark2.id)
+									getParentRelatedCtrlCopy(bookmark1[0]?.id),
+									getParentRelatedCtrlCopy(bookmark2[0]?.id)
 								  ]);
 
 								  // You can now use ctrlCopy1 and ctrlCopy2 as needed
