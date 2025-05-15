@@ -528,10 +528,10 @@ require([
 			  if (typeof window.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js'; // IIFE version
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
 				  script.onload = () => {
-					// Ensure window.jspdf is defined for AutoTable plugin compatibility
-					if (typeof window.jspdf === 'undefined') {
+					// Required for AutoTable plugin to work
+					if (!window.jspdf) {
 					  window.jspdf = { jsPDF: window.jsPDF };
 					}
 					resolve();
@@ -539,14 +539,24 @@ require([
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
 				});
+			  } else if (!window.jspdf) {
+				// Ensure it's set if jsPDF was already loaded
+				window.jspdf = { jsPDF: window.jsPDF };
 			  }
 
 			  // Load AutoTable plugin
-			  if (typeof window.jsPDF === 'function' && typeof window.jsPDF.API.autoTable !== 'function') {
+			  if (typeof window.jsPDF.API.autoTable !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
 				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js';
-				  script.onload = resolve;
+				  script.onload = () => {
+					// Confirm plugin attached
+					if (typeof window.jsPDF.API.autoTable === 'function') {
+					  resolve();
+					} else {
+					  reject(new Error('AutoTable plugin failed to attach.'));
+					}
+				  };
 				  script.onerror = (e) => reject(new Error('Failed to load AutoTable plugin: ' + e.message));
 				  document.head.appendChild(script);
 				});
