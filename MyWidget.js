@@ -524,10 +524,14 @@ require([
 
 
 			async function ensureJsPDFLoaded() {
-			  if (typeof window.jsPDF !== 'function') {
+			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
 				throw new Error('jsPDF not available');
 			  }
-			  if (typeof window.jsPDF.API.autoTable !== 'function') {
+
+			  if (
+				!window.jspdf.jsPDF.API ||
+				typeof window.jspdf.jsPDF.API.autoTable !== 'function'
+			  ) {
 				throw new Error('AutoTable plugin is not available');
 			  }
 			}
@@ -540,7 +544,7 @@ require([
 
 				await ensureJsPDFLoaded();
 
-				const doc = new window.jsPDF();
+				const doc = new window.jspdf.jsPDF();
 				 if (typeof doc.autoTable !== 'function') {
 				  throw new Error("AutoTable plugin is not available.");
 				}
