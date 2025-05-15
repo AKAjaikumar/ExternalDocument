@@ -645,8 +645,13 @@ require([
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
-															const fcsResponse = JSON.parse(xhr.responseText);
-															const receipt = fcsResponse.receipt; // may be under fcsResponse.dataelements.receipt if nested
+															const match = xhr.responseText.match(/^receipt=(.+)$/m);
+															const receipt = match ? match[1] : null;
+
+															if (!receipt) {
+																reject("FCS upload succeeded but no valid receipt was returned.");
+																return;
+															}
 															console.log("Receipt:", receipt);
 															if (!receipt) {
 																reject("FCS upload succeeded but no receipt was returned.");
