@@ -671,7 +671,7 @@ require([
 															};
 
 															WAFData.authenticatedRequest(checkInURL, {
-																method: 'POST',
+																method: 'PATCH',
 																type: 'json',
 																headers: {
 																	'Content-Type': 'application/json',
