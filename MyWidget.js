@@ -645,7 +645,7 @@ require([
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
 													console.log("xhr.status:", xhr.status);
-													xhr.setRequestHeader(csrfHeaderName, csrfToken); 
+													//xhr.setRequestHeader(csrfHeaderName, csrfToken); 
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
