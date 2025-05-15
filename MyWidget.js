@@ -440,11 +440,11 @@ require([
 									// docs contains both documents' data
 									const doc1 = docs[0];
 									const doc2 = docs[1];
-									Promise.all([
-											fetchBookmarksForDocument(droppedObjects[0].objectId),
-											fetchBookmarksForDocument(droppedObjects[1].objectId)
-										]).then(function ([bookmarks1, bookmarks2]) {
-											console.log("Bookmarks:", bookmarks1, bookmarks2);
+									Promise.all(function (obj)[
+											fetchBookmarksForDocument(obj.objectId),
+											//fetchBookmarksForDocument(droppedObjects[1].objectId)
+										])).then(function (bookmarks1) {
+											console.log("Bookmarks:", bookmarks1);
 											// Continue processing
 										}).catch(function (err) {
 											console.error("Error fetching bookmarks:", err);
@@ -498,7 +498,7 @@ require([
 									const csrfToken = csrfData.csrf.value;
 									const csrfHeaderName = csrfData.csrf.name;
 
-									const docURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/bookmarks';
+									const docURL = baseUrl + '/resources/v1/FolderManagement/Folder/' + docId + '/getRelatedBookmarks';
 									WAFData.authenticatedRequest(docURL, {
 										method: 'GET',
 										type: 'json',
