@@ -517,7 +517,6 @@ require([
 											}
 										},
 										onFailure: function (err) {
-											console.error("Error fetching bookmarks:", err);
 											reject(err);
 										}
 									});
