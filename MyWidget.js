@@ -19,11 +19,12 @@ require([
         'DS/WAFData/WAFData',
         'DS/i3DXCompassServices/i3DXCompassServices',
 		'jspdf'
-    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdf) {
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdfModule) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
-			
+			 const jsPDF = jspdfModule.default;
+			 console.log("jsPDF",jsPDF);
             widget.body.empty();
             var container = new UWA.Element('div', {
                 styles: {
