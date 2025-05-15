@@ -434,50 +434,42 @@ require([
 
 							if (droppedObjects.length === 2) {
 								(async function () {
-									Promise.all(droppedObjects.map(function (obj) {
-										return fetchDocumentData(obj.objectId);
-									})).then(function (docs) {
-										
-										const doc1 = docs[0];
-										const doc2 = docs[1];
-										Promise.all(droppedObjects.map(function (obj){
-												return fetchBookmarksForDocument(obj.objectId);
-												
-												})).then(function (bookmarks) {
-													const bookmark1 = bookmarks[0];
-													const bookmark2 = bookmarks[1];
-													console.log("bookmark1:", bookmark1);
-													console.log("bookmark2:", bookmark2);
-													const [ctrlCopy1, ctrlCopy2] = await Promise.all([
-													  getParentRelatedCtrlCopy(bookmark1.id),
-													  getParentRelatedCtrlCopy(bookmark2.id)
-													]);
-														/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
-															
-															
-															generatePDF(mergedContent).then(function (pdfData) {
-																
-																createDocumentWithPDF(pdfData).then(function (response) {
-																	alert("Document created and checked in successfully!");
-																}).catch(function (err) {
-																	console.error("Failed to create or check in the document:", err);
-																});
-															}).catch(function (err) {
-																console.error("Failed to generate PDF:", err);
-															});*/
-														// Continue processing
-													
-													
-													
-												
-											}).catch(function (err) {
-												console.error("Error fetching bookmarks:", err);
-											});
+									 try {
+								  const docs = await Promise.all(
+									droppedObjects.map(obj => fetchDocumentData(obj.objectId))
+								  );
 
-										
-									}).catch(function (err) {
-										console.error("Failed to fetch document data:", err);
-									});
+								  const [doc1, doc2] = docs;
+
+								  const bookmarks = await Promise.all(
+									droppedObjects.map(obj => fetchBookmarksForDocument(obj.objectId))
+								  );
+
+								  const [bookmark1, bookmark2] = bookmarks;
+								  console.log("bookmark1:", bookmark1);
+								  console.log("bookmark2:", bookmark2);
+
+								  const [ctrlCopy1, ctrlCopy2] = await Promise.all([
+									getParentRelatedCtrlCopy(bookmark1.id),
+									getParentRelatedCtrlCopy(bookmark2.id)
+								  ]);
+
+								  // You can now use ctrlCopy1 and ctrlCopy2 as needed
+								  console.log("ctrlCopy1:", ctrlCopy1);
+								  console.log("ctrlCopy2:", ctrlCopy2);
+
+								  // Proceed with merging and PDF generation if needed
+								  /*
+								  const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
+								  const pdfData = await generatePDF(mergedContent);
+								  await createDocumentWithPDF(pdfData);
+								  alert("Document created and checked in successfully!");
+								  */
+
+								} catch (err) {
+								  console.error("Processing failed:", err);
+								  alert("An error occurred while processing dropped items.");
+								}
 								})();
 							} else {
 								alert("Please drop exactly two documents.");
