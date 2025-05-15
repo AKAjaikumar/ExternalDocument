@@ -9,16 +9,18 @@
 
   <!-- Wait for jsPDF to load, then expose it globally -->
   <script type="text/javascript">
-    window.jsPDFReady = new Promise((resolve) => {
-      window.jspdfLoaded = setInterval(() => {
+  window.jsPDFReady = {
+    then: function(callback) {
+      var intervalId = setInterval(function() {
         if (window.jspdf && window.jspdf.jsPDF) {
           window.jsPDF = window.jspdf.jsPDF;
-          clearInterval(window.jspdfLoaded);
-          resolve();
+          clearInterval(intervalId);
+          callback();
         }
       }, 100);
-    });
-  </script>
+    }
+  };
+</script>
 
   <!-- Load AutoTable plugin -->
   <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js"></script>
