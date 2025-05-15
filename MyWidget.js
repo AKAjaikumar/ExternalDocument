@@ -638,9 +638,9 @@ require([
 													console.log("FCS Upload URL:", fcsUrl);
 
 													const formData = new FormData();
-													formData.append('file_0', pdfBlob, fileName);
+													formData.append('file_0', pdfBlob, "Merged_Document.pdf");
 													formData.append(paramName, ticket);
-													formData.append("file_0_filename", fileName);
+													formData.append("file_0_filename", "Merged_Document.pdf");
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
