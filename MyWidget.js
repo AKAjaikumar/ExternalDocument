@@ -645,6 +645,7 @@ require([
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
+															console.log("Raw FCS responseText:", xhr.responseText);
 															const match = xhr.responseText.match(/^receipt=(.+)$/m);
 															const receipt = match ? match[1] : null;
 
