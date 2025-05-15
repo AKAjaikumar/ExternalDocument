@@ -441,8 +441,8 @@ require([
 									const doc1 = docs[0];
 									const doc2 = docs[1];
 									Promise.all(droppedObjects.map(function (obj){
-											fetchBookmarksForDocument(obj.objectId),
-											//fetchBookmarksForDocument(droppedObjects[1].objectId)
+											return fetchBookmarksForDocument(obj.objectId);
+											
 											})).then(function (bookmarks1) {
 											console.log("Bookmarks:", bookmarks1);
 											// Continue processing
