@@ -660,32 +660,31 @@ require([
 															}
 															console.log("Receipt:", receipt);
 															
-															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
+															const checkInURL = baseUrl + '/resources/v1/modeler/documents' ;
 															console.log("Checkin URL:", checkInURL);
 															console.log("Document ID:", docId);
 															const checkInPayload = {
 															  data: [{
-																id: docId,
-																type: "Document",                // or the actual type string expected
-																updateAction: "CONNECT",
-																dataelements: {
-																  title: "Merged_Document.pdf",  // or dynamic file title
-																  name: "Merged_Document",       // or dynamic document name
-																  comments: "File uploaded via widget",
-																  fileType: "pdf",
-																  dimension: "",
-																  revision: "A",
-																  receipt: receipt,
-																  keepLocked: "false",
-																  format: "pdf",
-																  store: ""
-																},
-																relateddata: {}
-															  }]
+																"id": docId,
+																"relateddata": {
+																				"files": [
+																					{
+																						"dataelements": {
+																							"comments": "COMING VIA EXTERNAM WIDGET",
+																							"receipt": receipt,
+																							"title": "Merged_Document"
+																						},
+																						"updateAction": "CREATE"
+																					}
+																				]
+																			},
+																			"updateAction": "NONE"
+																		}
+																	]
 															};
 
 															WAFData.authenticatedRequest(checkInURL, {
-																method: 'POST',
+																method: 'PUT',
 																type: 'json',
 																headers: {
 																	'Content-Type': 'application/json',
