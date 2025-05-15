@@ -637,7 +637,7 @@ require([
 													console.log("FCS URL:", fcsUrl);
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, fileName);
-													formData.append('ticket_0', ticketData.dataelements.ticket);
+													formData.append('ticket_0', ticketData.data[0].dataelements.ticket);
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
