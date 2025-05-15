@@ -454,7 +454,7 @@ require([
 									getParentRelatedCtrlCopy(bookmark2[0]?.id)
 								  ]);
 
-								  // You can now use ctrlCopy1 and ctrlCopy2 as needed
+								 
 								  console.log("ctrlCopy1:", ctrlCopy1);
 								  console.log("ctrlCopy2:", ctrlCopy2);
 
@@ -507,7 +507,13 @@ require([
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
 						  type: 'json',
-						  data: JSON.stringify({ ids: [bookmarkId] }),
+						  data: JSON.stringify({
+							  objects: [
+								{
+								  id: bookmarkId
+								}
+							  ]
+							})
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
