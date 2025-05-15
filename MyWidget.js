@@ -618,7 +618,7 @@ require([
 											};
 
 											WAFData.authenticatedRequest(ticketURL, {
-												method: 'POST',
+												method: 'PUT',
 												type: 'json',
 												headers: {
 													'Content-Type': 'application/json',
