@@ -626,6 +626,7 @@ require([
 												},
 												data: JSON.stringify(ticketPayload),
 												onComplete: function (ticketResponse) {
+													 console.log("Ticket response:", ticketResponse);
 													const ticketData = ticketResponse.data[0];
 													const ticketURL = ticketData.dataelements.ticketURL;
 													const fileName = ticketData.dataelements.fileName;
@@ -633,12 +634,14 @@ require([
 
 													// 4. Upload the actual file to FCS
 													const fcsUrl = ticketURL; // already a full URL
+													console.log("FCS URL:", fcsUrl);
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, fileName);
 													formData.append('ticket_0', ticketData.dataelements.ticket);
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
+													console.log("xhr.status:", xhr.status);
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
