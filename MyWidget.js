@@ -523,41 +523,25 @@ require([
 			}
 
 
-			async function ensureJsPDFLoaded() {
-			  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
-				throw new Error('jsPDF not available');
-			  }
-
-			  if (
-				!window.jspdf.jsPDF.API ||
-				typeof window.jspdf.jsPDF.API.autoTable !== 'function'
-			  ) {
-				throw new Error('AutoTable plugin is not available');
-			  }
+			function ensureJsPDFLoaded() {
+			  return window.jsPDFReady || Promise.reject("jsPDF not loaded");
 			}
 
-			async function generatePDF(content) {
-			  try {
-				if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
-				  throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
-				}
+			function generatePDF(documentData) {
+			  ensureJsPDFLoaded().then(() => {
+				const doc = new window.jsPDF(); // Now globally accessible
+				doc.text("Document Properties", 10, 10);
 
-				await ensureJsPDFLoaded();
-
-				const doc = new window.jspdf.jsPDF();
-				 if (typeof doc.autoTable !== 'function') {
-				  throw new Error("AutoTable plugin is not available.");
-				}
-				doc.autoTable({
-				  head: [content.headers],
-				  body: content.rows
+				// Assume autoTable is already loaded
+				window.jspdf.plugin.autotable(doc, {
+				  head: [['Name', 'Type']],
+				  body: documentData.map(doc => [doc.name, doc.type])
 				});
 
-				return doc.output('blob');
-			  } catch (err) {
-				console.error('Failed to generate PDF:', err);
-				throw err;
-			  }
+				doc.save("document.pdf");
+			  }).catch((err) => {
+				console.error("Failed to generate PDF:", err);
+			  });
 			}
 
 
