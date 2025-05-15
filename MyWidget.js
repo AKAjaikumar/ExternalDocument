@@ -640,6 +640,7 @@ require([
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, fileName);
 													formData.append(paramName, ticket);
+													formData.append("file_0_filename", fileName);
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
