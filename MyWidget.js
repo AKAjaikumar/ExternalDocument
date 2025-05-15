@@ -508,11 +508,7 @@ require([
 						  method: 'POST',
 						  type: 'json',
 						    data: JSON.stringify({
-							  objects: [
-								{
-								  id: bookmarkId
-								}
-							  ]
+							  ids: [bookmarkId]
 							}),
 						  headers: {
 							'Content-Type': 'application/json',
