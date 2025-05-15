@@ -626,18 +626,18 @@ require([
 												},
 												data: JSON.stringify(ticketPayload),
 												onComplete: function (ticketResponse) {
-													 console.log("Ticket response:", ticketResponse);
-													const ticketData = ticketResponse.data[0];
-													const ticketURL = ticketData.dataelements.ticketURL;
-													const fileName = ticketData.dataelements.fileName;
-													const docFormat = ticketData.dataelements.format;
+													 const ticketInfo = ticketData.data[0].dataelements;
+													const paramName = ticketInfo.ticketparamname;
+													const ticket = ticketInfo.ticket;
+													const fcsUrl = ticketInfo.ticketURL;
 
-													// 4. Upload the actual file to FCS
-													const fcsUrl = ticketURL; // already a full URL
-													console.log("FCS URL:", fcsUrl);
+													console.log("Using ticket param:", paramName);
+													console.log("Ticket:", ticket);
+													console.log("FCS Upload URL:", fcsUrl);
+
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, fileName);
-													formData.append('ticket_0', ticketData.data[0].dataelements.ticket);
+													formData.append(paramName, ticket);
 
 													const xhr = new XMLHttpRequest();
 													xhr.open('POST', fcsUrl, true);
