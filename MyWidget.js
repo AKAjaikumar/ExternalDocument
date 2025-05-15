@@ -513,8 +513,8 @@ require([
 										},
 										onComplete: function (data) {
 											console.log("Bookmarks for document", docId, data);
-											if (data && data.bookmarks && data.bookmarks.length > 0) {
-											  resolve(data.bookmarks);  // Return all related bookmarks
+											if (data && data.folders && data.folders.length > 0) {
+											  resolve(data.folders);  // Return all related bookmarks
 											} else {
 											  reject("No bookmarks found for this document.");
 											}
