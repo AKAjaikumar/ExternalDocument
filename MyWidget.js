@@ -546,7 +546,7 @@ require([
 				  throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
 				}
 
-				const doc = new jspdf("p", "mm", "a4");
+				const doc = new jsPDF();
 				 if (typeof doc.autoTable !== 'function') {
 				  throw new Error("AutoTable plugin is not available.");
 				}
