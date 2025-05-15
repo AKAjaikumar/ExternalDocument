@@ -1,23 +1,25 @@
 requirejs.config({
     paths: {
-        jsPDF: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min",
-        autotable: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min",
+        jspdf: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min",
+        autotable: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min"
     },
-}),
-define("PDFJsDependency", ["jsPDF"], function (jsPDF) {
-	return jsPDF;
-}),
-define("AUTOTABLE", ["autotable"], function (autotable) {
-	return autotable;
-}),
+    shim: {
+        jspdf: {
+            exports: "jspdf"
+        },
+        autotable: {
+            deps: ["jspdf"],
+            exports: "jspdf.plugin.autotable"
+        }
+    }
+});
 require([
         'UWA/Core',
         'UWA/Drivers/Alone',
         'DS/WAFData/WAFData',
         'DS/i3DXCompassServices/i3DXCompassServices',
-		'PDFJsDependency',
-		'AUTOTABLE',
-    ], function (UWA, Alone, WAFData, i3DXCompassServices,PDFJsDependency,AUTOTABLE) {
+		'jspdf'
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdf) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
