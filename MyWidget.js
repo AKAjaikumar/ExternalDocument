@@ -647,9 +647,24 @@ require([
 															// 5. Call Checkin
 															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
 															const checkInPayload = {
-																data: [{
-																	id: docId
-																}]
+															  data: [{
+																id: docId,
+																type: "Document",                // or the actual type string expected
+																updateAction: "CONNECT",
+																dataelements: {
+																  title: "Merged_Document.pdf",  // or dynamic file title
+																  name: "Merged_Document",       // or dynamic document name
+																  comments: "File uploaded via widget",
+																  fileType: "pdf",
+																  dimension: "",
+																  revision: "A",
+																  receipt: "",
+																  keepLocked: "false",
+																  format: "pdf",
+																  store: ""
+																},
+																relateddata: {}
+															  }]
 															};
 
 															WAFData.authenticatedRequest(checkInURL, {
