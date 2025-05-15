@@ -10,6 +10,21 @@
 <body>
   <P>Widget Loaded</P>
   <div id="testGridView" style="position: absolute; top: 60px; left: 0px; bottom: 0px; width: 100%;"></div>
-  
+  <script>
+  // Wait for UMD to finish loading
+  window.jspdfReady = setInterval(() => {
+    try {
+      if (typeof window.jspdf === 'undefined' && window.jspdf && window.jspdf.jsPDF) {
+        window.jspdf = window.jspdf;
+        clearInterval(window.jspdfReady);
+      } else if (typeof window.jspdf === 'undefined' && window.jsPDF) {
+        window.jspdf = { jsPDF: window.jsPDF }; // fallback
+        clearInterval(window.jspdfReady);
+      }
+    } catch (e) {
+      console.warn("Waiting for jsPDF UMD load...");
+    }
+  }, 100);
+</script>
 </body>
 </html>
