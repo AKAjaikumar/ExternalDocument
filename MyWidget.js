@@ -2,15 +2,6 @@ requirejs.config({
     paths: {
         jspdf: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min",
         autotable: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min"
-    },
-    shim: {
-        jspdf: {
-            exports: "jspdf"
-        },
-        autotable: {
-            deps: ["jspdf"],
-            exports: "jspdf.plugin.autotable"
-        }
     }
 });
 require([
@@ -18,12 +9,17 @@ require([
         'UWA/Drivers/Alone',
         'DS/WAFData/WAFData',
         'DS/i3DXCompassServices/i3DXCompassServices',
-		'jspdf'
-    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdfModule) {
+		'jspdf',
+		'autotable'
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdfModule, autotablePlugin) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
 			 const jsPDF = jspdfModule.default;
+			
+			 if (typeof jsPDF === 'function' && typeof jsPDF.API.autoTable === 'undefined') {
+				autotablePlugin(jsPDF);
+			}
 			 console.log("jsPDF",jsPDF);
             widget.body.empty();
             var container = new UWA.Element('div', {
@@ -541,26 +537,27 @@ require([
 
 
 			async function generatePDF(content) {
-			  try {
-				if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
-				  throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
-				}
+                try {
+                    if (!content.headers || !content.rows || !Array.isArray(content.headers) || !Array.isArray(content.rows)) {
+                        throw new Error('Invalid content format. Expected object with "headers" and "rows" arrays.');
+                    }
 
-				const doc = new jsPDF();
-				 if (typeof doc.autoTable !== 'function') {
-				  throw new Error("AutoTable plugin is not available.");
-				}
-				doc.autoTable({
-				  head: [content.headers],
-				  body: content.rows
-				});
+                    const doc = new jsPDF();
+                    if (typeof doc.autoTable !== 'function') {
+                        throw new Error("AutoTable plugin is not available.");
+                    }
 
-				return doc.output('blob');
-			  } catch (err) {
-				console.error('Failed to generate PDF:', err);
-				throw err;
-			  }
-			}
+                    doc.autoTable({
+                        head: [content.headers],
+                        body: content.rows
+                    });
+
+                    return doc.output('blob');
+                } catch (err) {
+                    console.error('Failed to generate PDF:', err);
+                    throw err;
+                }
+            }
 
 
 			function createDocumentWithPDF(pdfData) {
