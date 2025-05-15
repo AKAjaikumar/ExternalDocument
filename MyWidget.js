@@ -527,7 +527,7 @@ require([
 			  if (typeof window.jsPDF !== 'function') {
 				await new Promise((resolve, reject) => {
 				  const script = document.createElement('script');
-				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.min.js';
+				  script.src = 'https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min.js';
 				  script.onload = resolve;
 				  script.onerror = (e) => reject(new Error('Failed to load jsPDF: ' + e.message));
 				  document.head.appendChild(script);
