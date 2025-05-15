@@ -507,15 +507,16 @@ require([
 											'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 											[csrfHeaderName]: csrfToken
 										},
-										onComplete: function (docData) {
-										console.log("Fetched docData for ID", docId, docData);
-											if (docData.data && docData.data.length > 0) {
-												resolve(docData.data[0]);  // Return first document object
+										onComplete: function (data) {
+											console.log("Bookmarks for document", docId, data);
+											if (data && data.bookmarks && data.bookmarks.length > 0) {
+											  resolve(data.bookmarks);  // Return all related bookmarks
 											} else {
-												reject("No document data returned");
+											  reject("No bookmarks found for this document.");
 											}
 										},
 										onFailure: function (err) {
+											console.error("Error fetching bookmarks:", err);
 											reject(err);
 										}
 									});
