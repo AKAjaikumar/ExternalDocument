@@ -645,7 +645,10 @@ require([
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
+															
 															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
+															console.log("Checkin URL:", checkInURL);
+															console.log("Document ID:", docId);
 															const checkInPayload = {
 															  data: [{
 																id: docId,
