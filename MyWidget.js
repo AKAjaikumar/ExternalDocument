@@ -502,7 +502,7 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const navURL = baseUrl + '/enovia/resources/enorelnav/v2/navigate/getEcosystem';
+						const navURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
 
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
