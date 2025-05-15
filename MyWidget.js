@@ -560,7 +560,7 @@ require([
             }
 
 
-			function createDocumentWithPDF(pdfData) {
+			function createDocumentWithPDF(pdfBlob) {
 				return new Promise(function (resolve, reject) {
 					i3DXCompassServices.getServiceUrl({
 						platformId: platformId,
@@ -573,6 +573,7 @@ require([
 
 							const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
+							// 1. Fetch CSRF token
 							WAFData.authenticatedRequest(csrfURL, {
 								method: 'GET',
 								type: 'json',
@@ -580,6 +581,7 @@ require([
 									const csrfToken = csrfData.csrf.value;
 									const csrfHeaderName = csrfData.csrf.name;
 
+									// 2. Create Document metadata
 									const createDocURL = baseUrl + '/resources/v1/modeler/documents';
 									const payload = {
 										data: [{
@@ -599,38 +601,80 @@ require([
 											[csrfHeaderName]: csrfToken
 										},
 										data: JSON.stringify(payload),
-										onComplete: function (response) {
-											const docId = response.data[0].id;
+										onComplete: function (createResponse) {
+											const docId = createResponse.data[0].id;
 
-											// Assuming an API endpoint to upload a PDF file to the newly created document
-											const uploadUrl = baseUrl + `/resources/v1/modeler/documents/${docId}/attachments`;
-											const formData = new FormData();
-											formData.append('file', pdfData);
+											// 3. Request Checkin Ticket
+											const ticketURL = baseUrl + '/resources/v1/modeler/documents/files/CheckinTicket';
+											const ticketPayload = {
+												data: [{
+													id: docId,
+													dataelements: {
+														format: "pdf",
+														title: "MergedPDF",
+														fileName: "Merged_Document.pdf"
+													}
+												}]
+											};
 
-											WAFData.authenticatedRequest(uploadUrl, {
+											WAFData.authenticatedRequest(ticketURL, {
 												method: 'POST',
+												type: 'json',
 												headers: {
+													'Content-Type': 'application/json',
 													[csrfHeaderName]: csrfToken
 												},
-												data: formData,
-												onComplete: function () {
-													// Check in the document if needed
-													const checkInUrl = baseUrl + `/resources/v1/modeler/documents/${docId}/checkin`;
-													WAFData.authenticatedRequest(checkInUrl, {
-														method: 'POST',
-														headers: {
-															[csrfHeaderName]: csrfToken
-														},
-														onComplete: function () {
-															resolve(response);
-														},
-														onFailure: function (err) {
-															reject("Failed to check in the document: " + err);
+												data: JSON.stringify(ticketPayload),
+												onComplete: function (ticketResponse) {
+													const ticketData = ticketResponse.data[0];
+													const ticketURL = ticketData.dataelements.ticketURL;
+													const fileName = ticketData.dataelements.fileName;
+													const docFormat = ticketData.dataelements.format;
+
+													// 4. Upload the actual file to FCS
+													const fcsUrl = ticketURL; // already a full URL
+													const formData = new FormData();
+													formData.append('file_0', pdfBlob, fileName);
+													formData.append('ticket_0', ticketData.dataelements.ticket);
+
+													const xhr = new XMLHttpRequest();
+													xhr.open('POST', fcsUrl, true);
+													xhr.onload = function () {
+														if (xhr.status === 200) {
+															// 5. Call Checkin
+															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin';
+															const checkInPayload = {
+																data: [{
+																	id: docId
+																}]
+															};
+
+															WAFData.authenticatedRequest(checkInURL, {
+																method: 'POST',
+																type: 'json',
+																headers: {
+																	'Content-Type': 'application/json',
+																	[csrfHeaderName]: csrfToken
+																},
+																data: JSON.stringify(checkInPayload),
+																onComplete: function () {
+																	resolve(createResponse);
+																},
+																onFailure: function (err) {
+																	reject("Failed to check in the document: " + err);
+																}
+															});
+														} else {
+															reject("Failed to upload PDF to FCS. Status: " + xhr.status);
 														}
-													});
+													};
+													xhr.onerror = function () {
+														reject("FCS upload request failed.");
+													};
+													xhr.send(formData);
 												},
 												onFailure: function (err) {
-													reject("Failed to upload PDF: " + err);
+													reject("Failed to get checkin ticket: " + err);
 												}
 											});
 										},
@@ -640,7 +684,7 @@ require([
 									});
 								},
 								onFailure: function (err) {
-									reject("Failed to fetch CSRF token: " + err);
+									reject("Failed to get CSRF token: " + err);
 								}
 							});
 						},
