@@ -440,13 +440,15 @@ require([
 									// docs contains both documents' data
 									const doc1 = docs[0];
 									const doc2 = docs[1];
-									const [bookmarks1, bookmarks2] = Promise.all([
-									  fetchBookmarksForDocument(droppedObjects[0].objectId),
-									  fetchBookmarksForDocument(droppedObjects[1].objectId)
-									]);
-
-									console.log('Bookmarks for doc1:', bookmarks1);
-									console.log('Bookmarks for doc2:', bookmarks2);
+									Promise.all([
+											fetchBookmarksForDocument(droppedObjects[0].objectId),
+											fetchBookmarksForDocument(droppedObjects[1].objectId)
+										]).then(function ([bookmarks1, bookmarks2]) {
+											console.log("Bookmarks:", bookmarks1, bookmarks2);
+											// Continue processing
+										}).catch(function (err) {
+											console.error("Error fetching bookmarks:", err);
+									});
 									// Merge the document data into a table format
 									/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
 
