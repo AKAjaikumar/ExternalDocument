@@ -639,7 +639,7 @@ require([
 
 													const formData = new FormData();
 													formData.append('file_0', pdfBlob, "Merged_Document.pdf");
-													formData.append(paramName, ticket);
+													formData.append("__fcs__jobTicket", ticket);
 													formData.append("file_0_filename", "Merged_Document.pdf");
 
 													const xhr = new XMLHttpRequest();
@@ -658,10 +658,7 @@ require([
 																return;
 															}
 															console.log("Receipt:", receipt);
-															if (!receipt) {
-																reject("FCS upload succeeded but no receipt was returned.");
-																return;
-															}
+															
 															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
 															console.log("Checkin URL:", checkInURL);
 															console.log("Document ID:", docId);
