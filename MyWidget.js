@@ -409,7 +409,7 @@ require([
 				},
 				events: {
 					dragover: function (event) {
-						event.preventDefault(); // Allow drop
+						event.preventDefault(); 
 						dropZone.setStyle('background', '#e0f0ff');
 					},
 					dragleave: function () {
@@ -433,11 +433,11 @@ require([
 							if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
 
 							if (droppedObjects.length === 2) {
-								// Fetch the document data for both dropped objects
+								
 								Promise.all(droppedObjects.map(function (obj) {
 									return fetchDocumentData(obj.objectId);
 								})).then(function (docs) {
-									// docs contains both documents' data
+									
 									const doc1 = docs[0];
 									const doc2 = docs[1];
 									Promise.all(droppedObjects.map(function (obj){
@@ -446,27 +446,35 @@ require([
 											})).then(function (bookmarks) {
 												const bookmark1 = bookmarks[0];
 												const bookmark2 = bookmarks[1];
-											console.log("bookmark1:", bookmark1);
-											console.log("bookmark2:", bookmark2);
-											// Continue processing
+												console.log("bookmark1:", bookmark1);
+												console.log("bookmark2:", bookmark2);
+												const [ctrlCopy1, ctrlCopy2] = await Promise.all([
+												  getParentRelatedCtrlCopy(bookmark1.id),
+												  getParentRelatedCtrlCopy(bookmark2.id)
+												]);
+													/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
+														
+														
+														generatePDF(mergedContent).then(function (pdfData) {
+															
+															createDocumentWithPDF(pdfData).then(function (response) {
+																alert("Document created and checked in successfully!");
+															}).catch(function (err) {
+																console.error("Failed to create or check in the document:", err);
+															});
+														}).catch(function (err) {
+															console.error("Failed to generate PDF:", err);
+														});*/
+													// Continue processing
+												
+												
+												
+											
 										}).catch(function (err) {
 											console.error("Error fetching bookmarks:", err);
 										});
 
-									// Merge the document data into a table format
-									/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
-
-									// Generate PDF from the merged content
-									generatePDF(mergedContent).then(function (pdfData) {
-										// Create a new document and upload the merged PDF
-										createDocumentWithPDF(pdfData).then(function (response) {
-											alert("Document created and checked in successfully!");
-										}).catch(function (err) {
-											console.error("Failed to create or check in the document:", err);
-										});
-									}).catch(function (err) {
-										console.error("Failed to generate PDF:", err);
-									});*/
+									
 								}).catch(function (err) {
 									console.error("Failed to fetch document data:", err);
 								});
@@ -481,7 +489,57 @@ require([
 					}
 				}
 			}).inject(container4);
+			async function getParentRelatedCtrlCopy(bookmarkId) {
+			  return new Promise((resolve, reject) => {
+				i3DXCompassServices.getServiceUrl({
+				  platformId: platformId,
+				  serviceName: '3DSpace',
+				  onComplete: function (URL3DSpace) {
+					let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+					if (baseUrl.endsWith('/3dspace')) {
+					  baseUrl = baseUrl.replace('/3dspace', '');
+					}
 
+					const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+					WAFData.authenticatedRequest(csrfURL, {
+					  method: 'GET',
+					  type: 'json',
+					  onComplete: function (csrfData) {
+						const csrfToken = csrfData.csrf.value;
+						const csrfHeaderName = csrfData.csrf.name;
+
+						const navURL = baseUrl + '/enovia/resources/enorelnav/v2/navigate/getEcosystem';
+
+						WAFData.authenticatedRequest(navURL, {
+						  method: 'POST',
+						  type: 'json',
+						  data: JSON.stringify({ ids: [bookmarkId] }),
+						  headers: {
+							'Content-Type': 'application/json',
+							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
+							[csrfHeaderName]: csrfToken
+						  },
+						  onComplete: function (data) {
+							console.log("getEcosystem result for", bookmarkId, data);
+							resolve(data);
+						  },
+						  onFailure: function (err) {
+							reject("Failed to fetch ecosystem: " + JSON.stringify(err));
+						  }
+						});
+					  },
+					  onFailure: function (err) {
+						reject("Failed to get CSRF: " + JSON.stringify(err));
+					  }
+					});
+				  },
+				  onFailure: function () {
+					reject("Failed to get 3DSpace URL");
+				  }
+				});
+			  });
+			}
 			function fetchBookmarksForDocument(docId) {
 			  return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
