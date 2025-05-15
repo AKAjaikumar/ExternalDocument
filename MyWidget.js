@@ -626,7 +626,9 @@ require([
 												},
 												data: JSON.stringify(ticketPayload),
 												onComplete: function (ticketResponse) {
-													 const ticketInfo = ticketData.data[0].dataelements;
+													console.log("ticketResponse:", ticketResponse);
+													const ticketInfo = ticketResponse.data[0].dataelements;
+													console.log("ticketInfo:", ticketInfo);
 													const paramName = ticketInfo.ticketparamname;
 													const ticket = ticketInfo.ticket;
 													const fcsUrl = ticketInfo.ticketURL;
