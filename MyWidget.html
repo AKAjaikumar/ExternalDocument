@@ -7,8 +7,7 @@
   <!-- Load jsPDF UMD version -->
   <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min.js"></script>
 
-  <!-- Wait for jsPDF to load, then expose it globally -->
-  <script type="text/javascript">
+ <script type="text/javascript">
   window.jsPDFReady = {
     then: function(callback) {
       var intervalId = setInterval(function() {
@@ -20,13 +19,16 @@
       }, 100);
     }
   };
-</script>
 
+  window.jsPDFReady.then(function() {
+    // Now jsPDF is loaded and ready, load your widget script:
+    var script = document.createElement('script');
+    script.src = 'https://akajaikumar.github.io/ExternalDocument/MyWidget.js';
+    document.head.appendChild(script);
+  });
+</script>
   <!-- Load AutoTable plugin -->
   <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min.js"></script>
-
-  <!-- Load your main widget script -->
-  <script type="text/javascript" src="https://akajaikumar.github.io/ExternalDocument/MyWidget.js"></script>
 </head>
 <body>
   <p>Widget Loaded</p>
