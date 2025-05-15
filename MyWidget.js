@@ -645,7 +645,13 @@ require([
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
-															
+															const fcsResponse = JSON.parse(xhr.responseText);
+															const receipt = fcsResponse.receipt; // may be under fcsResponse.dataelements.receipt if nested
+															console.log("Receipt:", receipt);
+															if (!receipt) {
+																reject("FCS upload succeeded but no receipt was returned.");
+																return;
+															}
 															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
 															console.log("Checkin URL:", checkInURL);
 															console.log("Document ID:", docId);
@@ -661,7 +667,7 @@ require([
 																  fileType: "pdf",
 																  dimension: "",
 																  revision: "A",
-																  receipt: "",
+																  receipt: receipt,
 																  keepLocked: "false",
 																  format: "pdf",
 																  store: ""
@@ -671,7 +677,7 @@ require([
 															};
 
 															WAFData.authenticatedRequest(checkInURL, {
-																method: 'PATCH',
+																method: 'POST',
 																type: 'json',
 																headers: {
 																	'Content-Type': 'application/json',
