@@ -433,51 +433,52 @@ require([
 							if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
 
 							if (droppedObjects.length === 2) {
-								
-								Promise.all(droppedObjects.map(function (obj) {
-									return fetchDocumentData(obj.objectId);
-								})).then(function (docs) {
-									
-									const doc1 = docs[0];
-									const doc2 = docs[1];
-									Promise.all(droppedObjects.map(function (obj){
-											return fetchBookmarksForDocument(obj.objectId);
-											
-											})).then(function (bookmarks) {
-												const bookmark1 = bookmarks[0];
-												const bookmark2 = bookmarks[1];
-												console.log("bookmark1:", bookmark1);
-												console.log("bookmark2:", bookmark2);
-												const [ctrlCopy1, ctrlCopy2] = await Promise.all([
-												  getParentRelatedCtrlCopy(bookmark1.id),
-												  getParentRelatedCtrlCopy(bookmark2.id)
-												]);
-													/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
-														
-														
-														generatePDF(mergedContent).then(function (pdfData) {
+								(async function () {
+									Promise.all(droppedObjects.map(function (obj) {
+										return fetchDocumentData(obj.objectId);
+									})).then(function (docs) {
+										
+										const doc1 = docs[0];
+										const doc2 = docs[1];
+										Promise.all(droppedObjects.map(function (obj){
+												return fetchBookmarksForDocument(obj.objectId);
+												
+												})).then(function (bookmarks) {
+													const bookmark1 = bookmarks[0];
+													const bookmark2 = bookmarks[1];
+													console.log("bookmark1:", bookmark1);
+													console.log("bookmark2:", bookmark2);
+													const [ctrlCopy1, ctrlCopy2] = await Promise.all([
+													  getParentRelatedCtrlCopy(bookmark1.id),
+													  getParentRelatedCtrlCopy(bookmark2.id)
+													]);
+														/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
 															
-															createDocumentWithPDF(pdfData).then(function (response) {
-																alert("Document created and checked in successfully!");
+															
+															generatePDF(mergedContent).then(function (pdfData) {
+																
+																createDocumentWithPDF(pdfData).then(function (response) {
+																	alert("Document created and checked in successfully!");
+																}).catch(function (err) {
+																	console.error("Failed to create or check in the document:", err);
+																});
 															}).catch(function (err) {
-																console.error("Failed to create or check in the document:", err);
-															});
-														}).catch(function (err) {
-															console.error("Failed to generate PDF:", err);
-														});*/
-													// Continue processing
+																console.error("Failed to generate PDF:", err);
+															});*/
+														// Continue processing
+													
+													
+													
 												
-												
-												
-											
-										}).catch(function (err) {
-											console.error("Error fetching bookmarks:", err);
-										});
+											}).catch(function (err) {
+												console.error("Error fetching bookmarks:", err);
+											});
 
-									
-								}).catch(function (err) {
-									console.error("Failed to fetch document data:", err);
-								});
+										
+									}).catch(function (err) {
+										console.error("Failed to fetch document data:", err);
+									});
+								})();
 							} else {
 								alert("Please drop exactly two documents.");
 							}
