@@ -443,8 +443,11 @@ require([
 									Promise.all(droppedObjects.map(function (obj){
 											return fetchBookmarksForDocument(obj.objectId);
 											
-											})).then(function (bookmarks1) {
-											console.log("Bookmarks:", bookmarks1);
+											})).then(function (bookmarks) {
+												const bookmark1 = bookmarks[0];
+												const bookmark2 = bookmarks[1];
+											console.log("bookmark1:", bookmark1);
+											console.log("bookmark2:", bookmark2);
 											// Continue processing
 										}).catch(function (err) {
 											console.error("Error fetching bookmarks:", err);
@@ -498,7 +501,7 @@ require([
 								onComplete: function (csrfData) {
 									const csrfToken = csrfData.csrf.value;
 									const csrfHeaderName = csrfData.csrf.name;
-
+									console.log("Bookmarks for document id", docId);
 									const docURL = baseUrl + '/resources/v1/FolderManagement/Folder/' + docId + '/getRelatedBookmarks';
 									WAFData.authenticatedRequest(docURL, {
 										method: 'GET',
