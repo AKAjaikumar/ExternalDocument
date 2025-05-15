@@ -605,7 +605,7 @@ require([
 											const docId = createResponse.data[0].id;
 
 											// 3. Request Checkin Ticket
-											const ticketURL = baseUrl + '/resources/v1/modeler/documents/files/CheckinTicket';
+											const ticketURL = baseUrl + '/resources/v1/modeler/documents/files/CheckinTicket?xrequestedwith=xmlhttprequest';
 											const ticketPayload = {
 												data: [{
 													id: docId,
@@ -645,7 +645,7 @@ require([
 													xhr.onload = function () {
 														if (xhr.status === 200) {
 															// 5. Call Checkin
-															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin';
+															const checkInURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/checkin' ;
 															const checkInPayload = {
 																data: [{
 																	id: docId
