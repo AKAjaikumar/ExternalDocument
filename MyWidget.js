@@ -449,7 +449,7 @@ require([
 										}).catch(function (err) {
 											console.error("Error fetching bookmarks:", err);
 										});
-									});
+
 									// Merge the document data into a table format
 									/*const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
 
