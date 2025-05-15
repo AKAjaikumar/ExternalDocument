@@ -605,7 +605,7 @@ require([
 											const docId = createResponse.data[0].id;
 
 											// 3. Request Checkin Ticket
-											const ticketURL = baseUrl + '/resources/v1/modeler/documents/files/CheckinTicket?xrequestedwith=xmlhttprequest';
+											const ticketURL = baseUrl + 'baseUrl + '/resources/v1/modeler/documents/' + docId + '/files/CheckinTicket';';
 											const ticketPayload = {
 												data: [{
 													id: docId,
