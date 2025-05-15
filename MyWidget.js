@@ -1,3 +1,15 @@
+requirejs.config({
+    paths: {
+        jsPDF: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.umd.min",
+        autotable: "https://akajaikumar.github.io/ExternalDocument/assets/jspdf.plugin.autotable.min",
+    },
+}),
+define("PDFJsDependency", ["jsPDF"], function (jsPDF) {
+	return jsPDF;
+}),
+define("AUTOTABLE", ["autotable"], function (autotable) {
+	return autotable;
+}),
 require([
         'UWA/Core',
         'UWA/Drivers/Alone',
