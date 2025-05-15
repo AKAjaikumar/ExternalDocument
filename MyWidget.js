@@ -507,13 +507,13 @@ require([
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
 						  type: 'json',
-						  data: JSON.stringify({
+						    data: JSON.stringify({
 							  objects: [
 								{
 								  id: bookmarkId
 								}
 							  ]
-							})
+							}),
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
