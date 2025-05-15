@@ -503,13 +503,15 @@ require([
 						const csrfHeaderName = csrfData.csrf.name;
 
 						const navURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
-
+						const payload = {
+						  objects: [
+							{ id: bookmarkId }
+						  ]
+						};
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
 						  type: 'json',
-						    data: JSON.stringify({
-							  ids: [bookmarkId]
-							}),
+						  data: JSON.stringify(payload),
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
