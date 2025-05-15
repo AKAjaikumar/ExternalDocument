@@ -526,6 +526,7 @@ require([
 							reject("Failed to get 3DSpace URL");
 						}
 					});
+			});
 			}
 			function fetchDocumentData(docId) {
 				return new Promise(function (resolve, reject) {
