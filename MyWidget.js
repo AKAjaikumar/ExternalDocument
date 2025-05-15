@@ -440,7 +440,7 @@ require([
 									// docs contains both documents' data
 									const doc1 = docs[0];
 									const doc2 = docs[1];
-									const [bookmarks1, bookmarks2] = await Promise.all([
+									const [bookmarks1, bookmarks2] = Promise.all([
 									  fetchBookmarksForDocument(droppedObjects[0].objectId),
 									  fetchBookmarksForDocument(droppedObjects[1].objectId)
 									]);
