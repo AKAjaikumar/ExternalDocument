@@ -498,7 +498,7 @@ require([
 									const csrfToken = csrfData.csrf.value;
 									const csrfHeaderName = csrfData.csrf.name;
 
-									const docURL = baseUrl + '/resources/v1/FolderManagement/Folder/' + docId + '/getRelatedBookmarks';
+									const docURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/bookmarks';
 									WAFData.authenticatedRequest(docURL, {
 										method: 'GET',
 										type: 'json',
