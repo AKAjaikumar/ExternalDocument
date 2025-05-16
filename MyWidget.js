@@ -514,6 +514,7 @@ require([
 						  type: 'json',
 						  headers: {
 							'Content-Type': 'application/json',
+							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 							[csrfHeaderName]: csrfToken
 						  },
 						  data: JSON.stringify(payload),
