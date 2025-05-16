@@ -502,17 +502,10 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const navURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
-						const payload = {
-							ids: [bookmarkId],
-							"label": "ENOFOL4_AP-rekha.babu7-1747313627297",
-							"responseMode": "objectsByPatterns",
-							"widgetId": "ENORIPE_Relations_Preview_5823_2033-17:53:15"
-						};
+						const navURL = baseUrl + '/resources/v1/modeler/dslib:ClassifiedItem/'+bookmarkId+'?$mask=dslib:ClassifiedItemBaseMask';
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
 						  type: 'json',
-						    data: JSON.stringify(payload),
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
