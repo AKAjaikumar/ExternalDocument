@@ -504,9 +504,10 @@ require([
 
 						const navURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
 						const payload = {
-						  ids: [bookmarkId],
-						  label: 'TEST',
-						  responseMode: "objectsByPatterns"
+							ids: [bookmarkId],
+							"label": "ENOFOL4_AP-rekha.babu7-1747313627297",
+							"responseMode": "objectsByPatterns",
+							"widgetId": "ENORIPE_Relations_Preview_5823_2033-17:53:15"
 						};
 						WAFData.authenticatedRequest(navURL, {
 						  method: 'POST',
