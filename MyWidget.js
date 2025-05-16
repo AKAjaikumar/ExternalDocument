@@ -482,7 +482,7 @@ require([
 					}
 				}
 			}).inject(container4);
-			async function getParentBookmark(bookmarkId) {
+			async function getParentRelatedCtrlCopy(bookmarkId) {
 			  return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
 				  platformId: platformId,
