@@ -504,7 +504,7 @@ require([
 
 						const navURL = baseUrl + '/resources/v1/modeler/dslib:ClassifiedItem/'+bookmarkId+'?$mask=dslib:ClassifiedItemBaseMask';
 						WAFData.authenticatedRequest(navURL, {
-						  method: 'POST',
+						  method: 'GET',
 						  type: 'json',
 						  headers: {
 							'Content-Type': 'application/json',
