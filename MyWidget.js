@@ -500,7 +500,7 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const ecosystemURL = baseUrl + 'resources/v1/modeler/dsbks/dsbks:Bookmark/' + bookmarkId + '?$mask=dsbks:BksMask.Parent';
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/dsbks/dsbks:Bookmark/' + bookmarkId + '?$mask=dsbks:BksMask.Parent';
 
 						WAFData.authenticatedRequest(ecosystemURL, {
 						  method: 'GET',
