@@ -482,16 +482,14 @@ require([
 					}
 				}
 			}).inject(container4);
-			async function getParentRelatedCtrlCopy(bookmarkId) {
+			async function getParentBookmark(bookmarkId) {
 			  return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
 				  platformId: platformId,
 				  serviceName: '3DSpace',
-				  onComplete: function (URL3DSpace) {
-					let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
-					if (baseUrl.endsWith('/3dspace')) {
-					  baseUrl = baseUrl.replace('/3dspace', '');
-					}
+				  onComplete: function (spaceUrl) {
+					let baseUrl = typeof spaceUrl === "string" ? spaceUrl : spaceUrl[0].url;
+					if (baseUrl.endsWith("/3dspace")) baseUrl = baseUrl.replace("/3dspace", "");
 
 					const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
@@ -502,31 +500,39 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const navURL = baseUrl + '/resources/v1/modeler/dslib:ClassifiedItem/'+bookmarkId+'?$mask=dslib:ClassifiedItemBaseMask';
-						WAFData.authenticatedRequest(navURL, {
-						  method: 'GET',
+						const ecosystemURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
+
+						const payload = {
+						  ids: [bookmarkId],
+						  label: `GET_PARENT_${Date.now()}`,
+						  responseMode: "objectsByPatterns",
+						  widgetId: `Widget_${Date.now()}`
+						};
+
+						WAFData.authenticatedRequest(ecosystemURL, {
+						  method: 'POST',
 						  type: 'json',
 						  headers: {
 							'Content-Type': 'application/json',
-							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 							[csrfHeaderName]: csrfToken
 						  },
-						  onComplete: function (data) {
-							console.log("getEcosystem result for", bookmarkId, data);
-							resolve(data);
+						  data: JSON.stringify(payload),
+						  onComplete: function (response) {
+							console.log("getEcosystem result:", response);
+							resolve(response);
 						  },
 						  onFailure: function (err) {
-							reject("Failed to fetch ecosystem: " + JSON.stringify(err));
+							reject("Failed to get parent bookmark: " + JSON.stringify(err));
 						  }
 						});
 					  },
 					  onFailure: function (err) {
-						reject("Failed to get CSRF: " + JSON.stringify(err));
+						reject("CSRF fetch failed: " + JSON.stringify(err));
 					  }
 					});
 				  },
 				  onFailure: function () {
-					reject("Failed to get 3DSpace URL");
+					reject("3DSpace URL fetch failed");
 				  }
 				});
 			  });
