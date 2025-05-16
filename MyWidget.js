@@ -500,19 +500,26 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const ecosystemURL = baseUrl + '/resources/v1/modeler/dslib:WorkspaceVault/'+ bookmarkId +'?$mask=dslib:WorkspaceVaultMask';
+						const ecosystemURL = baseUrl + '/resources/enorelnav/v2/navigate/getEcosystem';
 
+						const payload = {
+						  ids: [bookmarkId],
+						  label: `GET_PARENT_${Date.now()}`,
+						  responseMode: "objectsByPatterns",
+						  widgetId: `Widget_${Date.now()}`
+						};
 
 						WAFData.authenticatedRequest(ecosystemURL, {
-						  method: 'GET',
+						  method: 'POST',
 						  type: 'json',
 						  headers: {
 							'Content-Type': 'application/json',
 							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 							[csrfHeaderName]: csrfToken
 						  },
+						  data: JSON.stringify(payload),
 						  onComplete: function (response) {
-							console.log("getParent result:", response);
+							console.log("getEcosystem result:", response);
 							resolve(response);
 						  },
 						  onFailure: function (err) {
