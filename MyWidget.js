@@ -500,7 +500,7 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const ecosystemURL = baseUrl + '/resources/v1/modeler/dslib/dslib:ClassifiedItem/'+ bookmarkId +'?$mask=dslib:ReverseClassificationMask';
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/dslib:WorkspaceVault/'+ bookmarkId +'?$mask=dslib:WorkspaceVaultMask';
 
 
 						WAFData.authenticatedRequest(ecosystemURL, {
