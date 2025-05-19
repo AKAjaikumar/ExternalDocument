@@ -513,7 +513,7 @@ require([
 						  onComplete: function (response) {
 							console.log("getEcosystem result:", response);
 							try {
-							  const parentId = data?.member?.[0]?.parent?.member?.[0]?.referencedObject?.identifier;
+							  const parentId = response?.parent?.member?.[0]?.referencedObject?.identifier;
 							  if (parentId) {
 								const ctrlCopyURL = baseUrl + '/resources/v1/FolderManagement/Folder/'+ parentId +'/folderTree';
 								WAFData.authenticatedRequest(ctrlCopyURL, {
@@ -524,8 +524,9 @@ require([
 										'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 										[csrfHeaderName]: csrfToken
 								    }, 
-									onComplete: function (response) {
+									onComplete: function (ctrlResponse) {
 										console.log("get Folder Tree result:", response);
+										resolve(ctrlResponse); 
 									},
 									onFailure: function (err) {
 										reject("Failed to get Controlled COpy: " + JSON.stringify(err));
