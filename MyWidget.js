@@ -535,8 +535,14 @@ require([
 										[csrfHeaderName]: csrfToken
 								    }, 
 									onComplete: function (ctrlResponse) {
-										console.log("get Folder Tree result:", response);
-										resolve(ctrlResponse); 
+										const controlledCopyFolder = response.folders.find(folder => folder.label === "Controlled Copy");
+
+										if (controlledCopyFolder) {
+										  const controlledCopyId = controlledCopyFolder.id;
+										  console.log("Controlled Copy Folder ID:", controlledCopyId);
+										} else {
+										  console.warn("Controlled Copy folder not found.");
+										} 
 									},
 									onFailure: function (err) {
 										reject("Failed to get Controlled COpy: " + JSON.stringify(err));
