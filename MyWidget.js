@@ -752,7 +752,6 @@ require([
 										type: 'json',
 										headers: {
 											'Content-Type': 'application/json',
-											'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 											[csrfHeaderName]: csrfToken
 										},
 										data: JSON.stringify(payload),
@@ -843,6 +842,7 @@ require([
 																type: 'json',
 																headers: {
 																	'Content-Type': 'application/json',
+																	'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 																	[csrfHeaderName]: csrfToken
 																},
 																data: JSON.stringify(checkInPayload),
@@ -853,6 +853,7 @@ require([
 																		type: 'json',
 																		headers: {
 																			'Content-Type': 'application/json',
+																			'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 																			[csrfHeaderName]: csrfToken
 																		},
 																		data: JSON.stringify({"IDs": docId}),
