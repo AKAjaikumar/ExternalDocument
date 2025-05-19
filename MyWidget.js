@@ -520,7 +520,14 @@ require([
 									method: 'POST',
 									type: 'json',
 									data: JSON.stringify({
-										section: 'FolderSection_AllFolders'
+										expandList: "",
+										isRoot: "",
+										nextStart: 0,
+										nresults: 200,
+										Read: true,
+										refine: "",
+										sortMode: "ds6w:label",
+										sortOrder: "asc"
 									}),
 									headers: {
 										'Content-Type': 'application/json',
