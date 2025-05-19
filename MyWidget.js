@@ -519,6 +519,9 @@ require([
 								WAFData.authenticatedRequest(folderTreeURL, {
 									method: 'POST',
 									type: 'json',
+									data: JSON.stringify({
+										section: 'FolderSection_AllFolders'
+									}),
 									headers: {
 										'Content-Type': 'application/json',
 										'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
