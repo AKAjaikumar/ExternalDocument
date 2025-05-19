@@ -459,12 +459,12 @@ require([
 								  console.log("ctrlCopy2:", ctrlCopy2);
 
 								  // Proceed with merging and PDF generation if needed
-								  /*
+								  
 								  const mergedContent = mergeDocumentsIntoTable(doc1, doc2);
 								  const pdfData = await generatePDF(mergedContent);
-								  await createDocumentWithPDF(pdfData);
+								  await createDocumentWithPDF(pdfData,ctrlCopy1,ctrlCopy2);
 								  alert("Document created and checked in successfully!");
-								  */
+								  
 
 								} catch (err) {
 								  console.error("Processing failed:", err);
@@ -714,7 +714,7 @@ require([
             }
 
 
-			function createDocumentWithPDF(pdfBlob) {
+			function createDocumentWithPDF(pdfBlob,ctrlCopy1,ctrlCopy2) {
 				return new Promise(function (resolve, reject) {
 					i3DXCompassServices.getServiceUrl({
 						platformId: platformId,
@@ -757,7 +757,7 @@ require([
 										data: JSON.stringify(payload),
 										onComplete: function (createResponse) {
 											const docId = createResponse.data[0].id;
-
+											
 											// 3. Request Checkin Ticket
 											const ticketURL = baseUrl + '/resources/v1/modeler/documents/' + docId + '/files/CheckinTicket';
 											const ticketPayload = {
@@ -846,7 +846,23 @@ require([
 																},
 																data: JSON.stringify(checkInPayload),
 																onComplete: function () {
-																	resolve(createResponse);
+																	const bookMarkURL = baseUrl + '/resources/v1/FolderManagement/Folder/'+ ctrlCopy1 +'/content';
+																	WAFData.authenticatedRequest(bookMarkURL, {
+																		method: 'POST',
+																		type: 'json',
+																		headers: {
+																			'Content-Type': 'application/json',
+																			[csrfHeaderName]: csrfToken
+																		},
+																		data: JSON.stringify({"IDs": docId}),
+																		onComplete: function (createResponse) {
+																			console.log("createResponse :"+createResponse);
+																			resolve(createResponse);
+																		},
+																		onFailure: function (err) {
+																			reject("Failed to add bookmark: " + err);
+																		}
+																	});
 																},
 																onFailure: function (err) {
 																	reject("Failed to check in the document: " + err);
