@@ -515,7 +515,7 @@ require([
 							try {
 							  const parentId = response?.member?.[0]?.parent?.member?.[0]?.referencedObject?.identifier;
 							  if (parentId) {
-								const ctrlCopyURL = baseUrl + '/resources/v1/modeler/dsbks/dsbks:Bookmark/' + parentId + '?$mask=dsbks:BksMask.Details';';
+								const ctrlCopyURL = baseUrl + '/resources/v1/modeler/dsbks/dsbks:Bookmark/' + parentId + '?$mask=dsbks:BksMask.Details';
 								WAFData.authenticatedRequest(ctrlCopyURL, {
 									method: 'POST',
 									type: 'json',
