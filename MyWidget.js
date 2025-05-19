@@ -534,7 +534,7 @@ require([
 										'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
 										[csrfHeaderName]: csrfToken
 								    }, 
-									onComplete: function (ctrlResponse) {
+									onComplete: function (response) {
 										const controlledCopyFolder = response.folders.find(folder => folder.label === "Controlled Copy");
 
 										if (controlledCopyFolder) {
