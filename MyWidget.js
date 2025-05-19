@@ -513,7 +513,7 @@ require([
 						  onComplete: function (response) {
 							console.log("getEcosystem result:", response);
 							try {
-							  const parentId = response?.parent?.member?.[0]?.referencedObject?.identifier;
+							  const parentId = response?.member?.[0]?.parent?.member?.[0]?.referencedObject?.identifier;
 							  if (parentId) {
 								const ctrlCopyURL = baseUrl + '/resources/v1/FolderManagement/Folder/'+ parentId +'/folderTree';
 								WAFData.authenticatedRequest(ctrlCopyURL, {
