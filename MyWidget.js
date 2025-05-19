@@ -512,7 +512,31 @@ require([
 						  },
 						  onComplete: function (response) {
 							console.log("getEcosystem result:", response);
-							resolve(response);
+							try {
+							  const parentId = data?.member?.[0]?.parent?.member?.[0]?.referencedObject?.identifier;
+							  if (parentId) {
+								const ctrlCopyURL = baseUrl + '/resources/v1/FolderManagement/Folder/'+ parentId +'/folderTree';
+								WAFData.authenticatedRequest(ctrlCopyURL, {
+									method: 'POST',
+									type: 'json',
+									headers: {
+										'Content-Type': 'application/json',
+										'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
+										[csrfHeaderName]: csrfToken
+								    }, 
+									onComplete: function (response) {
+										console.log("get Folder Tree result:", response);
+									},
+									onFailure: function (err) {
+										reject("Failed to get Controlled COpy: " + JSON.stringify(err));
+									}
+								});
+							  } else {
+								reject("Parent ID not found in response");
+							  }
+							} catch (err) {
+							  reject("Error extracting parent ID: " + err);
+							}
 						  },
 						  onFailure: function (err) {
 							reject("Failed to get parent bookmark: " + JSON.stringify(err));
