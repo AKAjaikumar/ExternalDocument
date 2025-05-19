@@ -539,8 +539,9 @@ require([
 
 										if (controlledCopyFolder) {
 										  const controlledCopyId = controlledCopyFolder.id;
-										  console.log("Controlled Copy Folder ID:", controlledCopyId);
+										  resolve(controlledCopyId); 
 										} else {
+											reject("Controlled Copy folder not found.");
 										  console.warn("Controlled Copy folder not found.");
 										} 
 									},
