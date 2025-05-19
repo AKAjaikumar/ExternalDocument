@@ -517,7 +517,7 @@ require([
 							  if (parentId) {
 								const ctrlCopyURL = baseUrl + '/resources/v1/modeler/dsbks/dsbks:Bookmark/' + parentId + '?$mask=dsbks:BksMask.Details';
 								WAFData.authenticatedRequest(ctrlCopyURL, {
-									method: 'POST',
+									method: 'GET',
 									type: 'json',
 									headers: {
 										'Content-Type': 'application/json',
