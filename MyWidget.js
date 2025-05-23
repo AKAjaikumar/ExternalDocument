@@ -542,6 +542,17 @@ require([
 									
 									console.log("Parent VPMReference ID:", physicalProduct[0].id);
 									const attrs = await getPhysicalProductAttributes(physicalProduct[0].id);
+									const item = attrs?.[0];
+
+									if (item && item["dseno:EnterpriseAttributes"]) {
+										const projectNumber = item["dseno:EnterpriseAttributes"]["LNProjectNumber"];
+										const itemGroup = item["dseno:EnterpriseAttributes"]["ItemGroup"];
+
+										console.log("LNProjectNumber:", projectNumber);
+										console.log("ItemGroup:", itemGroup);
+									} else {
+										console.error("Enterprise attributes not found.");
+									}
 									// const generatedDocNumber = await callCustomWebService(attrs);
 									// console.log("Generated Document Number:", generatedDocNumber);
 
