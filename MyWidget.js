@@ -534,13 +534,13 @@ require([
 									const doc = droppedObjects[0];
 
 									// Fetch connected Physical Product
-									const physicalProductId = await getConnectedPhysicalProduct(doc.objectId);
+									const physicalProduct = await getConnectedPhysicalProduct(doc.objectId);
 									if (!physicalProduct) {
 										alert("No connected Physical Product found.");
 										return;
 									}
 									
-									console.log("Parent VPMReference ID:", physicalProductId);
+									console.log("Parent VPMReference ID:", physicalProduct);
 									// const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
 									// const generatedDocNumber = await callCustomWebService(attrs);
 									// console.log("Generated Document Number:", generatedDocNumber);
