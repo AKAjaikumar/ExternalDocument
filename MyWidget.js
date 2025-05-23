@@ -629,7 +629,7 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const ecosystemURL = baseUrl + '/resources/v1/modeler/dseng/dseng:EngItem/' + physicalProductId + '?$fields=dsmveno:CustomerAttributes';
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/dseng/dseng:EngItem/' + physicalProductId + '?$mask=dsmveng:EngItemMask.Details&$fields=dsmveno:CustomerAttributes';
 
 						WAFData.authenticatedRequest(ecosystemURL, {
 						  method: 'GET',
