@@ -541,7 +541,7 @@ require([
 									}
 									
 									console.log("Parent VPMReference ID:", physicalProduct[0].id);
-									// const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
+									const attrs = await getPhysicalProductAttributes(physicalProduct[0].id);
 									// const generatedDocNumber = await callCustomWebService(attrs);
 									// console.log("Generated Document Number:", generatedDocNumber);
 
@@ -588,6 +588,59 @@ require([
 							[csrfHeaderName]: csrfToken
 						  },
 						  onComplete: function (response) {
+							if (response && response.data && response.data.length > 0) {
+                                    resolve(response.data);
+							} else {
+								reject("No data found for document.");
+							}
+							
+						  },
+						  onFailure: function (err) {
+							reject("Failed to get parent bookmark: " + JSON.stringify(err));
+						  }
+						});
+					  },
+					  onFailure: function (err) {
+						reject("CSRF fetch failed: " + JSON.stringify(err));
+					  }
+					});
+				  },
+				  onFailure: function () {
+					reject("3DSpace URL fetch failed");
+				  }
+				});
+			  });
+			}
+			async function getPhysicalProductAttributes(physicalProductId) {
+				return new Promise((resolve, reject) => {
+				i3DXCompassServices.getServiceUrl({
+				  platformId: platformId,
+				  serviceName: '3DSpace',
+				  onComplete: function (spaceUrl) {
+					let baseUrl = typeof spaceUrl === "string" ? spaceUrl : spaceUrl[0].url;
+					if (baseUrl.endsWith("/3dspace")) baseUrl = baseUrl.replace("/3dspace", "");
+
+					const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+					WAFData.authenticatedRequest(csrfURL, {
+					  method: 'GET',
+					  type: 'json',
+					  onComplete: function (csrfData) {
+						const csrfToken = csrfData.csrf.value;
+						const csrfHeaderName = csrfData.csrf.name;
+
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/dseng/dseng:EngItem/' + physicalProductId + '?$fields=dsmveno:CustomerAttributes';
+
+						WAFData.authenticatedRequest(ecosystemURL, {
+						  method: 'GET',
+						  type: 'json',
+						  headers: {
+							'Content-Type': 'application/json',
+							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
+							[csrfHeaderName]: csrfToken
+						  },
+						  onComplete: function (response) {
+							  console.log("Response:",response.data);
 							if (response && response.data && response.data.length > 0) {
                                     resolve(response.data);
 							} else {
