@@ -589,7 +589,7 @@ require([
 						  },
 						  onComplete: function (response) {
 							if (response && response.data && response.data.length > 0) {
-                                    resolve(response.data[0].id;);
+                                    resolve(response.data[0].id);
 							} else {
 								reject("No data found for document.");
 							}
