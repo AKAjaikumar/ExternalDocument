@@ -534,12 +534,13 @@ require([
 									const doc = droppedObjects[0];
 
 									// Fetch connected Physical Product
-									const physicalProduct = await getConnectedPhysicalProduct(doc.objectId);
+									const physicalProductId = await getConnectedPhysicalProduct(doc.objectId);
 									if (!physicalProduct) {
 										alert("No connected Physical Product found.");
 										return;
 									}
-
+									
+									console.log("Parent VPMReference ID:", physicalProductId);
 									// const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
 									// const generatedDocNumber = await callCustomWebService(attrs);
 									// console.log("Generated Document Number:", generatedDocNumber);
@@ -587,7 +588,11 @@ require([
 							[csrfHeaderName]: csrfToken
 						  },
 						  onComplete: function (response) {
-							console.log("getEcosystem result:", response);
+							if (response && response.data && response.data.length > 0) {
+                                    resolve(response.data[0].id;);
+							} else {
+								reject("No data found for document.");
+							}
 							
 						  },
 						  onFailure: function (err) {
