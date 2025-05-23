@@ -640,9 +640,9 @@ require([
 							[csrfHeaderName]: csrfToken
 						  },
 						  onComplete: function (response) {
-							  console.log("Response:",response.data);
-							if (response && response.data && response.data.length > 0) {
-                                    resolve(response.data);
+							  console.log("Response:",response.member);
+							if (response && response.member && response.member.length > 0) {
+                                    resolve(response.member);
 							} else {
 								reject("No data found for document.");
 							}
