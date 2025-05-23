@@ -44,6 +44,11 @@ require([
             }).inject(widget.body);
 			var container4 = new UWA.Element('div', {
                 styles: {
+                    padding: '15px'
+                }
+            }).inject(widget.body);
+			var container4 = new UWA.Element('div', {
+                styles: {
                     display: 'flex',
 					flexDirection: 'column',
 					padding: '10px',
@@ -482,6 +487,115 @@ require([
 					}
 				}
 			}).inject(container4);
+			var dropZone1 = new UWA.Element('div', {
+				html: '<strong>Drop Documents Here</strong>',
+				styles: {
+					border: '2px dashed #0078d4',
+					padding: '30px',
+					textAlign: 'center',
+					marginTop: '20px',
+					background: '#f3f3f3',
+					color: '#333'
+				},
+				events: {
+					dragover: function (event) {
+						event.preventDefault(); 
+						dropZone.setStyle('background', '#e0f0ff');
+					},
+					dragleave: function () {
+						dropZone.setStyle('background', '#f3f3f3');
+					},
+					drop: function (event) {
+						event.preventDefault();
+						dropZone.setStyle('background', '#f3f3f3');
+
+						var data = event.dataTransfer.getData('text');
+						if (!data) {
+							alert("No data dropped.");
+							return;
+						}
+
+						console.log("Raw drop data:", data);
+
+						try {
+								if (droppedObjects.length === 1) {
+									const doc = droppedObjects[0];
+
+									// Fetch connected Physical Product
+									const physicalProduct = await getConnectedPhysicalProduct(doc.objectId);
+									if (!physicalProduct) {
+										alert("No connected Physical Product found.");
+										return;
+									}
+
+									// Get required attributes
+									//const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
+
+									// Call custom external webservice
+									//const generatedDocNumber = await callCustomWebService(attrs);
+									//console.log("Generated Document Number:", generatedDocNumber);
+
+									alert(`Generated Document Number: ${generatedDocNumber}`);
+
+								} else {
+									alert("Please drop exactly one document.");
+								}															
+
+							} catch (err) {
+								console.error("Failed to parse dropped data or process file:", err);
+								alert("Error: Failed to process dropped data.");
+							}
+					}
+				}
+			}).inject(container5);
+			async function getConnectedPhysicalProduct(documentId) {
+				return new Promise((resolve, reject) => {
+				i3DXCompassServices.getServiceUrl({
+				  platformId: platformId,
+				  serviceName: '3DSpace',
+				  onComplete: function (spaceUrl) {
+					let baseUrl = typeof spaceUrl === "string" ? spaceUrl : spaceUrl[0].url;
+					if (baseUrl.endsWith("/3dspace")) baseUrl = baseUrl.replace("/3dspace", "");
+
+					const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+					WAFData.authenticatedRequest(csrfURL, {
+					  method: 'GET',
+					  type: 'json',
+					  onComplete: function (csrfData) {
+						const csrfToken = csrfData.csrf.value;
+						const csrfHeaderName = csrfData.csrf.name;
+
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/documents/' + documentId + '';
+
+						WAFData.authenticatedRequest(ecosystemURL, {
+						  method: 'GET',
+						  type: 'json',
+						  headers: {
+							'Content-Type': 'application/json',
+							'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
+							[csrfHeaderName]: csrfToken
+						  },
+						  onComplete: function (response) {
+							console.log("getEcosystem result:", response);
+							
+						  },
+						  onFailure: function (err) {
+							reject("Failed to get parent bookmark: " + JSON.stringify(err));
+						  }
+						});
+					  },
+					  onFailure: function (err) {
+						reject("CSRF fetch failed: " + JSON.stringify(err));
+					  }
+					});
+				  },
+				  onFailure: function () {
+					reject("3DSpace URL fetch failed");
+				  }
+				});
+			  });
+			}
 			async function getParentRelatedCtrlCopy(bookmarkId) {
 			  return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
