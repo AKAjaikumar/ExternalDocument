@@ -42,12 +42,19 @@ require([
                     padding: '15px'
                 }
             }).inject(widget.body);
+			
 			var container4 = new UWA.Element('div', {
                 styles: {
-                    padding: '15px'
+                    display: 'flex',
+					flexDirection: 'column',
+					padding: '10px',
+					gap: '8px',
+					border: '1px solid #ccc',
+					width: '200px',
+					marginBottom: '20px'
                 }
             }).inject(widget.body);
-			var container4 = new UWA.Element('div', {
+			var container5 = new UWA.Element('div', {
                 styles: {
                     display: 'flex',
 					flexDirection: 'column',
