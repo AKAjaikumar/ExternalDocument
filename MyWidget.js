@@ -540,7 +540,7 @@ require([
 										return;
 									}
 									
-									console.log("Parent VPMReference ID:", physicalProduct);
+									console.log("Parent VPMReference ID:", physicalProduct.id);
 									// const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
 									// const generatedDocNumber = await callCustomWebService(attrs);
 									// console.log("Generated Document Number:", generatedDocNumber);
