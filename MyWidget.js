@@ -517,7 +517,12 @@ require([
 
 						console.log("Raw drop data:", data);
 
-						try {
+						(async function () {
+							try {
+								var droppedPayload = JSON.parse(data);
+								var droppedObjects = droppedPayload?.data?.items || [];
+								if (!Array.isArray(droppedObjects)) droppedObjects = [droppedObjects];
+
 								if (droppedObjects.length === 1) {
 									const doc = droppedObjects[0];
 
@@ -528,23 +533,21 @@ require([
 										return;
 									}
 
-									// Get required attributes
-									//const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
+									// const attrs = await getPhysicalProductAttributes(physicalProduct.objectId);
+									// const generatedDocNumber = await callCustomWebService(attrs);
+									// console.log("Generated Document Number:", generatedDocNumber);
 
-									// Call custom external webservice
-									//const generatedDocNumber = await callCustomWebService(attrs);
-									//console.log("Generated Document Number:", generatedDocNumber);
-
-									alert(`Generated Document Number: ${generatedDocNumber}`);
+									alert(`Generated Document Number: (mocked) DOC-1234`); // Replace with actual value when you hook up
 
 								} else {
 									alert("Please drop exactly one document.");
-								}															
+								}
 
 							} catch (err) {
 								console.error("Failed to parse dropped data or process file:", err);
 								alert("Error: Failed to process dropped data.");
 							}
+						})();
 					}
 				}
 			}).inject(container5);
