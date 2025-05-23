@@ -576,7 +576,7 @@ require([
 						const csrfToken = csrfData.csrf.value;
 						const csrfHeaderName = csrfData.csrf.name;
 
-						const ecosystemURL = baseUrl + '/resources/v1/modeler/documents/' + documentId + '?$include=%5B%21%5Dparents';
+						const ecosystemURL = baseUrl + '/resources/v1/modeler/documents/' + documentId + '?$include=all';
 
 						WAFData.authenticatedRequest(ecosystemURL, {
 						  method: 'GET',
