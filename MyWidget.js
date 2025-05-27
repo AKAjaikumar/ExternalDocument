@@ -559,7 +559,8 @@ require([
 
 										  const generatedDocNumber = await callCustomWebService(dataToSend)
 
-									alert('Generated Document Number:',generatedDocNumber); // Replace with actual value when you hook up
+										console.log('Generated Document Number:', generatedDocNumber);
+											alert(`Generated Document Number: ${generatedDocNumber}`);
 									} else {
 										console.error("Enterprise attributes not found.");
 									}
