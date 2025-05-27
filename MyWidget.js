@@ -550,13 +550,15 @@ require([
 
 										console.log("LNProjectNumber:", projectNumber);
 										console.log("ItemGroup:", itemGroup);
+										
+										const generatedDocNumber = await callCustomWebService(attrs);
+										console.log("Generated Document Number:", generatedDocNumber);
+
+									alert(`Generated Document Number: (mocked) DOC-1234`); // Replace with actual value when you hook up
 									} else {
 										console.error("Enterprise attributes not found.");
 									}
-									// const generatedDocNumber = await callCustomWebService(attrs);
-									// console.log("Generated Document Number:", generatedDocNumber);
-
-									alert(`Generated Document Number: (mocked) DOC-1234`); // Replace with actual value when you hook up
+									
 
 								} else {
 									alert("Please drop exactly one document.");
@@ -570,6 +572,17 @@ require([
 					}
 				}
 			}).inject(container5);
+			async function callCustomWebService(attributes) {
+				const response = await fetch('});http://localhost:9090/myapp/api/generate', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(attributes)
+				});
+				const result = await response.json();
+				return result.generatedNumber;
+			}
 			async function getConnectedPhysicalProduct(documentId) {
 				return new Promise((resolve, reject) => {
 				i3DXCompassServices.getServiceUrl({
