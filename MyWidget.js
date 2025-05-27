@@ -551,8 +551,13 @@ require([
 										console.log("LNProjectNumber:", projectNumber);
 										console.log("ItemGroup:", itemGroup);
 										
-										const generatedDocNumber = await callCustomWebService(attrs);
-										console.log("Generated Document Number:", generatedDocNumber);
+										const dataToSend = {
+											attr1: projectNumber,
+											attr2: itemGroup
+										  };
+										  console.log("Sending attributes to backend:", dataToSend);
+
+										  const generatedDocNumber = await callCustomWebService(dataToSend)
 
 									alert(`Generated Document Number: `,generatedDocNumber); // Replace with actual value when you hook up
 									} else {
