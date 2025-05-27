@@ -554,7 +554,7 @@ require([
 										const generatedDocNumber = await callCustomWebService(attrs);
 										console.log("Generated Document Number:", generatedDocNumber);
 
-									alert(`Generated Document Number: (mocked) DOC-1234`); // Replace with actual value when you hook up
+									alert(`Generated Document Number: `,generatedDocNumber); // Replace with actual value when you hook up
 									} else {
 										console.error("Enterprise attributes not found.");
 									}
@@ -573,7 +573,7 @@ require([
 				}
 			}).inject(container5);
 			async function callCustomWebService(attributes) {
-				const response = await fetch('});http://localhost:9090/myapp/api/generate', {
+				const response = await fetch('http://localhost:9090/myapp/api/generate', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
