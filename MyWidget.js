@@ -579,7 +579,7 @@ require([
 				}
 			}).inject(container5);
 			async function callCustomWebService(attributes) {
-				const response = await fetch('http://localhost:9090/myapp/api/hello/generate', {
+				const response = await fetch('http://192.168.194.250:9090/myapp/api/hello/generate', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
