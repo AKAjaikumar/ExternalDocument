@@ -21,6 +21,7 @@ require([
 				autotablePlugin(jsPDF);
 			}
 			 console.log("jsPDF",jsPDF);
+			 const platformId = widget.getValue("x3dPlatformId");
             widget.body.empty();
             var container = new UWA.Element('div', {
                 styles: {
@@ -89,7 +90,94 @@ require([
 					padding: '5px'
 				}
 			}).inject(container6);
-			const platformId = widget.getValue("x3dPlatformId");
+			
+			var resultsContainer = new UWA.Element('div', {
+				styles: {
+					border: '1px solid #ccc',
+					display: 'none',
+					'max-height': '150px',
+					overflow: 'auto',
+					'margin-top': '5px',
+					'background-color': '#fff',
+					'z-index': 1000,
+					position: 'absolute',
+					width: '300px'
+				}
+			}).inject(container6);
+			
+			libraryInput.addEvent('keyup', function () {
+				const query = libraryInput.value.trim();
+				if (!query) return;
+				i3DXCompassServices.getServiceUrl({
+                            platformId: platformId,
+                            serviceName: '3DSpace',
+                            onComplete: function (URL3DSpace) {
+                                let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+                                if (baseUrl.endsWith('/3dspace')) {
+                                    baseUrl = baseUrl.replace('/3dspace', '');
+                                }
+
+                                const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+                                WAFData.authenticatedRequest(csrfURL, {
+                                    method: 'GET',
+                                    type: 'json',
+                                    onComplete: function (csrfData) {
+                                        const csrfToken = csrfData.csrf.value;
+                                        const csrfHeaderName = csrfData.csrf.name;
+										const searchURL = baseUrl +'/resources/v1/modeler/dslib/dslib:Library/search?mask=dslib:SimpleMask&$searchStr=' + encodeURIComponent(query);
+										WAFData.authenticatedRequest(searchURL, {
+										method: 'GET',
+										headers: {
+											Accept: 'application/json',
+											'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
+											[csrfHeaderName]: csrfToken
+										},
+										onComplete: function (response) {
+											resultsContainer.setContent(''); 
+											resultsContainer.show();
+
+											const result = JSON.parse(response);
+											const members = result.member || [];
+
+											if (members.length === 0) {
+												resultsContainer.setContent('<div style="padding:5px;">No matches</div>');
+												return;
+											}
+
+											members.forEach(item => {
+												const itemEl = new UWA.Element('div', {
+													html: item.title,
+													styles: {
+														padding: '5px',
+														cursor: 'pointer',
+														'border-bottom': '1px solid #eee'
+													},
+													events: {
+														click: function () {
+															libraryInput.value = item.title;
+															resultsContainer.hide();
+															console.log("Selected Library ID:", item.id);
+														}
+													}
+												}).inject(resultsContainer);
+											});
+										},
+										onFailure: function (err) {
+											console.error("Library search failed:", err);
+										}
+									});
+								 },
+                                    onFailure: function (err) {
+                                        console.error("Failed to fetch CSRF token:", err);
+                                    }
+                                });
+                            },
+                            onFailure: function () {
+                                console.error("Failed to get 3DSpace URL");
+                            }
+			});
+			
             
             var button = new UWA.Element('button', {
                 text: 'Create Document',
