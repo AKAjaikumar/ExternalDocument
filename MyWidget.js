@@ -176,6 +176,7 @@ require([
                             onFailure: function () {
                                 console.error("Failed to get 3DSpace URL");
                             }
+				});
 			});
 			
             
