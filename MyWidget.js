@@ -43,7 +43,7 @@ require([
                 }
             }).inject(widget.body);
 			
-			var container4 = new UWA.Element('div', {
+			/*var container4 = new UWA.Element('div', {
                 styles: {
                     display: 'flex',
 					flexDirection: 'column',
@@ -64,7 +64,7 @@ require([
 					width: '200px',
 					marginBottom: '20px'
                 }
-            }).inject(widget.body);
+            }).inject(widget.body);*/
 			var container6 = new UWA.Element('div', {
 				styles: {
 					padding: '15px'
@@ -433,7 +433,7 @@ require([
 					}
 				}
 			}).inject(container3);
-			var dropZone = new UWA.Element('div', {
+			/*var dropZone = new UWA.Element('div', {
 				html: '<strong>Drop Documents Here</strong>',
 				styles: {
 					border: '2px dashed #0078d4',
@@ -601,7 +601,7 @@ require([
 						})();
 					}
 				}
-			}).inject(container5);
+			}).inject(container5);*/
 			async function callCustomWebService(attributes) {
 				const response = await fetch('https://0f1c-49-37-194-80.ngrok-free.app/myapp/api/hello/generate', {
 					method: 'POST',
