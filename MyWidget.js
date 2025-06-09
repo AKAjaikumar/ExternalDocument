@@ -107,75 +107,116 @@ require([
 			
 			libraryInput.addEvent('keyup', function () {
 				const query = libraryInput.value.trim();
-				if (!query) return;
+				if (!query || query.length < 2) return;
+
 				i3DXCompassServices.getServiceUrl({
-                            platformId: platformId,
-                            serviceName: '3DSpace',
-                            onComplete: function (URL3DSpace) {
-                                let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
-                                if (baseUrl.endsWith('/3dspace')) {
-                                    baseUrl = baseUrl.replace('/3dspace', '');
-                                }
+					platformId: platformId,
+					serviceName: '3DSpace',
+					onComplete: function (URL3DSpace) {
+						let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+						if (baseUrl.endsWith('/3dspace')) {
+							baseUrl = baseUrl.replace('/3dspace', '');
+						}
 
-                                const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+						const csrfURL = baseUrl + '/resources/v1/application/CSRF';
 
-                                WAFData.authenticatedRequest(csrfURL, {
-                                    method: 'GET',
-                                    type: 'json',
-                                    onComplete: function (csrfData) {
-                                        const csrfToken = csrfData.csrf.value;
-                                        const csrfHeaderName = csrfData.csrf.name;
-										const searchURL = baseUrl +'/resources/v1/modeler/dslib/dslib:Library/search?mask=dslib:SimpleMask&$searchStr=' + encodeURIComponent(query);
-										WAFData.authenticatedRequest(searchURL, {
-										method: 'GET',
-										headers: {
-											Accept: 'application/json',
-											'SecurityContext': 'VPLMProjectLeader.Company Name.APTIV INDIA',
-											[csrfHeaderName]: csrfToken
-										},
-										onComplete: function (response) {
-											resultsContainer.setContent(''); 
-											resultsContainer.show();
+						WAFData.authenticatedRequest(csrfURL, {
+							method: 'GET',
+							type: 'json',
+							onComplete: function (csrfData) {
+								const csrfToken = csrfData.csrf.value;
+								const csrfHeaderName = csrfData.csrf.name;
+								const searchURL = baseUrl + '/federated/search';
 
-											const result = JSON.parse(response);
-											const members = result.member || [];
-
-											if (members.length === 0) {
-												resultsContainer.setContent('<div style="padding:5px;">No matches</div>');
-												return;
-											}
-
-											members.forEach(item => {
-												const itemEl = new UWA.Element('div', {
-													html: item.title,
-													styles: {
-														padding: '5px',
-														cursor: 'pointer',
-														'border-bottom': '1px solid #eee'
-													},
-													events: {
-														click: function () {
-															libraryInput.value = item.title;
-															resultsContainer.hide();
-															console.log("Selected Library ID:", item.id);
-														}
-													}
-												}).inject(resultsContainer);
-											});
-										},
-										onFailure: function (err) {
-											console.error("Library search failed:", err);
+								const payload = {
+									label: "IPClass-" + UWA.Utils.getUUID(),
+									locale: "en",
+									login: {
+										"3dspace": {
+											SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 										}
-									});
-								 },
-                                    onFailure: function (err) {
-                                        console.error("Failed to fetch CSRF token:", err);
-                                    }
-                                });
-                            },
-                            onFailure: function () {
-                                console.error("Failed to get 3DSpace URL");
-                            }
+									},
+									nresults: 5,
+									order_by: "asc",
+									order_field: "ds6w:label",
+									query: `[ds6w:label]:(\"*${query}*\")`,
+									refine: {
+										"ds6w:what/ds6w:status": [{
+											field: "internal",
+											object: "Classification.Active",
+											type: "string"
+										}]
+									},
+									select_predicate: [
+										"ds6w:label", "physicalid", "ds6w:type"
+									],
+									source: ["3dspace"],
+									specific_source_parameter: {
+										"3dspace": {
+											additional_query: "AND flattenedtaxonomies:(\"types/General Class\")"
+										}
+									},
+									start: 0,
+									with_indexing_date: true,
+									with_nls: false
+								};
+
+								WAFData.authenticatedRequest(searchURL, {
+									method: 'POST',
+									type: 'json',
+									headers: {
+										Accept: 'application/json',
+										'Content-Type': 'application/json',
+										[csrfHeaderName]: csrfToken
+									},
+									data: JSON.stringify(payload),
+									onComplete: function (result) {
+										resultsContainer.setContent('');
+										resultsContainer.show();
+
+										const members = result.results || [];
+
+										if (members.length === 0) {
+											resultsContainer.setContent('<div style="padding:5px;">No matches</div>');
+											return;
+										}
+
+										members.forEach(item => {
+											const getAttr = (name) =>
+												(item.attributes.find(a => a.name === name) || {}).value;
+											const label = getAttr("ds6w:label");
+											const id = getAttr("physicalid");
+
+											new UWA.Element('div', {
+												html: `<strong>${label}</strong>`,
+												styles: {
+													padding: '5px',
+													cursor: 'pointer',
+													'border-bottom': '1px solid #eee'
+												},
+												events: {
+													click: function () {
+														libraryInput.value = label;
+														resultsContainer.hide();
+														console.log("Selected Classification ID:", id);
+													}
+												}
+											}).inject(resultsContainer);
+										});
+									},
+									onFailure: function (err) {
+										console.error("Federated search failed:", err);
+									}
+								});
+							},
+							onFailure: function (err) {
+								console.error("Failed to fetch CSRF token:", err);
+							}
+						});
+					},
+					onFailure: function () {
+						console.error("Failed to get 3DSpace URL");
+					}
 				});
 			});
 			
