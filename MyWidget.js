@@ -10,9 +10,8 @@ require([
         'DS/WAFData/WAFData',
         'DS/i3DXCompassServices/i3DXCompassServices',
 		'jspdf',
-		'autotable',
-		'DS/SMAAnalyticsNLS/SMAAnalyticsObjectSelector'
-    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdfModule, autotablePlugin, ObjectSelector) {
+		'autotable'
+    ], function (UWA, Alone, WAFData, i3DXCompassServices,jspdfModule, autotablePlugin) {
     if (typeof widget !== 'undefined') {
         widget.addEvent('onLoad', function () {
             console.log("Widget Loaded");
@@ -71,25 +70,27 @@ require([
 					padding: '15px'
 				}
 			}).inject(widget.body);
-			const librarySelector = new ObjectSelector({
-				label: "Libraries",
-				multiSelect: false,
-				placeholder: "Search...",
-				selectType: ['dslib:ClassificationTree'],
-				onChange: function (selectedObjects) {
-					console.log("Selected Library:", selectedObjects);
-					const selectedLibrary = selectedObjects[0];
-					if (selectedLibrary) {
-						console.log("Library ID:", selectedLibrary.id);
-						console.log("Library Label:", selectedLibrary.label);
-					}
-				}
-			});
 
-			// Inject it into container3
-			librarySelector.inject(container6);
+			new UWA.Element('label', {
+				html: 'Libraries:',
+				styles: {
+					display: 'block',
+					'margin-bottom': '5px',
+					'font-weight': 'bold'
+				}
+			}).inject(container6);
+
+
+			var libraryInput = new UWA.Element('input', {
+				type: 'text',
+				placeholder: 'Search Libraries...',
+				styles: {
+					width: '300px',
+					padding: '5px'
+				}
+			}).inject(container6);
 			const platformId = widget.getValue("x3dPlatformId");
-            // Create button inside widget.body
+            
             var button = new UWA.Element('button', {
                 text: 'Create Document',
                 styles: {
