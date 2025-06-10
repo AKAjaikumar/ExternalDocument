@@ -255,7 +255,7 @@ require([
 														}
 														libraryInput.value = '';
 														resultsContainer.hide();
-														fetchClassAttributes(id); 
+														fetchClassAttributes(label,id); 
 													}
 												}
 											}).inject(resultsContainer);
@@ -276,9 +276,50 @@ require([
 					}
 				});
 			});
-			function displayAttributes(data) {
-				attributeContainer.setContent('');
+			function addClassificationChip(label, id, attributeData) {
+    
+					const chip = new UWA.Element('div', {
+						class: 'classification-chip',
+						styles: {
+							display: 'inline-block',
+							margin: '5px',
+							padding: '5px 10px',
+							borderRadius: '20px',
+							backgroundColor: '#0078d7',
+							color: '#fff',
+							fontSize: '12px',
+							cursor: 'default'
+						},
+						html: `${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
+						id: `chip-${id}`
+					}).inject(container6);
 
+
+					const block = new UWA.Element('div', {
+						class: 'attr-block',
+						id: `attr-${id}`,
+						styles: {
+							margin: '10px 0',
+							padding: '10px',
+							border: '1px solid #ccc',
+							borderRadius: '6px',
+							backgroundColor: '#f9f9f9'
+						}
+					}).inject(attributeContainer);
+
+					buildAttributeFields(attributeData, block);
+
+					// Remove chip + attribute block
+					chip.getElement('.remove-chip').addEvent('click', function (e) {
+						e.stopPropagation();
+						chip.destroy();
+						block.destroy();
+					});
+				}
+			
+			
+			
+			function buildAttributeFields(data, container) {
 				const classAttributes = data.member?.[0]?.ClassAttributes?.member || [];
 
 				classAttributes.forEach(attr => {
@@ -307,17 +348,17 @@ require([
 
 					} else {
 						inputField = new UWA.Element('input', {
-							type: attr.type === 'string' ? 'text' : 'text', 
+							type: 'text',
 							styles: { width: '300px', padding: '4px' }
 						});
 					}
 
 					inputField.inject(wrapper);
-					wrapper.inject(attributeContainer);
+					wrapper.inject(container);
 				});
 			}
 
-            function fetchClassAttributes(classId) {
+            function fetchClassAttributes(label,classId) {
 				i3DXCompassServices.getServiceUrl({
 					platformId: platformId,
 					serviceName: '3DSpace',
@@ -348,7 +389,7 @@ require([
 									},
 									onComplete: function (data) {
 										console.log("date:",data)
-										displayAttributes(data);
+										addClassificationChip(label,classId,data);
 									},
 									onFailure: function (err) {
 										console.error("Failed to fetch class attributes:", err);
