@@ -129,12 +129,11 @@ require([
 								if(baseUrl.endsWith('/enovia')) {
 									baseUrl = baseUrl.replace('/enovia', '');
 								}
-								if(baseUrl.contains('-space')) {
+								if(baseUrl.indexOf('-space') !== -1) {
 									baseUrl = baseUrl.replace('-space', '-fedsearch');
 								}
 								
-								const searchURL = baseUrl + '/federated/search?tenant='+platformId;
-
+								onst searchURL = `${baseUrl}/federated/search?tenant=${platformId}`;
 								const payload = {
 									label: "IPClass-" + UWA.Utils.getUUID(),
 									locale: "en",
