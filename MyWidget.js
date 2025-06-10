@@ -174,8 +174,7 @@ require([
 									headers: {
 										Accept: 'application/json',
 										'Content-Type': 'application/json',
-										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
-										[csrfHeaderName]: csrfToken
+										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 									},
 									data: JSON.stringify(payload),
 									onComplete: function (result) {
