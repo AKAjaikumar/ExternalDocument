@@ -297,8 +297,9 @@ require([
 									method: 'POST',
 									type: 'json',
 									headers: {
-										Accept: 'application/json',
-										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
+										'Content-Type': 'application/json',
+										'Accept': 'application/json',
+										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
 										[csrfHeaderName]: csrfToken
 									},
 									data: JSON.stringify({
