@@ -302,7 +302,7 @@ require([
 										[csrfHeaderName]: csrfToken
 									},
 									data: JSON.stringify({
-												classId: classId
+												"classId": classId
 											}),
 									onComplete: function (data) {
 										console.log("date:",data)
