@@ -279,7 +279,7 @@ require([
 			function displayAttributes(data) {
 				attributeContainer.setContent('');
 
-				const classAttributes = response.member?.[0]?.ClassAttributes?.member || [];
+				const classAttributes = data.member?.[0]?.ClassAttributes?.member || [];
 
 				classAttributes.forEach(attr => {
 					const wrapper = new UWA.Element('div', {
