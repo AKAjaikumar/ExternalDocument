@@ -298,7 +298,7 @@ require([
 										Accept: 'application/json',
 										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 									},
-									data: JSON.stringify({"classId	": classId}),
+									data: JSON.stringify("classId": classId),
 									onComplete: function (data) {
 										console.log("date:",data)
 									},
