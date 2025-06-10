@@ -133,7 +133,7 @@ require([
 									baseUrl = baseUrl.replace('-space', '-fedsearch');
 								}
 								
-								const searchURL = baseUrl + '/federated/search?tenant='+platformId.trim();
+								const searchURL = baseUrl + '/federated/search?tenant='+platformId;
 
 								const payload = {
 									label: "IPClass-" + UWA.Utils.getUUID(),
@@ -164,7 +164,7 @@ require([
 										}
 									},
 									start: 0,
-									tenant: ${platformId},
+									tenant: platformId,
 									with_indexing_date: true,
 									with_nls: false
 								};
