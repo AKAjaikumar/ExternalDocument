@@ -290,7 +290,9 @@ require([
 								const csrfToken = csrfData.csrf.value;
 								const csrfHeaderName = csrfData.csrf.name;
 								const url = baseUrl + '/resources/IPClassificationReuse/classifiedItem/getAttributesOfObjectForClass';
-
+								const payload = {
+									classId: classId
+								};
 								WAFData.authenticatedRequest(url, {
 									method: 'POST',
 									type: 'json',
@@ -298,7 +300,7 @@ require([
 										Accept: 'application/json',
 										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 									},
-									data: JSON.stringify({"classId": classId}),
+									data: JSON.stringify(payload),
 									onComplete: function (data) {
 										console.log("date:",data)
 									},
