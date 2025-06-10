@@ -298,9 +298,12 @@ require([
 									type: 'json',
 									headers: {
 										Accept: 'application/json',
-										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
+										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
+										[csrfHeaderName]: csrfToken
 									},
-									data: JSON.stringify(payload),
+									data: JSON.stringify({
+												classId: classId
+											}),
 									onComplete: function (data) {
 										console.log("date:",data)
 									},
