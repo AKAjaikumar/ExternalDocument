@@ -289,7 +289,7 @@ require([
 							onComplete: function (csrfData) {
 								const csrfToken = csrfData.csrf.value;
 								const csrfHeaderName = csrfData.csrf.name;
-								const url = baseUrl + '/resources/v1/modeler/dslib/dslib:class/'+classId+'?$mask=dslib:ClassAttributesMask';
+								const url = baseUrl + '/resources/v1/modeler/dslib/dslib:Class/'+classId+'?$mask=dslib:ClassAttributesMask';
 								
 								WAFData.authenticatedRequest(url, {
 									method: 'GET',
