@@ -90,7 +90,45 @@ require([
 					padding: '5px'
 				}
 			}).inject(container6);
-			
+			const selectedClassifications = [];
+
+			const chipContainer = new UWA.Element('div', {
+				styles: {
+					margin: '10px 0',
+					display: 'flex',
+					'flex-wrap': 'wrap',
+					gap: '5px'
+				}
+			}).inject(container6);
+
+			function renderChips() {
+				chipContainer.setContent('');
+
+				selectedClassifications.forEach((item, index) => {
+					new UWA.Element('div', {
+						className: 'uwa-chip',
+						styles: {
+							display: 'flex',
+							'align-items': 'center',
+							'background-color': '#e0e0e0',
+							padding: '5px 10px',
+							'border-radius': '20px'
+						},
+						html: `
+							<span style="margin-right: 8px;">${item.label}</span>
+							<span style="cursor: pointer; font-weight: bold;">&times;</span>
+						`,
+						events: {
+							click: function (e) {
+								if (e.target.textContent === '×') {
+									selectedClassifications.splice(index, 1);
+									renderChips();
+								}
+							}
+						}
+					}).inject(chipContainer);
+				});
+			}
 			var resultsContainer = new UWA.Element('div', {
 				styles: {
 					border: '1px solid #ccc',
@@ -204,9 +242,13 @@ require([
 												},
 												events: {
 													click: function () {
-														libraryInput.value = label;
+														const exists = selectedClassifications.some(c => c.id === id);
+														if (!exists) {
+															selectedClassifications.push({ label, id });
+															renderChips();
+														}
+														libraryInput.value = '';
 														resultsContainer.hide();
-														console.log("Selected Classification ID:", id);
 													}
 												}
 											}).inject(resultsContainer);
