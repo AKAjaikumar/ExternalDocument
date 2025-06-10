@@ -249,6 +249,7 @@ require([
 														}
 														libraryInput.value = '';
 														resultsContainer.hide();
+														fetchClassAttributes(id); 
 													}
 												}
 											}).inject(resultsContainer);
@@ -270,7 +271,52 @@ require([
 				});
 			});
 			
-            
+            function fetchClassAttributes(classId) {
+				i3DXCompassServices.getServiceUrl({
+					platformId: platformId,
+					serviceName: '3DSpace',
+					onComplete: function (URL3DSpace) {
+						let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+						if (baseUrl.endsWith('/3dspace')) {
+							baseUrl = baseUrl.replace('/3dspace', '');
+						}
+
+						const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+						WAFData.authenticatedRequest(csrfURL, {
+							method: 'GET',
+							type: 'json',
+							onComplete: function (csrfData) {
+								const csrfToken = csrfData.csrf.value;
+								const csrfHeaderName = csrfData.csrf.name;
+								const url = baseUrl + '/resources/IPClassificationReuse/classifiedItem/getAttributesOfObjectForClass';
+
+								WAFData.authenticatedRequest(url, {
+									method: 'POST',
+									type: 'json',
+									headers: {
+										Accept: 'application/json',
+										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
+									},
+									data: JSON.stringify({"classId	": classId}),
+									onComplete: function (data) {
+										console.log("date:",data)
+									},
+									onFailure: function (err) {
+										console.error("Failed to fetch class attributes:", err);
+									}
+								});
+							},
+							onFailure: function (err) {
+								console.error("Failed to fetch CSRF token:", err);
+							}
+						});
+					},
+					onFailure: function () {
+						console.error("Failed to get 3DSpace URL");
+					}
+				});
+			}
             var button = new UWA.Element('button', {
                 text: 'Create Document',
                 styles: {
