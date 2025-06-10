@@ -164,6 +164,7 @@ require([
 										}
 									},
 									start: 0,
+									tenant: ${platformId},
 									with_indexing_date: true,
 									with_nls: false
 								};
