@@ -299,8 +299,7 @@ require([
 									headers: {
 										'Content-Type': 'application/json',
 										'Accept': 'application/json',
-										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
-										[csrfHeaderName]: csrfToken
+										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 									},
 									data: JSON.stringify({
 												"classId": classId
