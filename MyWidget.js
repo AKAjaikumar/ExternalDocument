@@ -142,7 +142,13 @@ require([
 					width: '300px'
 				}
 			}).inject(container6);
-			
+			var attributeContainer = new UWA.Element('div', {
+				styles: {
+					'margin-top': '10px',
+					'border-top': '1px solid #ccc',
+					'padding-top': '10px'
+				}
+			}).inject(container6);
 			libraryInput.addEvent('keyup', function () {
 				const query = libraryInput.value.trim();
 				if (!query || query.length < 2) return;
@@ -270,7 +276,47 @@ require([
 					}
 				});
 			});
-			
+			function displayAttributes(data) {
+				attributeContainer.setContent('');
+
+				const classAttributes = response.member?.[0]?.ClassAttributes?.member || [];
+
+				classAttributes.forEach(attr => {
+					const wrapper = new UWA.Element('div', {
+						styles: { margin: '10px 0' }
+					});
+
+					new UWA.Element('label', {
+						html: attr.name,
+						styles: { display: 'block', marginBottom: '4px' }
+					}).inject(wrapper);
+
+					let inputField;
+
+					if (Array.isArray(attr.authorizedValues) && attr.authorizedValues.length > 0) {
+						inputField = new UWA.Element('select', {
+							styles: { width: '300px', padding: '4px' }
+						});
+
+						attr.authorizedValues.forEach(value => {
+							new UWA.Element('option', {
+								value: value,
+								text: value
+							}).inject(inputField);
+						});
+
+					} else {
+						inputField = new UWA.Element('input', {
+							type: attr.type === 'string' ? 'text' : 'text', 
+							styles: { width: '300px', padding: '4px' }
+						});
+					}
+
+					inputField.inject(wrapper);
+					wrapper.inject(attributeContainer);
+				});
+			}
+
             function fetchClassAttributes(classId) {
 				i3DXCompassServices.getServiceUrl({
 					platformId: platformId,
@@ -302,6 +348,7 @@ require([
 									},
 									onComplete: function (data) {
 										console.log("date:",data)
+										displayAttributes(data);
 									},
 									onFailure: function (err) {
 										console.error("Failed to fetch class attributes:", err);
