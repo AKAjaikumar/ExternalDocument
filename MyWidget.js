@@ -302,7 +302,7 @@ require([
 										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
 									},
 									data: JSON.stringify({
-												"classId": classId
+												"classId": classId,
 												"objId": "4111F597EBED26006847E32000004B41"
 											}),
 									onComplete: function (data) {
