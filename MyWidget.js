@@ -303,7 +303,7 @@ require([
 									},
 									data: JSON.stringify({
 												"classId": classId,
-												"objId": ""
+												"objId": classId
 											}),
 									onComplete: function (data) {
 										console.log("date:",data)
