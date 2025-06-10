@@ -126,6 +126,9 @@ require([
 							onComplete: function (csrfData) {
 								const csrfToken = csrfData.csrf.value;
 								const csrfHeaderName = csrfData.csrf.name;
+								if(baseUrl.endsWith('/enovia')) {
+									baseUrl = baseUrl.replace('/enovia', '');
+								}
 								const searchURL = baseUrl + '/federated/search';
 
 								const payload = {
@@ -1022,7 +1025,7 @@ require([
 										onComplete: function (docData) {
 										console.log("Fetched docData for ID", docId, docData);
 											if (docData.data && docData.data.length > 0) {
-												resolve(docData.data[0]);  // Return first document object
+												resolve(docData.data[0]);  
 											} else {
 												reject("No document data returned");
 											}
