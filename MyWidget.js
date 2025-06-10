@@ -129,6 +129,10 @@ require([
 								if(baseUrl.endsWith('/enovia')) {
 									baseUrl = baseUrl.replace('/enovia', '');
 								}
+								if(baseUrl.endsWith('-space')) {
+									baseUrl = baseUrl.replace('-space', '-fedsearch');
+								}
+								
 								const searchURL = baseUrl + '/federated/search';
 
 								const payload = {
