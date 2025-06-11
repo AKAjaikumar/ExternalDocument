@@ -316,10 +316,12 @@ require([
 						e.stopPropagation();
 						chip.destroy();
 						block.destroy();
-						const index = selectedClassifications.findIndex(c => c.id === id);
-						console.log("index:",index);
+						const index = selectedClassifications.findIndex(c => c.id == id);
 						if (index !== -1) {
 							selectedClassifications.splice(index, 1);
+							console.log('Removed classification with id:', id);
+						} else {
+							console.warn('Classification not found in selectedClassifications:', id);
 						}
 					});
 				}
