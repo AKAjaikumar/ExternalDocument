@@ -309,13 +309,22 @@ require([
 						}
 					}).inject(attributeContainer);
 
-					buildAttributeFields(attributeData, block);
+					buildAttributeFields(attributeData, 
+					
+					
+					
+					
+					);
 
 					
 					chip.getElement('.remove-chip').addEvent('click', function (e) {
 						e.stopPropagation();
 						chip.destroy();
 						block.destroy();
+						const index = selectedClassifications.findIndex(c => c.id === id);
+						if (index !== -1) {
+							selectedClassifications.splice(index, 1);
+						}
 					});
 				}
 			
