@@ -304,7 +304,6 @@ require([
 							border: '1px solid #ccc',
 							borderRadius: '4px',
 							backgroundColor: '#f9f9f9',
-							display: 'inline-block',
 							fontSize: '12px',
 							maxWidth: '320px' 
 						}
