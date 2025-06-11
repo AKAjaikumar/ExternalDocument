@@ -146,7 +146,8 @@ require([
 				styles: {
 					'margin-top': '10px',
 					'border-top': '1px solid #ccc',
-					'padding-top': '10px'
+					'padding-top': '10px',
+					'maxWidth': '320px'
 				}
 			}).inject(container6);
 			libraryInput.addEvent('keyup', function () {
@@ -326,6 +327,7 @@ require([
 				classAttributes.forEach(attr => {
 					const wrapper = new UWA.Element('div', {
 						styles: { margin: '10px 0' }
+						
 					});
 
 					new UWA.Element('label', {
