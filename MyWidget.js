@@ -309,12 +309,7 @@ require([
 						}
 					}).inject(attributeContainer);
 
-					buildAttributeFields(attributeData, 
-					
-					
-					
-					
-					);
+					buildAttributeFields(attributeData, block);
 
 					
 					chip.getElement('.remove-chip').addEvent('click', function (e) {
