@@ -114,10 +114,10 @@ require([
 							padding: '5px 10px',
 							'border-radius': '20px'
 						},
-						html: `
+						html: '
 							<span style="margin-right: 8px;">${item.label}</span>
 							<span style="cursor: pointer; font-weight: bold;">&times;</span>
-						`,
+						',
 						events: {
 							click: function (e) {
 								if (e.target.textContent === '×') {
@@ -190,7 +190,7 @@ require([
 									nresults: 5,
 									order_by: "asc",
 									order_field: "ds6w:label",
-									query: `[ds6w:label]:(\"*${query}*\")`,
+									query: '[ds6w:label]:(\"*${query}*\")',
 									refine: {
 										"ds6w:what/ds6w:status": [{
 											field: "internal",
@@ -240,7 +240,7 @@ require([
 											const id = getAttr("physicalid");
 
 											new UWA.Element('div', {
-												html: `<strong>${label}</strong>`,
+												html: '<strong>${label}</strong>',
 												styles: {
 													padding: '5px',
 													cursor: 'pointer',
@@ -282,34 +282,41 @@ require([
 						class: 'classification-chip',
 						styles: {
 							display: 'inline-block',
-							margin: '5px',
-							padding: '5px 10px',
-							borderRadius: '20px',
+							margin: '3px',
+							padding: '2px 8px',
+							borderRadius: '12px',
 							backgroundColor: '#0078d7',
 							color: '#fff',
-							fontSize: '12px',
-							cursor: 'default'
+							fontSize: '11px',
+							cursor: 'default',
+							maxWidth: '200px',
+							overflow: 'hidden',
+							whiteSpace: 'nowrap',
+							textOverflow: 'ellipsis'
 						},
-						html: `${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
-						id: `chip-${id}`
+						html: '${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>',
+						id: 'chip-${id}'
 					}).inject(container6);
 
 
 					const block = new UWA.Element('div', {
 						class: 'attr-block',
-						id: `attr-${id}`,
+						id: 'attr-${id}',
 						styles: {
-							margin: '10px 0',
-							padding: '10px',
+							margin: '6px 0',
+							padding: '6px 10px',
 							border: '1px solid #ccc',
-							borderRadius: '6px',
-							backgroundColor: '#f9f9f9'
+							borderRadius: '4px',
+							backgroundColor: '#f4f4f4',
+							display: 'inline-block',
+							fontSize: '12px',
+							maxWidth: '320px'
 						}
 					}).inject(attributeContainer);
 
 					buildAttributeFields(attributeData, block);
 
-					// Remove chip + attribute block
+					
 					chip.getElement('.remove-chip').addEvent('click', function (e) {
 						e.stopPropagation();
 						chip.destroy();
