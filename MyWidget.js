@@ -278,21 +278,17 @@ require([
 			});
 			function addClassificationChip(label, id, attributeData) {
     
-					const chip = new UWA.Element('div', {
+					const chip = new UWA.Element('div', { 
 						class: 'classification-chip',
 						styles: {
 							display: 'inline-block',
-							margin: '3px',
-							padding: '2px 8px',
-							borderRadius: '12px',
+							margin: '5px',
+							padding: '5px 10px',
+							borderRadius: '20px',
 							backgroundColor: '#0078d7',
 							color: '#fff',
-							fontSize: '11px',
-							cursor: 'default',
-							maxWidth: '200px',
-							overflow: 'hidden',
-							whiteSpace: 'nowrap',
-							textOverflow: 'ellipsis'
+							fontSize: '12px',
+							cursor: 'default'
 						},
 						html: `${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
 						id: 'chip-${id}'
@@ -303,14 +299,14 @@ require([
 						class: 'attr-block',
 						id: 'attr-${id}',
 						styles: {
-							margin: '6px 0',
+							margin: '10px 0',
 							padding: '6px 10px',
 							border: '1px solid #ccc',
 							borderRadius: '4px',
-							backgroundColor: '#f4f4f4',
+							backgroundColor: '#f9f9f9',
 							display: 'inline-block',
 							fontSize: '12px',
-							maxWidth: '320px'
+							maxWidth: '320px' 
 						}
 					}).inject(attributeContainer);
 
