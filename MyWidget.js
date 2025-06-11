@@ -294,7 +294,7 @@ require([
 							whiteSpace: 'nowrap',
 							textOverflow: 'ellipsis'
 						},
-						html: '${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>',
+						html: `${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
 						id: 'chip-${id}'
 					}).inject(container6);
 
