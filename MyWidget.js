@@ -320,6 +320,7 @@ require([
 						if (index !== -1) {
 							selectedClassifications.splice(index, 1);
 							console.log('Removed classification with id:', id);
+							renderChips();
 						} else {
 							console.warn('Classification not found in selectedClassifications:', id);
 						}
