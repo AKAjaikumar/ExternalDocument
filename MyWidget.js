@@ -114,10 +114,10 @@ require([
 							padding: '5px 10px',
 							'border-radius': '20px'
 						},
-						html: '
+						html: `
 							<span style="margin-right: 8px;">${item.label}</span>
 							<span style="cursor: pointer; font-weight: bold;">&times;</span>
-						',
+						`,
 						events: {
 							click: function (e) {
 								if (e.target.textContent === '×') {
@@ -190,7 +190,7 @@ require([
 									nresults: 5,
 									order_by: "asc",
 									order_field: "ds6w:label",
-									query: '[ds6w:label]:(\"*${query}*\")',
+									query: `[ds6w:label]:(\"*${query}*\")`,
 									refine: {
 										"ds6w:what/ds6w:status": [{
 											field: "internal",
@@ -240,7 +240,7 @@ require([
 											const id = getAttr("physicalid");
 
 											new UWA.Element('div', {
-												html: '<strong>${label}</strong>',
+												html: `<strong>${label}</strong>`,
 												styles: {
 													padding: '5px',
 													cursor: 'pointer',
