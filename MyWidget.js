@@ -240,11 +240,10 @@ require([
 											const id = getAttr("physicalid");
 
 											new UWA.Element('div', {
-												html: `<strong>${label}</strong>`,
+												//html: `<strong>${label}</strong>`,
 												styles: {
 													padding: '5px',
-													cursor: 'pointer',
-													'border-bottom': '1px solid #eee'
+													cursor: 'pointer'
 												},
 												events: {
 													click: function () {
