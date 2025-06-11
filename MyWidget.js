@@ -317,6 +317,7 @@ require([
 						chip.destroy();
 						block.destroy();
 						const index = selectedClassifications.findIndex(c => c.id === id);
+						console.log("index:",index);
 						if (index !== -1) {
 							selectedClassifications.splice(index, 1);
 						}
