@@ -71,7 +71,11 @@ require([
 					padding: '15px'
 				}
 			}).inject(widget.body);
-
+			var container7 = new UWA.Element('div', {
+				styles: {
+					padding: '15px'
+				}
+			}).inject(widget.body);
 			new UWA.Element('label', {
 				html: 'Libraries:',
 				styles: {
@@ -80,8 +84,22 @@ require([
 					'font-weight': 'bold'
 				}
 			}).inject(container6);
-
-
+			new UWA.Element('label', {
+				html: 'Bookmarks:',
+				styles: {
+					display: 'block',
+					'margin-bottom': '5px',
+					'font-weight': 'bold'
+				}
+			}).inject(container7);
+			var bookmarkInput = new UWA.Element('input', {
+				type: 'text',
+				placeholder: 'Search Bookmarks...',
+				styles: {
+					width: '300px',
+					padding: '5px'
+				}
+			}).inject(container6);
 			var libraryInput = new UWA.Element('input', {
 				type: 'text',
 				placeholder: 'Search Libraries...',
@@ -91,7 +109,8 @@ require([
 				}
 			}).inject(container6);
 			const selectedClassifications = [];
-
+			const selectedBookmarks = [];
+			
 			const chipContainer = new UWA.Element('div', {
 				styles: {
 					margin: '10px 0',
@@ -100,7 +119,14 @@ require([
 					gap: '5px'
 				}
 			}).inject(container6);
-
+			const chipContainer1 = new UWA.Element('div', {
+				styles: {
+					margin: '10px 0',
+					display: 'flex',
+					'flex-wrap': 'wrap',
+					gap: '5px'
+				}
+			}).inject(container7);
 			function renderChips() {
 				chipContainer.setContent('');
 
@@ -121,21 +147,42 @@ require([
 						events: {
 							click: function (e) {
 								if (e.target.textContent === '×') {
-									e.stopPropagation();
 									
 									selectedClassifications.splice(index, 1);
-
-									e.currentTarget.remove();
-			
-									const attrBlock = document.getElementById(`attr-${item.id}`);
-									if (attrBlock) {
-										attrBlock.remove();
-									}
 									renderChips();
 								}
 							}
 						}
 					}).inject(chipContainer);
+				});
+			}
+			function renderChips1() {
+				chipContainer1.setContent('');
+
+				selectedBookmarks.forEach((item, index) => {
+					new UWA.Element('div', {
+						className: 'uwa-chip',
+						styles: {
+							display: 'flex',
+							'align-items': 'center',
+							'background-color': '#e0e0e0',
+							padding: '5px 10px',
+							'border-radius': '20px'
+						},
+						html: `
+							<span style="margin-right: 8px;">${item.label}</span>
+							<span style="cursor: pointer; font-weight: bold;">&times;</span>
+						`,
+						events: {
+							click: function (e) {
+								if (e.target.textContent === '×') {
+									
+									selectedBookmarks.splice(index, 1);
+									renderChips1();
+								}
+							}
+						}
+					}).inject(chipContainer1);
 				});
 			}
 			var resultsContainer = new UWA.Element('div', {
@@ -151,6 +198,19 @@ require([
 					width: '300px'
 				}
 			}).inject(container6);
+			var resultsContainer1 = new UWA.Element('div', {
+				styles: {
+					border: '1px solid #ccc',
+					display: 'none',
+					'max-height': '150px',
+					overflow: 'auto',
+					'margin-top': '5px',
+					'background-color': '#fff',
+					'z-index': 1000,
+					position: 'absolute',
+					width: '300px'
+				}
+			}).inject(container7);
 			var attributeContainer = new UWA.Element('div', {
 				styles: {
 					'margin-top': '10px',
@@ -268,6 +328,140 @@ require([
 													}
 												}
 											}).inject(resultsContainer);
+										});
+									},
+									onFailure: function (err) {
+										console.error("Federated search failed:", err);
+									}
+								});
+							},
+							onFailure: function (err) {
+								console.error("Failed to fetch CSRF token:", err);
+							}
+						});
+					},
+					onFailure: function () {
+						console.error("Failed to get 3DSpace URL");
+					}
+				});
+			});
+			bookmarkInput.addEvent('keyup', function () {
+				const query = bookmarkInput.value.trim();
+				if (!query || query.length < 2) return;
+
+				i3DXCompassServices.getServiceUrl({
+					platformId: platformId,
+					serviceName: '3DSpace',
+					onComplete: function (URL3DSpace) {
+						let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+						if (baseUrl.endsWith('/3dspace')) {
+							baseUrl = baseUrl.replace('/3dspace', '');
+						}
+
+						const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+						WAFData.authenticatedRequest(csrfURL, {
+							method: 'GET',
+							type: 'json',
+							onComplete: function (csrfData) {
+								const csrfToken = csrfData.csrf.value;
+								const csrfHeaderName = csrfData.csrf.name;
+								if(baseUrl.endsWith('/enovia')) {
+									baseUrl = baseUrl.replace('/enovia', '');
+								}
+								if(baseUrl.indexOf('-space') !== -1) {
+									baseUrl = baseUrl.replace('-space', '-fedsearch');
+								}
+								
+								const searchURL = baseUrl + '/federated/search?tenant='+platformId;
+
+								const payload = {
+									label: "IPClass-" + UWA.Utils.getUUID(),
+									locale: "en",
+									login: {
+										"3dspace": {
+											SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
+										}
+									},
+									nresults: 5,
+									order_by: "asc",
+									order_field: "ds6w:label",
+									query: `[ds6w:label]:(\"*${query}*\")`,
+									refine: {
+										"ds6w:what/ds6w:status": [{
+											field: "internal",
+											object: "Classification.Active",
+											type: "string"
+										}]
+									},
+									select_predicate: [
+										"ds6w:label",
+										"ds6w:created",
+										"ds6w:reservedBy",
+										"relcount",
+										"taxonomies",
+										"ds6w:classification",
+										"icon_2ddefaultthb.subtype",
+										"ds6w:type",
+										"physicalid",
+										"ds6w:classificationUsage"
+									],
+									source: ["3dspace"],
+									specific_source_parameter: {
+										"3dspace": {
+											additional_query: "AND flattenedtaxonomies:(\"types/Workspace\" OR  \"types/Workspace Vault\")"
+										}
+									},
+									start: 0,
+									tenant: platformId,
+									with_indexing_date: true,
+									with_nls: false
+								};
+
+								WAFData.authenticatedRequest(searchURL, {
+									method: 'POST',
+									type: 'json',
+									headers: {
+										Accept: 'application/json',
+										'Content-Type': 'application/json',
+										SecurityContext: "ctx::VPLMProjectLeader.Company Name.APTIV INDIA"
+									},
+									data: JSON.stringify(payload),
+									onComplete: function (result) {
+										resultsContainer1.setContent('');
+										resultsContainer1.show();
+
+										const members = result.results || [];
+
+										if (members.length === 0) {
+											resultsContainer1.setContent('<div style="padding:5px;">No matches</div>');
+											return;
+										}
+
+										members.forEach(item => {
+											const getAttr = (name) =>
+												(item.attributes.find(a => a.name === name) || {}).value;
+											const label = getAttr("ds6w:label");
+											const id = getAttr("physicalid");
+
+											new UWA.Element('div', {
+												html: `<strong>${label}</strong>`,
+												styles: {
+													padding: '5px',
+													cursor: 'pointer'
+												},
+												events: {
+													click: function () {
+														const exists = selectedBookmarks.some(c => c.id === id);
+														if (!exists) {
+															selectedBookmarks.push({ label, id });
+															renderChips();
+														}
+														libraryInput.value = '';
+														resultsContainer1.hide();
+													}
+												}
+											}).inject(resultsContainer1);
 										});
 									},
 									onFailure: function (err) {
