@@ -269,7 +269,16 @@ require([
 										}]
 									},
 									select_predicate: [
-										"ds6w:label", "physicalid", "ds6w:type"
+										"ds6w:label",
+										"ds6w:created",
+										"ds6w:reservedBy",
+										"relcount",
+										"taxonomies",
+										"ds6w:classification",
+										"icon_2ddefaultthb.subtype",
+										"ds6w:type",
+										"physicalid",
+										"ds6w:classificationUsage"
 									],
 									source: ["3dspace"],
 									specific_source_parameter: {
