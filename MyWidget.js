@@ -448,7 +448,7 @@ require([
 														const exists = selectedBookmarks.some(c => c.id === id);
 														if (!exists) {
 															selectedBookmarks.push({ label, id });
-															renderChips();
+															renderChips1();
 														}
 														bookmarkInput.value = '';
 														resultsContainer1.hide();
