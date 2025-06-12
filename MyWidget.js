@@ -436,9 +436,10 @@ require([
 												(item.attributes.find(a => a.name === name) || {}).value;
 											const label = getAttr("ds6w:label");
 											const id = getAttr("physicalid");
-
+											const parentId = getAttr("ds6w:what/ds6w:kind")
 											new UWA.Element('div', {
-												html: `<strong>${label}</strong>`,
+												html: `<strong>${label}</strong><br>
+												<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
 												styles: {
 													padding: '5px',
 													cursor: 'pointer'
