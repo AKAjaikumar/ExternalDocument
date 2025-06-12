@@ -124,7 +124,7 @@ require([
 									e.stopPropagation();
 									
 									selectedClassifications.splice(index, 1);
-									chipElement?.remove();
+
 									e.currentTarget.remove();
 			
 									const attrBlock = document.getElementById(`attr-${item.id}`);
