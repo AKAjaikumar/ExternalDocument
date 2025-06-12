@@ -122,14 +122,15 @@ require([
 							click: function (e) {
 								if (e.target.textContent === '×') {
 									e.stopPropagation();
-									const chipElement = e.currentTarget;
-									const chipId = chipElement?.id?.replace('chip-', '');
+									
 									selectedClassifications.splice(index, 1);
 									chipElement?.remove();
-
+									e.currentTarget.remove();
 			
-									const attrBlock = document.getElementById(`attr-${chipId}`);
-									attrBlock?.remove();
+									const attrBlock = document.getElementById(`attr-${item.id}`);
+									if (attrBlock) {
+										attrBlock.remove();
+									}
 									renderChips();
 								}
 							}
