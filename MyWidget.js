@@ -99,7 +99,7 @@ require([
 					width: '300px',
 					padding: '5px'
 				}
-			}).inject(container6);
+			}).inject(container7);
 			var libraryInput = new UWA.Element('input', {
 				type: 'text',
 				placeholder: 'Search Libraries...',
