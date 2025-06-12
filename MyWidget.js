@@ -387,13 +387,6 @@ require([
 									order_by: "asc",
 									order_field: "ds6w:label",
 									query: `[ds6w:label]:(\"*${query}*\")`,
-									refine: {
-										"ds6w:what/ds6w:status": [{
-											field: "internal",
-											object: "Classification.Active",
-											type: "string"
-										}]
-									},
 									select_predicate: [
 										"ds6w:label",
 										"ds6w:created",
@@ -457,7 +450,7 @@ require([
 															selectedBookmarks.push({ label, id });
 															renderChips();
 														}
-														libraryInput.value = '';
+														bookmarkInput.value = '';
 														resultsContainer1.hide();
 													}
 												}
