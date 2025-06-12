@@ -121,7 +121,12 @@ require([
 						events: {
 							click: function (e) {
 								if (e.target.textContent === '×') {
+									const chipElement = e.target.closest('.classification-chip');
+									const chipId = chipElement?.id?.replace('chip-', '');
 									selectedClassifications.splice(index, 1);
+									chipElement?.destroy();
+									const attrBlock = document.getElementById(`attr-${chipId}`);
+									attrBlock?.remove();
 									renderChips();
 								}
 							}
