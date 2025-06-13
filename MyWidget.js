@@ -317,7 +317,13 @@ require([
 												(item.attributes.find(a => a.name === name) || {}).value;
 											const label = getAttr("ds6w:label");
 											const id = getAttr("physicalid");
-											const parentId = getAttr("ds6w:what/ds6w:kind")
+											const taxonomyPath = getAttr("taxonomies");
+											let parentId = '';
+											if (taxonomyPath) {
+												const taxonomy = taxonomyPath.split('/');
+												const library = taxonomy[taxonomy.taxonomy - 1];
+												parentId = fetchLabelsFromIDs(library);
+											}
 											new UWA.Element('div', {
 												html: `<strong>${label}</strong><br>
 												<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
@@ -355,6 +361,54 @@ require([
 					}
 				});
 			});
+			function fetchLabelsFromIDs(id) {
+				let idLabelMap = '';
+				i3DXCompassServices.getServiceUrl({
+					platformId: platformId,
+					serviceName: '3DSpace',
+					onComplete: function (URL3DSpace) {
+						let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+						if (baseUrl.endsWith('/3dspace')) {
+							baseUrl = baseUrl.replace('/3dspace', '');
+						}
+
+						const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+						WAFData.authenticatedRequest(csrfURL, {
+							method: 'GET',
+							type: 'json',
+							onComplete: function (csrfData) {
+								const csrfToken = csrfData.csrf.value;
+								const csrfHeaderName = csrfData.csrf.name;
+								const getLibURL = baseUrl + '/resources/v1/modeler/dslib/dslib:Library/'+id;
+								WAFData.authenticatedRequest(getLibURL, {
+									method: 'GET',
+									type: 'json',
+									headers: {
+										'Content-Type': 'application/json',
+										'Accept': 'application/json',
+										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
+										[csrfHeaderName]: csrfToken
+									},
+									onComplete: function (data) {
+										console.log("data:",data)
+									},
+									onFailure: function (err) {
+										console.error("Failed to fetch class attributes:", err);
+									}
+								});
+							},
+							onFailure: function (err) {
+								console.error("Failed to fetch CSRF token:", err);
+							}
+						});
+					},
+					onFailure: function () {
+						console.error("Failed to get 3DSpace URL");
+					}
+				});
+				return idLabelMap;
+			}
 			bookmarkInput.addEvent('keyup', function () {
 				const query = bookmarkInput.value.trim();
 				if (!query || query.length < 2) return;
