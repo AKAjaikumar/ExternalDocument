@@ -320,6 +320,8 @@ require([
 												const label = getAttr("ds6w:label");
 												const id = getAttr("physicalid");
 												const taxonomyPath = getAttr("taxonomies");
+												console.log("id:", id);
+												console.log("duplicateIds:", duplicateIds);
 												if (!id || duplicateIds.has(id)) {
 													console.log("Skipping duplicate or empty ID:", id);
 													continue;
