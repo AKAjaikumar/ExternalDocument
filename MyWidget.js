@@ -390,8 +390,11 @@ require([
 										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
 										[csrfHeaderName]: csrfToken
 									},
-									onComplete: function (data) {
-										console.log("data:",data)
+									onComplete: function (response) {
+										console.log("response:",response)
+										if (response && response.member && response.member.length > 0) {
+											idLabelMap = response.member.title;
+										} 
 									},
 									onFailure: function (err) {
 										console.error("Failed to fetch class attributes:", err);
