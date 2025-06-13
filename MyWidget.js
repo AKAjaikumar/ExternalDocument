@@ -219,7 +219,7 @@ require([
 					'maxWidth': '320px'
 				}
 			}).inject(container6);
-			(async libraryInput.addEvent('keyup', function () {
+			libraryInput.addEvent('keyup', async function () {
 				const query = libraryInput.value.trim();
 				if (!query || query.length < 2) return;
 
@@ -363,7 +363,7 @@ require([
 					}
 				});
 			});
-			)();
+			
 			function fetchLabelsFromIDs(id) {
 				return new Promise((resolve, reject) => {
 					i3DXCompassServices.getServiceUrl({
