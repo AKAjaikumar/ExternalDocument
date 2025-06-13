@@ -353,7 +353,7 @@ require([
 															}
 															libraryInput.value = '';
 															resultsContainer.hide();
-															fetchClassAttributes(label, id);
+															fetchClassAttributes(parentId,label, id);
 														}
 													}
 												}).inject(resultsContainer);
@@ -559,7 +559,7 @@ require([
 					}
 				});
 			});
-			function addClassificationChip(label, id, attributeData) {
+			function addClassificationChip(parentId, label, id, attributeData) {
     
 					const chip = new UWA.Element('div', { 
 						class: 'classification-chip',
@@ -573,7 +573,7 @@ require([
 							fontSize: '12px',
 							cursor: 'default'
 						},
-						html: `${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
+						html: `${parentId ? parentId + ' → ' : ''}${label} <span class="remove-chip" style="margin-left:10px;cursor:pointer;">&times;</span>`,
 						id: 'chip-${id}'
 					}).inject(container6);
 
@@ -652,7 +652,7 @@ require([
 				});
 			}
 
-            function fetchClassAttributes(label,classId) {
+            function fetchClassAttributes(parentId,label,classId) {
 				i3DXCompassServices.getServiceUrl({
 					platformId: platformId,
 					serviceName: '3DSpace',
@@ -683,7 +683,7 @@ require([
 									},
 									onComplete: function (data) {
 										console.log("date:",data)
-										addClassificationChip(label,classId,data);
+										addClassificationChip(parentId,label,classId,data);
 									},
 									onFailure: function (err) {
 										console.error("Failed to fetch class attributes:", err);
