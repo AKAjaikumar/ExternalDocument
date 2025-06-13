@@ -313,13 +313,15 @@ require([
 										}
 
 										(async () => {
+											const duplicateIds = new Set();
 											for (const item of members) {
 												const getAttr = (name) =>
 													(item.attributes.find(a => a.name === name) || {}).value;
 												const label = getAttr("ds6w:label");
 												const id = getAttr("physicalid");
 												const taxonomyPath = getAttr("taxonomies");
-
+												if (duplicateIds.has(id)) continue;
+													duplicateIds.add(id);
 												let parentId = '';
 												if (taxonomyPath) {
 													const taxonomy = taxonomyPath.split('/');
