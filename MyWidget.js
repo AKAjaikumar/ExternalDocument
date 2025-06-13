@@ -223,7 +223,7 @@ require([
 			libraryInput.addEvent('keyup', async function () {
 				const query = libraryInput.value.trim();
 				if (!query || query.length < 2) return;
-
+				duplicateIds.clear();
 				i3DXCompassServices.getServiceUrl({
 					platformId: platformId,
 					serviceName: '3DSpace',
