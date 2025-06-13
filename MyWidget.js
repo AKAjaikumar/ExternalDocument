@@ -321,7 +321,7 @@ require([
 											let parentId = '';
 											if (taxonomyPath) {
 												const taxonomy = taxonomyPath.split('/');
-												const library = taxonomy[taxonomy.taxonomy - 1];
+												const library = taxonomy[taxonomy.length - 1];
 												parentId = fetchLabelsFromIDs(library);
 											}
 											new UWA.Element('div', {
