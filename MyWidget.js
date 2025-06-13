@@ -393,7 +393,9 @@ require([
 									onComplete: function (response) {
 										console.log("response:",response)
 										if (response && response.member && response.member.length > 0) {
-											idLabelMap = response.member.title;
+											
+											idLabelMap = response.member[0].title;
+											console.log("idLabelMap:",idLabelMap)
 										} 
 									},
 									onFailure: function (err) {
