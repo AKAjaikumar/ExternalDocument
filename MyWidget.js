@@ -320,8 +320,12 @@ require([
 												const label = getAttr("ds6w:label");
 												const id = getAttr("physicalid");
 												const taxonomyPath = getAttr("taxonomies");
-												if (!id || duplicateIds.has(id)) continue;
-													duplicateIds.add(id);
+												if (!id || duplicateIds.has(id)) {
+													console.log("Skipping duplicate or empty ID:", id);
+													continue;
+												}
+
+												duplicateIds.add(id);
 												let parentId = '';
 												if (taxonomyPath) {
 													const taxonomy = taxonomyPath.split('/');
