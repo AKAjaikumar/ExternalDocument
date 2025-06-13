@@ -323,7 +323,9 @@ require([
 												const taxonomy = taxonomyPath.split('/');
 												const library = taxonomy[taxonomy.length - 1];
 												parentId = fetchLabelsFromIDs(library);
+												console.log("parentId:",parentId);
 											}
+											console.log("parentId:",parentId);
 											new UWA.Element('div', {
 												html: `<strong>${label}</strong><br>
 												<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
