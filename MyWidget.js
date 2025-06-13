@@ -322,7 +322,7 @@ require([
 											if (taxonomyPath) {
 												const taxonomy = taxonomyPath.split('/');
 												const library = taxonomy[taxonomy.length - 1];
-												parentId = fetchLabelsFromIDs(library);
+												parentId = await fetchLabelsFromIDs(library);
 												console.log("parentId:",parentId);
 											}
 											console.log("parentId:",parentId);
@@ -364,57 +364,57 @@ require([
 				});
 			});
 			function fetchLabelsFromIDs(id) {
-				let idLabelMap = '';
-				i3DXCompassServices.getServiceUrl({
-					platformId: platformId,
-					serviceName: '3DSpace',
-					onComplete: function (URL3DSpace) {
-						let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
-						if (baseUrl.endsWith('/3dspace')) {
-							baseUrl = baseUrl.replace('/3dspace', '');
-						}
-
-						const csrfURL = baseUrl + '/resources/v1/application/CSRF';
-
-						WAFData.authenticatedRequest(csrfURL, {
-							method: 'GET',
-							type: 'json',
-							onComplete: function (csrfData) {
-								const csrfToken = csrfData.csrf.value;
-								const csrfHeaderName = csrfData.csrf.name;
-								const getLibURL = baseUrl + '/resources/v1/modeler/dslib/dslib:Library/'+id;
-								WAFData.authenticatedRequest(getLibURL, {
-									method: 'GET',
-									type: 'json',
-									headers: {
-										'Content-Type': 'application/json',
-										'Accept': 'application/json',
-										'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
-										[csrfHeaderName]: csrfToken
-									},
-									onComplete: function (response) {
-										console.log("response:",response)
-										if (response && response.member && response.member.length > 0) {
-											
-											idLabelMap = response.member[0].title;
-											console.log("idLabelMap:",idLabelMap)
-										} 
-									},
-									onFailure: function (err) {
-										console.error("Failed to fetch class attributes:", err);
-									}
-								});
-							},
-							onFailure: function (err) {
-								console.error("Failed to fetch CSRF token:", err);
+				return new Promise((resolve, reject) => {
+					i3DXCompassServices.getServiceUrl({
+						platformId: platformId,
+						serviceName: '3DSpace',
+						onComplete: function (URL3DSpace) {
+							let baseUrl = typeof URL3DSpace === "string" ? URL3DSpace : URL3DSpace[0].url;
+							if (baseUrl.endsWith('/3dspace')) {
+								baseUrl = baseUrl.replace('/3dspace', '');
 							}
-						});
-					},
-					onFailure: function () {
-						console.error("Failed to get 3DSpace URL");
-					}
+
+							const csrfURL = baseUrl + '/resources/v1/application/CSRF';
+
+							WAFData.authenticatedRequest(csrfURL, {
+								method: 'GET',
+								type: 'json',
+								onComplete: function (csrfData) {
+									const csrfToken = csrfData.csrf.value;
+									const csrfHeaderName = csrfData.csrf.name;
+									const getLibURL = baseUrl + '/resources/v1/modeler/dslib/dslib:Library/' + id;
+
+									WAFData.authenticatedRequest(getLibURL, {
+										method: 'GET',
+										type: 'json',
+										headers: {
+											'Content-Type': 'application/json',
+											'Accept': 'application/json',
+											'SecurityContext': "ctx::VPLMProjectLeader.Company Name.APTIV INDIA",
+											[csrfHeaderName]: csrfToken
+										},
+										onComplete: function (response) {
+											if (response && response.member && response.member.length > 0) {
+												resolve(response.member[0].title); 
+											} else {
+												resolve('');
+											}
+										},
+										onFailure: function (err) {
+											reject("Failed to fetch label: " + err);
+										}
+									});
+								},
+								onFailure: function (err) {
+									reject("CSRF token fetch failed: " + err);
+								}
+							});
+						},
+						onFailure: function () {
+							reject("3DSpace URL fetch failed");
+						}
+					});
 				});
-				return idLabelMap;
 			}
 			bookmarkInput.addEvent('keyup', function () {
 				const query = bookmarkInput.value.trim();
