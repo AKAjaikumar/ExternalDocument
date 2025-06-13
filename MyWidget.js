@@ -312,41 +312,44 @@ require([
 											return;
 										}
 
-										members.forEach(item => {
-											const getAttr = (name) =>
-												(item.attributes.find(a => a.name === name) || {}).value;
-											const label = getAttr("ds6w:label");
-											const id = getAttr("physicalid");
-											const taxonomyPath = getAttr("taxonomies");
-											let parentId = '';
-											if (taxonomyPath) {
-												const taxonomy = taxonomyPath.split('/');
-												const library = taxonomy[taxonomy.length - 1];
-												parentId = await fetchLabelsFromIDs(library);
-												console.log("parentId:",parentId);
-											}
-											console.log("parentId:",parentId);
-											new UWA.Element('div', {
-												html: `<strong>${label}</strong><br>
-												<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
-												styles: {
-													padding: '5px',
-													cursor: 'pointer'
-												},
-												events: {
-													click: function () {
-														const exists = selectedClassifications.some(c => c.id === id);
-														if (!exists) {
-															selectedClassifications.push({ label, id });
-															renderChips();
-														}
-														libraryInput.value = '';
-														resultsContainer.hide();
-														fetchClassAttributes(label,id); 
-													}
+										(async () => {
+											for (const item of members) {
+												const getAttr = (name) =>
+													(item.attributes.find(a => a.name === name) || {}).value;
+												const label = getAttr("ds6w:label");
+												const id = getAttr("physicalid");
+												const taxonomyPath = getAttr("taxonomies");
+
+												let parentId = '';
+												if (taxonomyPath) {
+													const taxonomy = taxonomyPath.split('/');
+													const library = taxonomy[taxonomy.length - 1];
+													parentId = await fetchLabelsFromIDs(library);
+													console.log("parentId:", parentId);
 												}
-											}).inject(resultsContainer);
-										});
+
+												new UWA.Element('div', {
+													html: `<strong>${label}</strong><br>
+													<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
+													styles: {
+														padding: '5px',
+														cursor: 'pointer'
+													},
+													events: {
+														click: function () {
+															const exists = selectedClassifications.some(c => c.id === id);
+															if (!exists) {
+																selectedClassifications.push({ label, id });
+																renderChips();
+															}
+															libraryInput.value = '';
+															resultsContainer.hide();
+															fetchClassAttributes(label, id);
+														}
+													}
+												}).inject(resultsContainer);
+											}
+										})();
 									},
 									onFailure: function (err) {
 										console.error("Federated search failed:", err);
