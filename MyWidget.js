@@ -320,8 +320,7 @@ require([
 												const label = getAttr("ds6w:label");
 												const id = getAttr("physicalid");
 												const taxonomyPath = getAttr("taxonomies");
-												if (duplicateIds.has(id)) continue;
-													duplicateIds.add(id);
+												
 												let parentId = '';
 												if (taxonomyPath) {
 													const taxonomy = taxonomyPath.split('/');
@@ -351,6 +350,8 @@ require([
 													}
 												}).inject(resultsContainer);
 												}
+												if (duplicateIds.has(id)) continue;
+													duplicateIds.add(id);
 											}
 										})();
 									},
