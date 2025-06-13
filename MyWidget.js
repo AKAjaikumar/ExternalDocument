@@ -329,7 +329,7 @@ require([
 													parentId = await fetchLabelsFromIDs(library);
 													console.log("parentId:", parentId);
 												}
-
+												if (!duplicateIds.has(id)) {
 												new UWA.Element('div', {
 													html: `<strong>${label}</strong><br>
 													<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
@@ -350,6 +350,7 @@ require([
 														}
 													}
 												}).inject(resultsContainer);
+												}
 											}
 										})();
 									},
