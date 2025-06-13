@@ -320,7 +320,8 @@ require([
 												const label = getAttr("ds6w:label");
 												const id = getAttr("physicalid");
 												const taxonomyPath = getAttr("taxonomies");
-												
+												if (!id || duplicateIds.has(id)) continue;
+													duplicateIds.add(id);
 												let parentId = '';
 												if (taxonomyPath) {
 													const taxonomy = taxonomyPath.split('/');
@@ -328,7 +329,7 @@ require([
 													parentId = await fetchLabelsFromIDs(library);
 													console.log("parentId:", parentId);
 												}
-												if (!duplicateIds.has(id)) {
+												
 												new UWA.Element('div', {
 													html: `<strong>${label}</strong><br>
 													<span style="font-size:11px;color:gray;">${parentId ? parentId + ' > ' : ''}${label}</span>`,
@@ -349,9 +350,8 @@ require([
 														}
 													}
 												}).inject(resultsContainer);
-												}
-												if (duplicateIds.has(id)) continue;
-													duplicateIds.add(id);
+												
+												
 											}
 										})();
 									},
