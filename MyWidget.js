@@ -219,6 +219,7 @@ require([
 					'maxWidth': '320px'
 				}
 			}).inject(container6);
+			const duplicateIds = new Set();
 			libraryInput.addEvent('keyup', async function () {
 				const query = libraryInput.value.trim();
 				if (!query || query.length < 2) return;
@@ -313,7 +314,7 @@ require([
 										}
 
 										(async () => {
-											const duplicateIds = new Set();
+											
 											for (const item of members) {
 												const getAttr = (name) =>
 													(item.attributes.find(a => a.name === name) || {}).value;
