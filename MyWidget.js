@@ -142,7 +142,6 @@ require([
 						},
 						html: `
 							<span style="margin-right: 8px;">${item.label}</span>
-							<span style="cursor: pointer; font-weight: bold;">&times;</span>
 						`,
 						events: {
 							click: function (e) {
