@@ -142,7 +142,6 @@ require([
 						},
 						html: `
 							<span style="margin-right: 8px;">${item.label}</span>
-							<span style="cursor: pointer; font-weight: bold;">&times;</span>
 						`,
 						events: {
 							click: function (e) {
@@ -323,12 +322,12 @@ require([
 												const taxonomyPath = getAttr("taxonomies");
 												console.log("id:", id);
 												console.log("duplicateIds:", duplicateIds);
-												/*if (!id || duplicateIds.has(id)) {
+												if (!id || duplicateIds.has(id)) {
 													console.log("Skipping duplicate or empty ID:", id);
 													continue;
 												}
 
-												duplicateIds.add(id);*/
+												duplicateIds.add(id);
 												let parentId = '';
 												if (taxonomyPath) {
 													const taxonomy = taxonomyPath.split('/');
